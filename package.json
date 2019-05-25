@@ -20,7 +20,7 @@
     "lodash.pick": "^4.4.0",
     "splitpanes": "^1.14.2",
     "vue": "^2.6.10",
-    "geelato-aui": "^0.1.1",
+    "geelato-ui-ant": "^0.1.3",
     "monaco-editor": "0.17.0"
   },
   "devDependencies": {

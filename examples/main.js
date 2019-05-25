@@ -2,10 +2,10 @@ import Vue from 'vue'
 import Antd from 'ant-design-vue'
 import App from './App.vue'
 import 'ant-design-vue/dist/antd.less'
-import 'geelato-aui/lib/geelato-aui.css'
+import 'geelato-ui-ant/lib/geelato-ui-ant.css'
 
 import apiHelper from "./apiHelper";
-import geelatoAui from "geelato-aui";
+import geelatoAui from "geelato-ui-ant";
 import geelatoIde from './../packages/index'
 
 Vue.config.productionTip = false
