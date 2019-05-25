@@ -1,0 +1,9 @@
+.gl-compact > .ant-tabs-bar {
+    margin: 0 !important;
+}
+.gl-compact > .ant-card-head {
+    min-height :24px;
+}
+.gl-card-gutter {
+    margin-bottom: 0.5em;
+}
