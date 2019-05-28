@@ -10,7 +10,7 @@
     <div class="rightBar">
       <template v-for="(plugin,index) in findPlugin('sidebar')">
         <component v-if="selectedPane?(selectedPane===plugin.sidebar.title):index===0" :is="plugin.sidebar.component"
-                   :key="index"></component>
+                   :key="index" :layout="layout"></component>
       </template>
     </div>
   </div>

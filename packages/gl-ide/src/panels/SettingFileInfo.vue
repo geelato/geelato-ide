@@ -19,6 +19,7 @@
 </template>
 <script>
   export default {
+    name: 'gl-ide-setting-file-info',
     props: {
       editingFile: Object,
       default() {

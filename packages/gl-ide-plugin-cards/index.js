@@ -1,5 +1,5 @@
 // 导入组件，组件必须声明 name
-import Cards from './src/Cards'
+import Sidebar from './src/Sidebar'
 import events from './src/events'
 
 const plugin = {
@@ -7,7 +7,7 @@ const plugin = {
   description: '组件库，以卡片的方式展示在sidebar中',
   sidebar: {
     title: '组件',
-    component: Cards
+    component: Sidebar
   }
 }
 // 默认导出组件

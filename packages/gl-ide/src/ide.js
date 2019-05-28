@@ -9,6 +9,10 @@ function checkPlugin() {
   return null
 }
 
+/**
+ * @param component :component name or component object
+ * @returns {*}
+ */
 function parseComponent(component) {
   console.log('ide > parseComponent > component: ', component)
   if (!component) {
@@ -37,37 +41,34 @@ function findPanels(fileType, panelsGroup) {
       // console.log('file>', file)
       file[panelsGroup].forEach((panel) => {
         matchPanels.push({
-          name: panel.name,
           title: panel.title,
-          panelComponent: findPanelComponent(panel.name),
-          content: panel.content ? {
-            component: parseComponent(panel.content.component),
-            opts: panel.content.opts ? JSON.parse(JSON.stringify(panel.content.opts)) : {}
-          } : {}
+          component: parseComponent(panel.component),
+          opts: panel.opts ? JSON.parse(JSON.stringify(panel.opts)) : {}
         })
-        console.log('ide > matchPanel>', matchPanels[matchPanels.length - 1])
+        console.log('ide > matchPanel> panel.component: ', panel.component, 'panel: ', matchPanels[matchPanels.length - 1])
       })
     }
   }
   return matchPanels
 }
 
-function findPanelComponent(name) {
-  for (let i in panels) {
-    let panel = panels[i]
-    if (panel.name === name) {
-      return panel.component
-    }
-  }
-  console.warn('ide > findPanelComponent > name: ', name, ' panels: ', panels)
-  return undefined
-}
+// function findPanelComponent(name) {
+//   for (let i in panels) {
+//     let panel = panels[i]
+//     if (panel.name === name) {
+//       return panel.component
+//     }
+//   }
+//   console.warn('ide > findPanelComponent > name: ', name, ' panels: ', panels)
+//   return undefined
+// }
 
 export default {
   setVue(Vue) {
     GlobalVue = Vue
   },
-  use(plugin, options) {
+  use(pluginComponet, options) {
+    let plugin = pluginComponet.config
     let checkInfo = checkPlugin(plugin)
     if (!checkInfo) {
       plugins.push(plugin)
@@ -79,6 +80,10 @@ export default {
       if (plugin.panels) {
         panels.push(...(plugin.panels))
       }
+      // install
+      if (typeof pluginComponet.install === 'function') {
+        pluginComponet.install(GlobalVue)
+      }
     } else {
       return checkInfo
     }
@@ -89,7 +94,7 @@ export default {
     // background: '#2185d0'
   },
   editingFile: {
-    type: 'gl-page-combination',
+    type: 'gl-page-layout',
     content: {opts: {ui: ''}}
   },
   plugins: plugins,

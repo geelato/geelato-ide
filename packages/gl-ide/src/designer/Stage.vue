@@ -2,7 +2,7 @@
   <div class="gl-designer-stage">
     <a-tabs @change="callback" size="small" class="gl-compact">
       <a-tab-pane v-for="(panel,index) in panels" :tab="panel.title||panel.name" :key="index">
-        <component :is="panel.panelComponent" :content="panel.content" :editingFile="editingFile"
+        <component :is="panel.component" v-bind="panel.opts" :editingFile="editingFile"
                    style="overflow-y: auto"></component>
       </a-tab-pane>
     </a-tabs>

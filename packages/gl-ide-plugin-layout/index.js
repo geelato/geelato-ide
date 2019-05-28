@@ -1,17 +1,23 @@
-import formData from './src/formData'
+// 导入组件，组件必须声明 name
+import Sidebar from './src/Sidebar'
+import Stage from './src/Stage/Index'
+import events from './src/events'
+// import formData from "../gl-ide-plugin-file-combination/src/formData";
 
 const plugin = {
-  name: 'gl-ide-plugin-file-combination',
+  name: 'gl-ide-plugin-layout',
+  description: '页面布局插件',
   file: {
-    title: '页面组件布局设计',
+    title: '页面布局',
     type: 'gl-page-layout',
-    icon: 'file',
+    icon: 'th list icon',
     description: '可组合的高级页面',
     toolbar: [],
     stagePanels: [{
-      title: '设计X',
+      title: '设计',
       component: 'gl-ide-layout-stage',
-      opts: formData
+      opts: {cardMap: {}},
+      query: {}
     },
       // {
       //   name: 'code',
@@ -32,25 +38,21 @@ const plugin = {
     settingPanels: [
       {
         title: '基本信息',
-        component: 'gl-ide-setting-file-info'
+        component: 'gl-ide-base-setting-file-info'
       },
     ]
+  },
+  sidebar: {
+    title: '布局',
+    component: Sidebar
   }
 }
-
 // 默认导出组件
 export default {
   name: plugin.name,
-  // 为组件提供 install 安装方法，供按需引入
-  // install: function (Vue) {
-  //   Vue.component(Sidebar.name, Sidebar)
-  //   let ide = Vue.component('gl-ide')
-  //   if (!ide) {
-  //     console.error('由于gl-ide未加载，无法注册插件' + plugin.name + '到gl-ide中。')
-  //   } else {
-  //     ide.use(plugin)
-  //   }
-  // },
-  config: plugin
-
+  install: function (Vue) {
+    Vue.component(Stage.name, Stage)
+  },
+  config: plugin,
+  events: events
 }

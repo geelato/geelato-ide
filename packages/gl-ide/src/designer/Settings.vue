@@ -1,8 +1,8 @@
 <template>
   <div class="gl-designer-properties">
     <a-tabs @change="callback" size="small" class="gl-compact">
-      <a-tab-pane v-for="(panel,index) in panels" :tab="panel.title||panel.name" :key="index">
-        <component :is="panel.panelComponent" :opts="panel.content" :editingFile="editingFile"></component>
+      <a-tab-pane v-for="(panel,index) in panels" :tab="panel.title" :key="index">
+        <component :is="panel.component" :opts="panel.opts" :editingFile="editingFile"></component>
       </a-tab-pane>
     </a-tabs>
   </div>

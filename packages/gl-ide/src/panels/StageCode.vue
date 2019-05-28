@@ -8,7 +8,7 @@
   import * as monaco from 'monaco-editor'
 
   export default {
-    name: "StageCode",
+    name: "gl-ide-stage-code",
     props: {
       content: {
         type: Object,
@@ -36,11 +36,11 @@
             roundedSelection: false,
             readOnly: false,        // 只读
             cursorStyle: 'line',        //光标样式
-            automaticLayout: true, //自动布局
             glyphMargin: true,  //字形边缘
             useTabStops: false,
             fontSize: 14,       //字体大小
             autoIndent: true, //自动布局
+            automaticLayout: true, //自动布局
             formatOnPaste: true,
             formatOnType: true,
             //quickSuggestionsDelay: 500,   //代码提示延时

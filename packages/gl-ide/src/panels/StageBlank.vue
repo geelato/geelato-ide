@@ -3,6 +3,7 @@
 </template>
 <script>
   export default {
+    name: 'gl-ide-stage-blank',
     props: {
       height: {
         type: String,

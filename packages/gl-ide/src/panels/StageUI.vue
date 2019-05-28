@@ -7,6 +7,7 @@
 </template>
 <script>
   export default {
+    name: "gl-ide-stage-ui",
     props: {
       editingFile: {
         type: Object,
