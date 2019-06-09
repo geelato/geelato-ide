@@ -1,8 +1,10 @@
 <template>
   <div class="gl-designer-properties">
     <a-tabs @change="callback" size="small" class="gl-compact">
-      <a-tab-pane v-for="(panel,index) in panels" :tab="panel.title" :key="index">
-        <component :is="panel.component" :opts="panel.opts" :editingFile="editingFile"></component>
+      <a-tab-pane v-for="(panel,index) in panels" :tab="panel.title" :key="index"
+                  :style="{padding:`${panelPadding}px`}">
+        <component :is="panel.component" v-bind="panel.opts" :editingFile="editingFile"
+                   style="overflow-y: auto" :style="{width:`${layout.width-4}px`}"></component>
       </a-tab-pane>
     </a-tabs>
   </div>
@@ -10,6 +12,7 @@
 
 <script>
   import mixin from '../../../mixin'
+  import events from '../../../gl-ide-plugin-layout/src/events'
 
   export default {
     name: "gl-ide-properties",
@@ -18,7 +21,13 @@
     data() {
       return {}
     },
+    created() {
+      this.$bus.$on(events.card_open, this.onCardOpen)
+    },
     methods: {
+      onCardOpen(card) {
+        console.log('onCardOpen >', card)
+      },
       callback(key) {
         console.log(key)
       }
@@ -27,7 +36,7 @@
 </script>
 
 <style scoped>
-  .ant-tabs-bar{
+  .ant-tabs-bar {
     margin: 0;
   }
 </style>

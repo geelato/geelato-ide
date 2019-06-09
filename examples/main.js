@@ -7,6 +7,7 @@ import 'geelato-ui-ant/lib/geelato-ui-ant.css'
 import apiHelper from "./apiHelper";
 import geelatoAui from "geelato-ui-ant";
 import geelatoIde from './../packages/index'
+import './../packages/ide.css'
 
 Vue.config.productionTip = false
 
@@ -22,7 +23,6 @@ Vue.prototype.$gl ? Vue.prototype.$gl.api = geelatoAui.api : Vue.prototype.$gl =
 let apiOptions = {api: {baseURL: 'http://localhost:8080/api'}}
 // let apiOptions = {api: {baseURL: 'http://api.geelato.org:8080/api'}}
 Vue.use(geelatoAui, apiOptions)
-
 
 
 Vue.use(geelatoIde)

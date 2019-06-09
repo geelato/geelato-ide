@@ -14,6 +14,7 @@ component.install = function (Vue) {
   Vue.component(StageCode.name, StageCode)
   Vue.component(StageBlank.name, StageBlank)
   Vue.component(SettingFileInfo.name, SettingFileInfo)
+  console.log('Vue.component(SettingFileInfo.name, SettingFileInfo)')
 }
 
 // 默认导出组件

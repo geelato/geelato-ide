@@ -37,8 +37,10 @@ const plugin = {
     ],
     settingPanels: [
       {
-        title: '基本信息',
-        component: 'gl-ide-base-setting-file-info'
+        title: '页面信息',
+        component: 'gl-ide-setting-file-info',
+        opts: {},
+        query: {}
       },
     ]
   },

@@ -6,6 +6,12 @@ export default {
     theme: {
       type: Object
     },
+    panelPadding: {
+      type: Number,
+      default() {
+        return 4
+      }
+    },
     layout: {
       type: Object,
       default() {
@@ -33,9 +39,10 @@ export default {
         return []
       }
     },
-    editingFile:{
-      type:Object,
-      default(){}
+    editingFile: {
+      type: Object,
+      default() {
+      }
     }
     // api: {
     //   type: Object,

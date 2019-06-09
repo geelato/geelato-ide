@@ -5,13 +5,14 @@
 import draggable from 'vuedraggable'
 import GlIde from './gl-ide/index'
 import GlIdePluginLayout from './gl-ide-plugin-layout/index'
-// import GlIdePluginFileCombination from './gl-ide-plugin-file-combination/index'
+import GlIdePluginFormDesigner from './gl-ide-plugin-form-designer/index'
 import GlIdePluginProject from './gl-ide-plugin-project/index'
 import GlIdePluginCards from './gl-ide-plugin-cards/index'
+import GlIdePluginFields from './gl-ide-plugin-fields/index'
+
 // import GlIdePluginStructure from './gl-ide-plugin-structure/index'
 import ide from './gl-ide/src/ide'
 import Api from './Api'
-
 
 
 import './ide.css'
@@ -33,8 +34,10 @@ const install = function (Vue, options) {
   // ide.use(GlIdePluginFileCombination.config)
   ide.use(GlIdePluginProject)
   ide.use(GlIdePluginLayout)
+  ide.use(GlIdePluginFormDesigner)
   // ide.use(GlIdePluginStructure.config)
   ide.use(GlIdePluginCards)
+  ide.use(GlIdePluginFields)
   // console.log(' aui options > ', options)
   Vue.prototype.$api = Vue.prototype.$api || (options && options.api ? new Api(options.api) : uiApi)
   Vue.prototype.$bus = Vue.prototype.$bus || new Vue()
@@ -46,9 +49,10 @@ const install = function (Vue, options) {
     Vue.component(component.name, component)
   })
   Vue.component('gl-draggable', draggable)
-  console.log('gl-form', Vue.component('gl-from'))
-  console.log('gl-draggable', Vue.component('gl-draggable'))
-  console.log('gl-draggable', draggable)
+  // console.log('gl-form', Vue.component('gl-from'))
+  // console.log('gl-draggable', Vue.component('gl-draggable'))
+  // console.log('gl-draggable', draggable)
+  Vue.use(GlIde)
 }
 
 // 判断是否是直接引入文件

@@ -20,6 +20,7 @@
     "lodash.get": "^4.4.2",
     "lodash.pick": "^4.4.0",
     "monaco-editor": "0.17.0",
+    "screenfull": "^4.2.0",
     "splitpanes": "^1.14.2",
     "vue": "^2.6.10",
     "vuedraggable": "^2.21.0"

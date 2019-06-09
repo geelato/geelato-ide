@@ -3,13 +3,14 @@
     <a-alert message="选择并拖放到右边界面" type="info" closeText="关闭" class="gl-card-gutter"/>
     <gl-draggable
         v-model="rows"
-        handle=".gl-dnd-handle"
+        handle=".gl-dnd-handle-row"
         :group="{ name: 'layoutItems', pull: 'clone', put: true }"
         ghost-class="ghost"
-        :sort="true"
+        :sort="false"
         @change="onChange"
     >
-      <a-row :gutter="gutter" v-for="(row,rowIndex) in rows" :key="rowIndex" :title="row.title" class="gl-dnd-handle">
+      <a-row :gutter="gutter" v-for="(row,rowIndex) in rows" :key="rowIndex" :title="row.title"
+             class="gl-dnd-handle-row">
         <a-col v-for="(col,colIndex) in row.cols" :key="colIndex" :span="col.span">
           <div>{{col.span}}</div>
         </a-col>
@@ -41,6 +42,16 @@
           title: '一行一列',
           cols: [
             {span: 24, offset: 0}
+          ]
+        }, {
+          title: '一行两列',
+          cols: [
+            {span: 6, offset: 0}, {span: 18, offset: 0}
+          ]
+        }, {
+          title: '一行两列',
+          cols: [
+            {span: 8, offset: 0}, {span: 16, offset: 0}
           ]
         }, {
           title: '一行两列',

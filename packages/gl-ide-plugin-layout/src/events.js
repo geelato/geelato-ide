@@ -1,4 +1,5 @@
 export default {
-  // cards_selected: 'cards_selected',
-  // cards_added: 'cards_added'
+  card_open: 'card_open',
+  card_expand: 'cards_selected',
+  card_added: 'cards_added'
 }

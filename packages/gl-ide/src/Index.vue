@@ -5,20 +5,21 @@
     <!--<designer-sidebar style="width:200px;display: inline-block"></designer-sidebar>-->
     <!--<designer-stage style="width: 100%;display: inline-block"></designer-stage>-->
     <!--<designer-settings style="width:200px;display: inline-block"></designer-settings>-->
-    <!--</div>-->
-    <splitpanes class="default-theme" :style="{height:`${designer.height-toolbar.height-status.height}px`}">
-      <span :splitpanes-size="sidebar.width/designer.width*100">
-          <designer-sidebar :layout="sidebar" :plugins="$ide.plugins"
-                            :editingFile="$ide.editingFile"></designer-sidebar>
+    <!-- </div>-->
+    <splitpanes class="default-theme"
+                :style="{height:`${designer.height-toolbar.height-status.height}px`}">
+        <span :splitpanes-size="sidebarsWidthPercent" :splitpanes-min="sidebarsMinWidthPercent">
+          <designer-sidebar :layout="sidebar" :plugins="$ide.plugins" :leftToolbarWidth="sidebarLeftToolbarWidth"
+                            :editingFile="$ide.editingFile" @switchPanel="switchSidebarPanel"></designer-sidebar>
       </span>
-      <span :splitpanes-size="(designer.width-sidebar.width-settings.width)/designer.width*100">
+      <span :splitpanes-size="stageWidthPercent">
           <designer-stage :layout="stage" :plugins="$ide.plugins" :panels="$ide.findStagePanels($ide.editingFile.type)"
                           :file="$ide.editingFile" :editingFile="$ide.editingFile"></designer-stage>
         </span>
-      <span :splitpanes-size="settings.width/designer.width*100">
+      <span :splitpanes-size="settingsWidthPercent">
           <designer-settings :layout="settings" :plugins="$ide.plugins"
-                               :panels="$ide.findSettingPanels($ide.editingFile.type)"
-                               :editingFile="$ide.editingFile"></designer-settings>
+                             :panels="$ide.findSettingPanels($ide.editingFile.type)"
+                             :editingFile="$ide.editingFile"></designer-settings>
         </span>
     </splitpanes>
     <designer-status v-if="status.height!==0" :style="{height:`${status.height}px`}" :layout="status"
@@ -53,6 +54,7 @@
           height: 0,
           width: 280
         },
+        sidebarLeftToolbarWidth: 22,
         stage: {
           height: 0,
           width: 0
@@ -68,7 +70,20 @@
       }
     },
     watch: {},
-    computed: {},
+    computed: {
+      sidebarsWidthPercent() {
+        return this.sidebar.width / this.designer.width * 100
+      },
+      sidebarsMinWidthPercent() {
+        return this.sidebarLeftToolbarWidth / this.designer.width * 100
+      },
+      stageWidthPercent() {
+        return (this.designer.width - this.sidebar.width - this.settings.width) / this.designer.width * 100
+      },
+      settingsWidthPercent() {
+        return this.settings.width / this.designer.width * 100
+      }
+    },
     created() {
       this.resize()
       this.$bus.$on('project_file_selected', function (data) {
@@ -90,6 +105,12 @@
         this.$set(this.sidebar, 'height', this.designer.height - this.toolbar.height - this.status.height)
         this.$set(this.stage, 'height', this.sidebar.height)
         this.$set(this.settings, 'height', this.sidebar.height)
+      },
+      switchSidebarPanel({showPanel}) {
+        if (!showPanel) {
+          console.log('showPanel>', showPanel)
+          this.$set(this.sidebar, 'width', this.sidebarLeftToolbarWidth)
+        }
       }
     }
   }
@@ -100,5 +121,4 @@
     margin: 0;
     padding: 0;
   }
-
 </style>

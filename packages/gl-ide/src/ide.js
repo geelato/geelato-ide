@@ -19,6 +19,9 @@ function parseComponent(component) {
     return component
   }
   if (typeof component === 'string') {
+    if (GlobalVue.component(component) === undefined) {
+      console.warn(`Vue.component('${component}')`, GlobalVue.component(component))
+    }
     return GlobalVue.component(component)
   } else if (typeof component === 'object') {
     return component
@@ -68,9 +71,18 @@ export default {
     GlobalVue = Vue
   },
   use(pluginComponet, options) {
+    if (!GlobalVue) {
+      console.error('安装ide插件失败，必需先调用setVue(Vue)设置Vue。')
+      return
+    }
+
     let plugin = pluginComponet.config
     let checkInfo = checkPlugin(plugin)
     if (!checkInfo) {
+      // install 注册全局组件
+      if (typeof pluginComponet.install === 'function') {
+        pluginComponet.install(GlobalVue)
+      }
       plugins.push(plugin)
       // use file
       if (plugin.file) {
@@ -79,10 +91,6 @@ export default {
       // use panels
       if (plugin.panels) {
         panels.push(...(plugin.panels))
-      }
-      // install
-      if (typeof pluginComponet.install === 'function') {
-        pluginComponet.install(GlobalVue)
       }
     } else {
       return checkInfo

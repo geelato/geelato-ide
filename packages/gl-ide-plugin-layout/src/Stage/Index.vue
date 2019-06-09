@@ -1,6 +1,6 @@
 <template>
   <div class="gl-ide-layout-stage" style="height: 620px;overflow-x: hidden">
-    <gl-ide-layout-stage-item :rows="layout.rows" :cardMap="cardMap"></gl-ide-layout-stage-item>
+    <gl-ide-layout-stage-item :rows="layout.rows" :cardMap="cardMap" :gutter="layout.gutter"></gl-ide-layout-stage-item>
   </div>
 </template>
 
@@ -15,7 +15,7 @@
       return {
         cardMap: {},
         layout: {
-          gutter: 8,
+          gutter: 4,
           rows: [{
             title: '一行一列',
             cols: [

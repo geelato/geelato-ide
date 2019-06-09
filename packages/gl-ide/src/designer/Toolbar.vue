@@ -43,25 +43,57 @@
     <a-button size="small" :style="{background: theme.background }">工具</a-button>
     <a-button size="small" :style="{background: theme.background }">插件</a-button>
     <a-button size="small" :style="{background: theme.background }">设置</a-button>
-    <a-button size="small" :style="{background: theme.background }" href="https://www.geelato.org" target="_blank">帮助</a-button>
-    <a-button size="small" :style="{background: theme.background }">登录</a-button>
+    <a-button size="small" :style="{background: theme.background }">保存</a-button>
+
+    <a-button size="small" :style="{background: theme.background }" style="float: right" v-if="islogined">
+      <a-icon type="logout"/>
+      退出
+    </a-button>
+    <a-button size="small" :style="{background: theme.background }" style="float: right" v-if="!islogined">
+      <a-icon type="login"/>
+      登录
+    </a-button>
+    <a-button size="small" :style="{background: theme.background }" href="https://www.geelato.org" target="_blank"
+              style="float: right">
+      <a-icon type="question-circle"/>
+      帮助
+    </a-button>
+    <a-button size="small" :style="{background: theme.background }" @click="toggleFullScreen" style="float: right"
+              title="按ESC键即可退出全屏">
+      <template v-if="isFullscreen">
+        <a-icon type="fullscreen-exit"/>
+        退出全屏
+      </template>
+      <template v-else>
+        <a-icon type="fullscreen"/>
+        全屏
+      </template>
+    </a-button>
   </div>
 </template>
 
 <script>
   import mixin from '../../../mixin'
+  import screenfull from 'screenfull'
 
   export default {
     name: "gl-designer-toolbar",
     mixins: [mixin],
     data() {
-      return {}
+      return {
+        isFullscreen: false,
+        islogined: true
+      }
     },
     props: {},
     methods: {
       callback(key) {
         console.log(key)
       },
+      toggleFullScreen() {
+        screenfull.toggle()
+        this.isFullscreen = !this.isFullscreen
+      }
     },
   }
 </script>
@@ -69,11 +101,11 @@
 <style scoped>
 
   .gl-designer-toolbar {
-    padding: 4px 2px
+    padding: 4px 10px
   }
 
   .gl-designer-toolbar .gutter {
-    padding-left: 4px;
+    /*padding-left: 4px;*/
   }
 
   .gl-designer-toolbar .ant-btn {
