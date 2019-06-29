@@ -1,5 +1,5 @@
 <template>
-  <div class="gl-ide-layout-stage" style="height: 620px;overflow-x: hidden">
+  <div class="gl-ide-layout-stage" style="height: 620px;overflow-x: hidden;padding-left: 0.5em;padding-right: 1em">
     <gl-ide-layout-stage-item :rows="layout.rows" :cardMap="cardMap" :gutter="layout.gutter"></gl-ide-layout-stage-item>
   </div>
 </template>

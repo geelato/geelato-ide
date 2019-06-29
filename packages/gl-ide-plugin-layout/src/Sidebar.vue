@@ -3,16 +3,16 @@
     <a-alert message="选择并拖放到右边界面" type="info" closeText="关闭" class="gl-card-gutter"/>
     <gl-draggable
         v-model="rows"
-        handle=".gl-dnd-handle-row"
+        handle=".gl-dnd-row-handle"
         :group="{ name: 'layoutItems', pull: 'clone', put: true }"
         ghost-class="ghost"
         :sort="false"
         @change="onChange"
     >
       <a-row :gutter="gutter" v-for="(row,rowIndex) in rows" :key="rowIndex" :title="row.title"
-             class="gl-dnd-handle-row">
+             class="gl-dnd-row-handle">
         <a-col v-for="(col,colIndex) in row.cols" :key="colIndex" :span="col.span">
-          <div>{{col.span}}</div>
+          <div style="min-height: 2em">{{parseInt(col.span/24*100)}}%</div>
         </a-col>
       </a-row>
     </gl-draggable>
@@ -41,38 +41,38 @@
         rows: [{
           title: '一行一列',
           cols: [
-            {span: 24, offset: 0}
+            {span: 24, offset: 0,items: []}
           ]
         }, {
           title: '一行两列',
           cols: [
-            {span: 6, offset: 0}, {span: 18, offset: 0}
+            {span: 6, offset: 0,items: []}, {span: 18, offset: 0,items: []}
           ]
         }, {
           title: '一行两列',
           cols: [
-            {span: 8, offset: 0}, {span: 16, offset: 0}
+            {span: 8, offset: 0,items: []}, {span: 16, offset: 0,items: []}
           ]
         }, {
           title: '一行两列',
           cols: [
-            {span: 12, offset: 0}, {span: 12, offset: 0}
+            {span: 12, offset: 0,items: []}, {span: 12, offset: 0,items: []}
           ]
         }, {
           title: '一行两列',
           cols: [
-            {span: 16, offset: 0}, {span: 8, offset: 0}
+            {span: 16, offset: 0,items: []}, {span: 8, offset: 0,items: []}
           ]
         }, {
           title: '一行三列',
           cols: [
-            {span: 8, offset: 0}, {span: 8, offset: 0}, {span: 8, offset: 0}
+            {span: 8, offset: 0,items: []}, {span: 8, offset: 0,items: []}, {span: 8, offset: 0,items: []}
           ]
         },
           {
             title: '一行四列',
             cols: [
-              {span: 6, offset: 0}, {span: 6, offset: 0}, {span: 6, offset: 0}, {span: 6, offset: 0}
+              {span: 6, offset: 0,items: []}, {span: 6, offset: 0,items: []}, {span: 6, offset: 0,items: []}, {span: 6, offset: 0,items: []}
             ]
           }]
       }
@@ -97,6 +97,10 @@
     /*background-color: #d8d8d8;*/
   }
 
+  .gl-ide-layout-sidebar .gl-dnd-row-handle {
+    min-height: 2em;
+  }
+
   .gl-ide-layout-sidebar .ant-row {
     border: 1px solid #f0f0f0;
     margin-bottom: 0.5em;
@@ -104,11 +108,11 @@
   }
 
   .gl-ide-layout-sidebar .ant-row:hover > div > div {
-    background-color: rgba(255, 158, 11, 0.7);
+    background-color: rgb(107, 209, 255);
   }
 
   .gl-ide-layout-sidebar .ant-row > div > div {
-    background-color: rgba(161, 222, 255, 0.7);
+    background-color: rgba(161, 222, 255, 0.35);
     text-align: center;
   }
 </style>

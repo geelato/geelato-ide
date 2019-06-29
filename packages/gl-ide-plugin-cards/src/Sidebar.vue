@@ -135,7 +135,7 @@
 <style scoped>
   .gl-card-header {
     padding: 0 0.5em;
-    height: 2em;
+    min-height: 2em;
     line-height: 2em;
     background-color: #e9e9e9;
     width: 100%;
@@ -143,7 +143,7 @@
   }
 
   .gl-card-header:hover {
-    background-color: #ff9e0b;
+    background-color: rgb(107, 209, 255);
   }
 
   .gl-card-body {

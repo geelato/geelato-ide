@@ -2,7 +2,7 @@
   <div>
     <gl-draggable
         :list="rowItems"
-        handle=".gl-dnd-handle-row"
+        handle=".gl-dnd-row-handle"
         group='layoutItems'
         :sort="true"
         @add="onRowAdd"
@@ -10,8 +10,8 @@
         @clone="onClone"
         @change="onRowChange"
     >
-      <a-row v-for="(row,rowIndex) in rowItems" :gutter="row.gutter||gutter" :key="rowIndex" class="gl-dnd-handle-row">
-        <a-col v-for="(col,colIndex) in row.cols" :span="col.span" :offset="col.offset" :key="colIndex">
+      <a-row v-for="(row,rowIndex) in rowItems" :gutter="row.gutter||gutter" :key="rowIndex" class="gl-dnd-row-handle">
+        <a-col v-for="(col,colIndex) in row.cols" :span="col.span" :offset="col.offset" :key="colIndex" style="">
           <template v-if="col.card">
             <a-card :title="getCardConfig(col.card).title" style="margin-top: 8px">
               <component :ref="col.card" :is="getCardComponent(col.card)"
@@ -27,46 +27,50 @@
           <template v-else>
             <gl-draggable
                 :list="col.items"
-                handle=".gl-dnd-handle-col"
+                handle=".gl-dnd-col-handle"
                 group='card'
                 :sort="false"
                 @add="onAddCol"
                 @change="onColChange"
+                @choose="onColChoose"
+                class="gl-dnd-col-wrapper"
             >
-              <div style="min-height: 2em">
-                <div v-for="(colItem,colItemIndex) in col.items" :key="colItem.id">
-                  <div style="padding: 0 1em;line-height: 2em;height: 2em;background-color: #d8d8d8">
-                    <div style="text-align: left;display:inline" class="gl-dnd-handle-col" title="拖动卡片">
-                      <a-icon :type="colItem.icon"/>
-                      {{colItem.title}}
-                    </div>&nbsp;
-                    <div style="display:inline-block;float: right">
-                      <a-button size="small" @click="onCardOpen(col,colItem,colItemIndex)"
-                                title="设置"
-                                style="background-color: #d8d8d8">
-                        <a-icon type="setting" theme="filled"/>
-                      </a-button>
-                      <a-button size="small" v-if="colItem.show!==false" @click="colItem.show=false" title="隐藏"
-                                style="background-color: #d8d8d8">
-                        <a-icon type="eye-invisible" />
-                      </a-button>
-                      <a-button size="small" v-if="colItem.show===false" @click="colItem.show=true" title="展示"
-                                style="background-color: #d8d8d8">
-                        <a-icon type="eye" />
-                      </a-button>
-                      <a-button size="small" @click="onColDelete(col,colItem,colItemIndex)" type="danger"
-                                title="删除" style="background-color: #d8d8d8">
-                        <a-icon type="delete"></a-icon>
-                      </a-button>
-                    </div>
+              <div v-for="(colItem,colItemIndex) in col.items" :key="colItem.id" class="gl-dnd-col-handle">
+                <div class="gl-dnd-col-toolbar">
+                  <div style="text-align: left;display:inline" title="拖动卡片">
+                    <a-icon :type="colItem.icon"/>
+                    {{colItem.title}}
+                  </div>&nbsp;
+                  <div style="display:inline-block;float: right">
+                    <a-button size="small" @click="onCardOpen(col,colItem,colItemIndex)"
+                              title="设置"
+                              style="background-color: #d8d8d8">
+                      <a-icon type="setting" theme="filled"/>
+                    </a-button>
+                    <a-button size="small" v-if="colItem.show!==false" @click="colItem.show=false" title="隐藏"
+                              style="background-color: #d8d8d8">
+                      <a-icon type="eye-invisible"/>
+                    </a-button>
+                    <a-button size="small" v-if="colItem.show===false" @click="colItem.show=true" title="展示"
+                              style="background-color: #d8d8d8">
+                      <a-icon type="eye"/>
+                    </a-button>
+                    <a-button size="small" @click="onColDelete(col,colItem,colItemIndex)" type="danger"
+                              title="删除" style="background-color: #d8d8d8">
+                      <a-icon type="delete"></a-icon>
+                    </a-button>
                   </div>
-                  <component v-show="colItem.show" :is="$globalVue.component(colItem.component)"
-                             v-bind="colItem.bind" class="gl-dnd-handle-col"></component>
                 </div>
+                <!--class="gl-dnd-col-handle"-->
+                <component v-show="colItem.show" :is="$globalVue.component(colItem.component)"
+                           v-bind="colItem.bind"></component>
               </div>
             </gl-draggable>
           </template>
         </a-col>
+        <div class="gl-dnd-row-toolbar" @click="removeRow(rowIndex)" title="删除行">
+          <a-icon type="close-circle" theme="twoTone" twoToneColor="#eb2f96"/>
+        </div>
       </a-row>
     </gl-draggable>
   </div>
@@ -75,7 +79,7 @@
 <script>
   import Vue from 'vue'
   import events from '../events'
-  import utils from '../../../utils'
+  // import utils from '../../../utils'
 
   export default {
     name: "gl-ide-layout-stage-item",
@@ -120,6 +124,20 @@
       onRowAdd: function (e) {
         console.log('gl-ide-plugin-layout > stage > onRowAdd: ', e)
       },
+      removeRow(rowIndex) {
+        let that = this
+        this.$confirm({
+          title: '是否删除该行?',
+          cancelText: '是',
+          okText: '否',
+          content: '',
+          onOk() {
+          },
+          onCancel() {
+            that.rowItems.splice(rowIndex, 1)
+          },
+        });
+      },
       onRowChange(e) {
         if (e.added && e.added.element) {
           // for (let i in e.added.element.cols) {
@@ -135,7 +153,8 @@
         console.log('gl-ide-plugin-layout > stage > onClone: ', e)
       },
       onAddCol: function (e) {
-        console.log('gl-ide-plugin-layout > stage > onAddCol: ', e)
+        console.log('gl-ide-plugin-layout > stage > onAddCol: ', e, JSON.stringify(this.rowItems[0]), JSON.stringify(this.rowItems[1]))
+        this.$nextTick()
       },
       onColChange(e) {
         if (e.added && e.added.element) {
@@ -145,6 +164,9 @@
           // // e.added.element.title = ''
         }
         console.log('gl-ide-plugin-layout > stage > onColChange: ', e)
+      },
+      onColChoose(e) {
+        console.log('gl-ide-plugin-layout > stage > onColChoose: ', e)
       },
       onCardOpen(col, item, index) {
         if (typeof item.onOpen === 'function') {
@@ -157,16 +179,16 @@
         console.log('gl-ide-plugin-layout > stage > onColDelete: ', col, item, index)
         this.$confirm({
           title: '是否删除该卡片内容?',
-          cancelText: '否',
-          okText: '是',
+          cancelText: '是',
+          okText: '否',
           content: '',
           onOk() {
+          },
+          onCancel() {
             col.items.splice(index, 1);
             // return new Promise((resolve, reject) => {
             //   setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
             // }).catch(() => console.log('Oops errors!'));
-          },
-          onCancel() {
           },
         });
       }
@@ -175,36 +197,59 @@
 </script>
 
 <style>
-  .gl-ide-layout-stage .ant-row {
+  .gl-ide-layout-stage .gl-dnd-row-handle {
     border: 1px solid #f0f0f0;
     margin-bottom: 0.1em;
     cursor: move;
   }
 
-  .gl-ide-layout-stage .ant-row > div {
-    /*padding: 0 1px !important;*/
+  .gl-ide-layout-stage .gl-dnd-row-handle.sortable-chosen {
+    background-color: rgb(107, 209, 255);
   }
 
-  .gl-ide-layout-stage .ant-row:hover > div > div {
-    background-color: rgba(255, 202, 17, 0.7);
+  .gl-dnd-col-wrapper {
+    min-height: 2em;
   }
 
-  .gl-ide-layout-stage .ant-row > div > div:hover {
-    background-color: rgba(255, 158, 11, 0.7);
+  .gl-dnd-row-toolbar {
+    position: absolute;
+    right: -0.5em;
+    display: none;
   }
 
-  .gl-ide-layout-stage .ant-row > div > div {
+  .gl-dnd-row-toolbar i {
+    font-size: 1.5em;
+    line-height: 1.5em;
+    cursor: pointer;
+  }
+
+  .gl-dnd-row-handle:hover .gl-dnd-row-toolbar {
+    display: inline-block;
+  }
+
+  .gl-dnd-col-toolbar {
+    padding: 0 1em;
+    line-height: 2em;
+    height: 2em;
+    background-color: #D8D8D8
+  }
+
+  /*.gl-ide-layout-stage .gl-dnd-row-handle > div {*/
+  /*!*padding: 0 1px !important;*!*/
+  /*}*/
+
+  /*.gl-ide-layout-stage .gl-dnd-row-handle:hover > div > div {*/
+  /*!*background-color: rgba(255, 202, 17, 0.7);*!*/
+  /*}*/
+
+  .gl-ide-layout-stage .gl-dnd-row-handle > div > div:hover {
+    background-color: rgba(211, 211, 211, 0.3);
+    border: 1px dotted #a5a5a5;
+  }
+
+  .gl-ide-layout-stage .gl-dnd-row-handle > div > div {
     background-color: rgba(161, 222, 255, 0.35);
     /*text-align: center;*/
   }
-
-  /*.gl-ide-layout-stage .gl-card-header {*/
-  /*line-height: 2em;*/
-  /*height: 2em;*/
-  /*width: 100%;*/
-  /*background-color: silver;*/
-  /*padding: 0 2em;*/
-  /*text-align: right;*/
-  /*}*/
 
 </style>
