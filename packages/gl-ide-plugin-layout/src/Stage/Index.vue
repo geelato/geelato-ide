@@ -52,7 +52,7 @@
     },
     methods: {
       onChange(e) {
-        console.log('gl-ide-plugin-layout > stage > onChange: ', e)
+        // console.log('gl-ide-plugin-layout > stage > onChange: ', e)
       }
     }
   }

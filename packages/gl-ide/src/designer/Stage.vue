@@ -21,7 +21,7 @@
     },
     methods: {
       callback(key) {
-        console.log(key)
+        console.log('designer > Stage > callback key: ',key)
       },
     },
   }

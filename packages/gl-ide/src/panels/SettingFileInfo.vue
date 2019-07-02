@@ -12,7 +12,7 @@
                  v-decorator="[ 'editingFile.code',  {rules: [{ required: true, message: '需填写编码' }]} ]"/>
       </a-form-item>
       <a-form-item label="描述" :label-col="{ span: 6 }" :wrapper-col="{ span: 17 }">
-        <textarea rows="4" v-decorator="[ 'editingFile.code']" style="width: 100%"></textarea>
+        <textarea rows="4" v-decorator="[ 'editingFile.description']" style="width: 100%"></textarea>
       </a-form-item>
     </a-form>
   </div>

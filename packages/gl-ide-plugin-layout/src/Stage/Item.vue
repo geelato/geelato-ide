@@ -69,7 +69,7 @@
           </template>
         </a-col>
         <div class="gl-dnd-row-toolbar" @click="removeRow(rowIndex)" title="删除行">
-          <a-icon type="close-circle" theme="twoTone" twoToneColor="#eb2f96"/>
+          <a-icon type="close-circle" theme="twoTone" twoToneColor="#f5222d"/>
         </div>
       </a-row>
     </gl-draggable>
@@ -139,30 +139,15 @@
         });
       },
       onRowChange(e) {
-        if (e.added && e.added.element) {
-          // for (let i in e.added.element.cols) {
-          //   let col = e.added.element.cols[i]
-          //   // col.id = utils.uuid(16)
-          //   col.items = []
-          // }
-          // e.added.element.title = 'sss'
-        }
         console.log('gl-ide-plugin-layout > stage > onRowChange: ', e)
       },
       onClone(e) {
         console.log('gl-ide-plugin-layout > stage > onClone: ', e)
       },
       onAddCol: function (e) {
-        console.log('gl-ide-plugin-layout > stage > onAddCol: ', e, JSON.stringify(this.rowItems[0]), JSON.stringify(this.rowItems[1]))
-        this.$nextTick()
+        console.log('gl-ide-plugin-layout > stage > onAddCol: ', e)
       },
       onColChange(e) {
-        if (e.added && e.added.element) {
-          // console.log('component> ', this.G.component('a-card'))
-          // e.added.element.card = Vue.component(e.added.element.component)
-          // e.added.element.id = utils.uuid(8)
-          // // e.added.element.title = ''
-        }
         console.log('gl-ide-plugin-layout > stage > onColChange: ', e)
       },
       onColChoose(e) {
@@ -186,9 +171,6 @@
           },
           onCancel() {
             col.items.splice(index, 1);
-            // return new Promise((resolve, reject) => {
-            //   setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
-            // }).catch(() => console.log('Oops errors!'));
           },
         });
       }
@@ -242,14 +224,16 @@
   /*!*background-color: rgba(255, 202, 17, 0.7);*!*/
   /*}*/
 
-  .gl-ide-layout-stage .gl-dnd-row-handle > div > div:hover {
-    background-color: rgba(211, 211, 211, 0.3);
-    border: 1px dotted #a5a5a5;
-  }
-
   .gl-ide-layout-stage .gl-dnd-row-handle > div > div {
     background-color: rgba(161, 222, 255, 0.35);
     /*text-align: center;*/
   }
+
+  .gl-ide-layout-stage .gl-dnd-row-handle > div > div:hover {
+    /*background-color: rgba(211, 211, 211, 0.3);*/
+    background-color: rgba(255, 202, 17, 0.35);
+    /*border: 1px dotted #a5a5a5;*/
+  }
+
 
 </style>

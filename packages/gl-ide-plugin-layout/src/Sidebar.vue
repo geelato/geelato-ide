@@ -4,10 +4,12 @@
     <gl-draggable
         v-model="rows"
         handle=".gl-dnd-row-handle"
-        :group="{ name: 'layoutItems', pull: 'clone', put: true }"
+        :group="{ name: 'layoutItems', pull: 'clone', put: false }"
         ghost-class="ghost"
         :sort="false"
         @change="onChange"
+        @choose="onChoose"
+        :clone="clone"
     >
       <a-row :gutter="gutter" v-for="(row,rowIndex) in rows" :key="rowIndex" :title="row.title"
              class="gl-dnd-row-handle">
@@ -16,6 +18,22 @@
         </a-col>
       </a-row>
     </gl-draggable>
+    <!--<gl-draggable-->
+    <!--v-model="rows"-->
+    <!--handle=".gl-dnd-row-handle"-->
+    <!--:group="{ name: 'layoutItems', pull: 'clone', put: false }"-->
+    <!--ghost-class="ghost"-->
+    <!--:sort="false"-->
+    <!--@change="onChange"-->
+    <!--@clone="onClone"-->
+    <!--&gt;-->
+    <!--<a-row :gutter="gutter" v-for="(row,rowIndex) in rows" :key="rowIndex" :title="row.title"-->
+    <!--class="gl-dnd-row-handle">-->
+    <!--<a-col v-for="(col,colIndex) in row.cols" :key="colIndex" :span="col.span">-->
+    <!--<div style="min-height: 2em">{{parseInt(col.span/24*100)}}%</div>-->
+    <!--</a-col>-->
+    <!--</a-row>-->
+    <!--</gl-draggable>-->
   </div>
 </template>
 
@@ -37,56 +55,70 @@
     },
     data() {
       return {
+        chooseIndex: 0,
         gutter: 8,
         rows: [{
           title: '一行一列',
           cols: [
-            {span: 24, offset: 0,items: []}
+            {span: 24, offset: 0, items: []}
           ]
         }, {
           title: '一行两列',
           cols: [
-            {span: 6, offset: 0,items: []}, {span: 18, offset: 0,items: []}
+            {span: 6, offset: 0, items: []}, {span: 18, offset: 0, items: []}
           ]
         }, {
           title: '一行两列',
           cols: [
-            {span: 8, offset: 0,items: []}, {span: 16, offset: 0,items: []}
+            {span: 8, offset: 0, items: []}, {span: 16, offset: 0, items: []}
           ]
         }, {
           title: '一行两列',
           cols: [
-            {span: 12, offset: 0,items: []}, {span: 12, offset: 0,items: []}
+            {span: 12, offset: 0, items: []}, {span: 12, offset: 0, items: []}
           ]
         }, {
           title: '一行两列',
           cols: [
-            {span: 16, offset: 0,items: []}, {span: 8, offset: 0,items: []}
+            {span: 16, offset: 0, items: []}, {span: 8, offset: 0, items: []}
+          ]
+        }, {
+          title: '一行两列',
+          cols: [
+            {span: 18, offset: 0, items: []}, {span: 6, offset: 0, items: []}
           ]
         }, {
           title: '一行三列',
           cols: [
-            {span: 8, offset: 0,items: []}, {span: 8, offset: 0,items: []}, {span: 8, offset: 0,items: []}
+            {span: 8, offset: 0, items: []}, {span: 8, offset: 0, items: []}, {span: 8, offset: 0, items: []}
           ]
         },
           {
             title: '一行四列',
             cols: [
-              {span: 6, offset: 0,items: []}, {span: 6, offset: 0,items: []}, {span: 6, offset: 0,items: []}, {span: 6, offset: 0,items: []}
+              {span: 6, offset: 0, items: []}, {span: 6, offset: 0, items: []}, {
+                span: 6,
+                offset: 0,
+                items: []
+              }, {span: 6, offset: 0, items: []}
             ]
           }]
       }
     },
     methods: {
       onSelect(keys) {
-        console.log('Trigger Select', keys)
         this.$bus.$emit('project_file_selected', keys)
       },
       onExpand() {
-        console.log('Trigger Expand');
       },
-      onChange(e) {
-        console.log('gl-ide-plugin-layout > sidebar > onChange: ', e)
+      onChange() {
+      },
+      onChoose(e) {
+        console.log('gl-ide-plugin-layout > sidebar > onChoose: ', e)
+        this.chooseIndex = e.oldIndex
+      },
+      clone() {
+        return JSON.parse(JSON.stringify(this.rows[this.chooseIndex]))
       }
     }
   }
