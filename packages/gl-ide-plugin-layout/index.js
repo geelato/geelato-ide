@@ -10,7 +10,7 @@ const plugin = {
   file: {
     title: '页面布局',
     type: 'gl-page-layout',
-    icon: 'th list icon',
+    icon: 'iconfont icon-file',
     description: '可组合的高级页面',
     toolbar: [],
     stagePanels: [{

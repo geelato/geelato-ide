@@ -1,5 +1,6 @@
 const plugins = []
 const files = []
+const fileTypes = {}
 const panels = []
 let GlobalVue
 
@@ -70,23 +71,28 @@ export default {
   setVue(Vue) {
     GlobalVue = Vue
   },
-  use(pluginComponet, options) {
+  use(pluginComponent, options) {
     if (!GlobalVue) {
       console.error('安装ide插件失败，必需先调用setVue(Vue)设置Vue。')
       return
     }
 
-    let plugin = pluginComponet.config
+    let plugin = pluginComponent.config
     let checkInfo = checkPlugin(plugin)
     if (!checkInfo) {
       // install 注册全局组件
-      if (typeof pluginComponet.install === 'function') {
-        pluginComponet.install(GlobalVue)
+      if (typeof pluginComponent.install === 'function') {
+        pluginComponent.install(GlobalVue)
       }
       plugins.push(plugin)
       // use file
       if (plugin.file) {
         files.push(plugin.file)
+        fileTypes[plugin.file.type] = {
+          type: plugin.file.type,
+          icon: plugin.file.icon,
+          name: plugin.file.title
+        }
       }
       // use panels
       if (plugin.panels) {

@@ -2,7 +2,7 @@
   <div class="gl-designer-toolbar" :style="{background: theme.background }">
     <a-dropdown size="small">
       <a-menu slot="overlay">
-        <a-menu-item size="small" key="1" style="font-size: 12px">
+        <a-menu-item size="small" key="1" style="font-size: 12px" @click="newProject">
           <a-icon type="user"/>
           新建项目
         </a-menu-item>
@@ -87,6 +87,9 @@
     },
     props: {},
     methods: {
+      newProject() {
+        this.$bus.$emit('designer.newProject')
+      },
       callback(key) {
         console.log(key)
       },

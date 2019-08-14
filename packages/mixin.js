@@ -39,9 +39,16 @@ export default {
         return []
       }
     },
+    fileTypes: {
+      type: Object,
+      default() {
+        return {}
+      }
+    },
     editingFile: {
       type: Object,
       default() {
+        return {}
       }
     }
     // api: {

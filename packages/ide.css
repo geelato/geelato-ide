@@ -1,3 +1,21 @@
+/**************************************
+ * 重置、扩展第三方插件的样式
+   带gl-*为扩展样式，其它则为重置样式
+ *************************************/
+/********* semantic ui *************/
+/*@import url("gl-sui.css");*/
+/********* jsoneditor *************/
+/*@import url("gl-jsoneditor.css");*/
+/********* Jstree *************/
+@import url("style/gl-jstree.css");
+/********* handsontable**************/
+/*@import url("gl-handsontable.css");*/
+/********* gl-split *************/
+/*@import url("gl-splitjs.css");*/
+/********* gl-codemirror *************/
+/*@import url("gl-codemirror.css");*/
+
+
 .gl-compact > .ant-tabs-bar {
     margin: 0 !important;
 }
