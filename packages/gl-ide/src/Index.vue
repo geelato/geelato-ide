@@ -10,7 +10,8 @@
                 :style="{height:`${designer.height-toolbar.height-status.height}px`}">
         <span :splitpanes-size="sidebarsWidthPercent" :splitpanes-min="sidebarsMinWidthPercent">
           <designer-sidebar :layout="sidebar" :plugins="$ide.plugins" :leftToolbarWidth="sidebarLeftToolbarWidth"
-                            :editingFile="$ide.editingFile" @switchPanel="switchSidebarPanel"></designer-sidebar>
+                            :editingFile="$ide.editingFile" @switchPanel="switchSidebarPanel"
+                            :fileTypes="$ide.fileTypes"></designer-sidebar>
       </span>
       <span :splitpanes-size="stageWidthPercent">
           <designer-stage :layout="stage" :plugins="$ide.plugins" :panels="$ide.findStagePanels($ide.editingFile.type)"

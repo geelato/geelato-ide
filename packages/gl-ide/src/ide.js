@@ -114,6 +114,7 @@ export default {
   plugins: plugins,
   panels: panels,
   files: files,
+  fileTypes:fileTypes,
   parseComponent: parseComponent,
   findStagePanels: function (fileType) {
     return findPanels(fileType, 'stagePanels')

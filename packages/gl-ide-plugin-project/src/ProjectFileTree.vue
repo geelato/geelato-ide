@@ -156,7 +156,7 @@
           if (!$(event.target).parent().hasClass('jstree-leaf')) {
             return
           }
-          var $node = $(event.target).closest('li')
+          let $node = $(event.target).closest('li')
           let data = getFileNodeData($node)
           // 且叶子节点为文件类型才生效
           if (data.type) {
@@ -194,7 +194,7 @@
          */
         function createSubmenuItems() {
           let items = {}
-          console.log('that.fileTypes>', that.fileTypes)
+          // console.log('that.fileTypes>', that.fileTypes)
           for (let fileType in that.fileTypes) {
             let item = that.fileTypes[fileType]
             items['create_' + fileType] = createNode(item.name, fileType, function (nodeId) {
@@ -217,14 +217,14 @@
                 treeId: that.project.id
               }
               that.$api.save('platform_tree_node', treeNode, '节点保存成功').then(function (res) {
-                treeNode.id = res.data
+                treeNode.id = res.data.data
                 let $ref = $.jstree.reference(data.reference)
                 let nodeId = $ref.create_node(data.reference, treeNode, 'last')
                 $ref.deselect_all()
                 $ref.select_node(nodeId)
                 // TODO 这里无需用edit，改成弹出页面录入节点名称
                 $ref.edit(nodeId, undefined, that.updateNode)
-                console.log('callback', typeof callback === 'function', callback)
+                // console.log('createNode callback', typeof callback === 'function', callback)
                 if (typeof callback === 'function') {
                   callback(nodeId)
                 }
@@ -260,7 +260,7 @@
           description: that.editingFile.description,
           content: that.editingFile.content
         }).then(function (res) {
-          that.editingFile.id = res.data
+          that.editingFile.id = res.data.data
           that.$message.success('页面保存成功')
         }).catch(function (e) {
           that.$message.error('页面保存失败')
@@ -274,9 +274,9 @@
       openPage(event, item) {
         let that = this
         that.$api.query('platform_page_config', {extendId: item.node.id}, 'id,type,code,description,content').then(function (res) {
-//          that.editingFile.reset(res.data[0])
-          console.log('res.data[0]>', res.data[0])
-          // that.editorStore.reset(new SimplePageDefinition(res.data[0], true))
+//          that.editingFile.reset(res.data.data[0])
+          console.log('res.data.data[0]>', res.data.data[0])
+          // that.editorStore.reset(new SimplePageDefinition(res.data.data[0], true))
           // console.log('editingFile>', that.editingFile)
         }).catch(function (e) {
           console.error(e)

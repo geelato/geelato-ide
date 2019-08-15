@@ -43,6 +43,7 @@ const install = function (Vue, options) {
   Vue.prototype.$bus = Vue.prototype.$bus || new Vue()
   Vue.prototype.$ide = Vue.prototype.$ide || ide
   Vue.prototype.$globalVue = Vue
+  console.log('ide: ', ide)
 
   // 遍历注册全局组件
   components.map(component => {
