@@ -8,6 +8,7 @@
 <script>
   import ProjectFileTree from './ProjectFileTree.vue'
   import ProjectCreate from './ProjectCreate.vue'
+  import ProjectList from './ProjectList.vue'
 
   /**
    * 提项目结构管理、项目文件管理，对外提供通用的管理能力
@@ -26,31 +27,39 @@
         project: {id: undefined, name: undefined}
       }
     },
-    mounted() {
+    created() {
       // 默认加载，我的最近一个项目
-      this.$bus.$on('designer.newProject', this.newProject)
-      this.$bus.$on('designer.openProject', this.openProject)
+      this.$gl.bus.$on('gl-ide.designer.showProjectForm', this.showProjectForm)
+      // this.$gl.bus.$on('gl-ide.designer.openProject', this.onProjectSelected)
+      this.$gl.bus.$on('gl-ide.designer.showProjectList', this.showProjectList)
 
     },
+    mounted() {
+    },
+    beforeDestroy() {
+      // 默认加载，我的最近一个项目
+      this.$gl.bus.$off('gl-ide.designer.showProjectForm', this.showProjectForm)
+      // this.$gl.bus.$on('gl-ide.designer.openProject', this.onProjectSelected)
+      this.$gl.bus.$off('gl-ide.designer.showProjectList', this.showProjectList)
+    },
     methods: {
-      newProject() {
-        console.log('newProject>bus')
+      showProjectForm() {
+        console.log('showProjectForm>bus')
         // // TODO 是否保存旧项目
         // let thisVue = this
         // // 重置，并通过数据驱动，各页面板进入初始状态
         // this.editorStore.reset()
         // thisVue.editorStore.project = {name: '新项目', tree: ''}
         // this.saveProject()
-        // this.$emit('newProject')
-        this.$pageManager.openModal(this, {
+        // this.$emit('showProjectForm')
+        this.$gl.ui.openModal(this, {
           title: '创建项目',
           width: '1000px',
           height: '480px',
           body: {
-            type: 'staticPage',
+            type: 'static',
             component: ProjectCreate,
-            opts: {},
-            query: {}
+            props: {}
           },
           actions: [{
             fn: 'save',
@@ -74,7 +83,38 @@
         // this.project = {id: '', name: '新项目', tree: ''}
         console.log('this.project>', this.project)
       },
-      openProject(project) {
+      showProjectList() {
+        this.$gl.ui.openModal(this, {
+          title: '选择项目',
+          width: '800px',
+          height: '480px',
+          body: {
+            type: 'staticPage',
+            component: ProjectList,
+            opts: {},
+            query: {}
+          },
+          actions: [{
+            fn: 'close',
+            ctx: 'modal',
+            text: '取消'
+          }],
+          on: [{
+            fn: 'selectItem',
+            ctx: 'content',
+            then: {
+              fn: 'onProjectSelected',
+              ctx: 'opener',
+              then: {
+                fn: 'close',
+                ctx: 'modal'
+              }
+            }
+          }]
+        })
+      },
+      onProjectSelected(project) {
+        console.log('project>', project)
         this.projectId = project.id
         this.project = project
       },
@@ -85,10 +125,10 @@
           that.projectId = res.data
         })
       },
-      onSaveProject(params, res, content) {
-        console.log('onSaveProject: ', params, res, res.data.data)
-        this.projectId = res.data.data
-        this.project = {id: this.projectId, name: content.getValue('name')}
+      onSaveProject(params, data) {
+        console.log('onSaveProject: ', params, data)
+        this.projectId = data.id
+        this.project = {id: this.projectId, name: data.name}
       }
     },
     components: {ProjectFileTree}

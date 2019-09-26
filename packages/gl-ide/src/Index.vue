@@ -87,7 +87,7 @@
     },
     created() {
       this.resize()
-      this.$bus.$on('project_file_selected', function (data) {
+      this.$gl.bus.$on('project_file_selected', function (data) {
         console.log('project_file_selected > ', data)
       })
     },

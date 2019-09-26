@@ -107,7 +107,7 @@
     },
     methods: {
       onSelect(keys) {
-        this.$bus.$emit('project_file_selected', keys)
+        this.$gl.bus.$emit('project_file_selected', keys)
       },
       onExpand() {
       },

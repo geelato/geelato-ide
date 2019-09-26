@@ -22,7 +22,7 @@
       return {}
     },
     created() {
-      this.$bus.$on(events.card_open, this.onCardOpen)
+      this.$gl.bus.$on(events.card_open, this.onCardOpen)
     },
     methods: {
       onCardOpen(card) {

@@ -157,7 +157,7 @@
         if (typeof item.onOpen === 'function') {
           item.onOpen({item: item, col: col, index: index})
         }
-        this.$bus.$emit(events.card_open, {col: col, item: item, index: index})
+        this.$gl.bus.$emit(events.card_open, {col: col, item: item, index: index})
         console.log('gl-ide-plugin-layout > stage > onCardOpen: ', col, item, index)
       },
       onColDelete(col, item, index) {

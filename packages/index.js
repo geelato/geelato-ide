@@ -13,7 +13,13 @@ import GlIdePluginFields from './gl-ide-plugin-fields/index'
 // import GlIdePluginStructure from './gl-ide-plugin-structure/index'
 import ide from './gl-ide/src/ide'
 import Api from './Api'
+// import geelatoAui from "geelato-ui-ant";
 
+// 导入依赖表单验证
+import VeeValidate from 'vee-validate'
+//引入中文包，提示信息可以以中文形式显示
+import zh_CN from 'vee-validate/dist/locale/zh_CN'
+import VueI18n from 'vue-i18n'
 
 import './ide.css'
 
@@ -38,22 +44,35 @@ const install = function (Vue, options) {
   // ide.use(GlIdePluginStructure.config)
   ide.use(GlIdePluginCards)
   ide.use(GlIdePluginFields)
-  // console.log(' aui options > ', options)
-  Vue.prototype.$api = Vue.prototype.$api || (options && options.api ? new Api(options.api) : uiApi)
-  Vue.prototype.$bus = Vue.prototype.$bus || new Vue()
+
   Vue.prototype.$ide = Vue.prototype.$ide || ide
   Vue.prototype.$globalVue = Vue
-  console.log('ide: ', ide)
+  console.log('geelato-ide > ide: ', ide)
 
   // 遍历注册全局组件
   components.map(component => {
     Vue.component(component.name, component)
   })
   Vue.component('gl-draggable', draggable)
-  // console.log('gl-form', Vue.component('gl-from'))
-  // console.log('gl-draggable', Vue.component('gl-draggable'))
-  // console.log('gl-draggable', draggable)
+
+  // 注册组件库
+  Vue.use(VueI18n)
+  Vue.use(VeeValidate, {
+    i18n: new VueI18n({
+      locale: 'zh_CN',
+    }),
+    i18nRootKey: 'validations',
+    dictionary: {
+      zh_CN
+    },
+    // fixed：The computed property "fields" is already defined in data.
+    errorBagName: 'errorBags',
+    fieldsBagName: 'fieldBags'
+  })
+  
   Vue.use(GlIde)
+
+
 }
 
 // 判断是否是直接引入文件

@@ -98,7 +98,7 @@
       }
     },
     created() {
-      this.$bus.$on(events.card_open, this.onCardOpen)
+      this.$gl.bus.$on(events.card_open, this.onCardOpen)
 
     },
     methods: {
@@ -113,7 +113,7 @@
       },
       onSelect(keys) {
         console.log('Trigger Select', keys)
-        this.$bus.$emit('project_file_selected', keys)
+        this.$gl.bus.$emit('project_file_selected', keys)
       },
       onExpand() {
         console.log('Trigger Expand');

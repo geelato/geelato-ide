@@ -1,12 +1,14 @@
 <template>
   <div class="gl-designer-toolbar" :style="{background: theme.background }">
+    <!--<img src="../../../../public/favicon.svg" style="width: 24px;height: 24px">-->
+    <img src="../../../../public/logo_words.svg" style="width: 84px;height: 24px">
     <a-dropdown size="small">
       <a-menu slot="overlay">
-        <a-menu-item size="small" key="1" style="font-size: 12px" @click="newProject">
+        <a-menu-item size="small" key="1" style="font-size: 12px" @click="showProjectForm">
           <a-icon type="user"/>
           新建项目
         </a-menu-item>
-        <a-menu-item size="small" key="2" style="font-size: 12px">
+        <a-menu-item size="small" key="2" style="font-size: 12px" @click="showProjectList">
           <a-icon type="user"/>
           打开项目
         </a-menu-item>
@@ -87,8 +89,11 @@
     },
     props: {},
     methods: {
-      newProject() {
-        this.$bus.$emit('designer.newProject')
+      showProjectForm() {
+        this.$gl.bus.$emit('gl-ide.designer.showProjectForm')
+      },
+      showProjectList() {
+        this.$gl.bus.$emit('gl-ide.designer.showProjectList')
       },
       callback(key) {
         console.log(key)

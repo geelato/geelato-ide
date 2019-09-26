@@ -37,7 +37,7 @@
           parent: '#',
           type: 'root'
         }]
-        that.$api.query('platform_tree_node', {treeId: project.id}, 'id,parent,text,type').then(function (res) {
+        that.$gl.api.query('platform_tree_node', {treeId: project.id}, 'id,parent,text,type').then(function (res) {
           console.log('res>', res)
           that.newTree(treeData.concat(res.data.data))
         })
@@ -216,7 +216,7 @@
                 type: typeName,
                 treeId: that.project.id
               }
-              that.$api.save('platform_tree_node', treeNode, '节点保存成功').then(function (res) {
+              that.$gl.api.save('platform_tree_node', treeNode, '节点保存成功').then(function (res) {
                 treeNode.id = res.data.data
                 let $ref = $.jstree.reference(data.reference)
                 let nodeId = $ref.create_node(data.reference, treeNode, 'last')
@@ -252,7 +252,7 @@
         let that = this
         console.log('that.editingFile>save>', that.editingFile)
 //        editingFile.component = editingFile.component.outerHTML || editingFile.component
-        that.$api.save('platform_page_config', {
+        that.$gl.api.save('platform_page_config', {
           id: that.editingFile.id,
           extendId: that.editingFile.extendId,
           type: that.editingFile.type,
@@ -273,7 +273,7 @@
        */
       openPage(event, item) {
         let that = this
-        that.$api.query('platform_page_config', {extendId: item.node.id}, 'id,type,code,description,content').then(function (res) {
+        that.$gl.api.query('platform_page_config', {extendId: item.node.id}, 'id,type,code,description,content').then(function (res) {
 //          that.editingFile.reset(res.data.data[0])
           console.log('res.data.data[0]>', res.data.data[0])
           // that.editorStore.reset(new SimplePageDefinition(res.data.data[0], true))
@@ -291,8 +291,8 @@
       removePage(nodeId) {
         let that = this
         // 两张表的删除，合在一个事务中
-        that.$api.delete('platform_page_config', {extendId: nodeId})
-        that.$api.delete('platform_tree_node', {id: nodeId})
+        that.$gl.api.delete('platform_page_config', {extendId: nodeId})
+        that.$gl.api.delete('platform_tree_node', {id: nodeId})
       },
       loadCachePage: function (extendId) {
         let that = this
@@ -308,7 +308,7 @@
         if (node.parent === '#') {
           // 如果是根节点，则更改项目名称
           let project = {id: node.id, name: node.text}
-          that.$api.save('platform_dev_project', project).then(function (res) {
+          that.$gl.api.save('platform_dev_project', project).then(function (res) {
             console.log('更新项目名称为' + node.text + ',更新返回：', res)
           })
         } else {
@@ -320,7 +320,7 @@
             type: node.type,
             treeId: that.project.id
           }
-          that.$api.save('platform_tree_node', treeNode).then(function (res) {
+          that.$gl.api.save('platform_tree_node', treeNode).then(function (res) {
             console.log('更新节点名称为“' + node.text + '”,更新返回：', res)
           })
         }

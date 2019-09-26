@@ -24,7 +24,7 @@
     methods: {
       onSelect(keys) {
         console.log('Trigger Select', keys)
-        this.$bus.$emit('project_file_selected', keys)
+        this.$gl.bus.$emit('project_file_selected', keys)
       },
       onExpand() {
         console.log('Trigger Expand');
