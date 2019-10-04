@@ -10,21 +10,19 @@
                 :style="{height:`${designer.height-toolbar.height-status.height}px`}">
         <span :splitpanes-size="sidebarsWidthPercent" :splitpanes-min="sidebarsMinWidthPercent">
           <designer-sidebar :layout="sidebar" :plugins="$ide.plugins" :leftToolbarWidth="sidebarLeftToolbarWidth"
-                            :editingFile="$ide.editingFile" @switchPanel="switchSidebarPanel"
+                            :ideStore="ideStore" @switchPanel="switchSidebarPanel"
                             :fileTypes="$ide.fileTypes"></designer-sidebar>
       </span>
       <span :splitpanes-size="stageWidthPercent">
-          <designer-stage :layout="stage" :plugins="$ide.plugins" :panels="$ide.findStagePanels($ide.editingFile.type)"
-                          :file="$ide.editingFile" :editingFile="$ide.editingFile"></designer-stage>
+          <designer-stage ref="stage" :layout="stage" :plugins="$ide.plugins" :ideStore="ideStore"></designer-stage>
         </span>
       <span :splitpanes-size="settingsWidthPercent">
-          <designer-settings :layout="settings" :plugins="$ide.plugins"
-                             :panels="$ide.findSettingPanels($ide.editingFile.type)"
-                             :editingFile="$ide.editingFile"></designer-settings>
+          <designer-settings :layout="settings" :plugins="$ide.plugins" :ideStore="ideStore"
+                             v-if="refreshFlag"></designer-settings>
         </span>
     </splitpanes>
     <designer-status v-if="status.height!==0" :style="{height:`${status.height}px`}" :layout="status"
-                     :plugins="$ide.plugins" :editingFile="$ide.editingFile"></designer-status>
+                     :plugins="$ide.plugins" :ideStore="ideStore"></designer-status>
   </div>
 </template>
 
@@ -39,10 +37,13 @@
   import DesignerStatus from './designer/Status'
 
   export default {
-    name: "gl-ide",
+    name: "GlIde",
     components: {Splitpanes, DesignerToolbar, DesignerSidebar, DesignerStage, DesignerSettings, DesignerStatus},
     data() {
       return {
+        refreshFlag: true,
+        ideStore: this.$ide.store,
+        stagePanels: [],
         designer: {
           height: 0,
           width: 0

@@ -8,7 +8,7 @@
   import mixin from '../../../mixin'
 
   export default {
-    name: "gl-designer-status",
+    name: "GlDesignerStatus",
     mixins: [mixin],
     data() {
       return {}

@@ -1,15 +1,15 @@
 <template>
   <div class="gl-file-content-wrapper">
-    <component :is="content.component" :opts="editingFile.content.opts.ui||content.opts" :query="queryString">
+    <component :is="content.component" :opts="ideStore.editingFile.content.opts.ui||content.opts" :query="queryString">
       <!-- 组件在 vm.currentview 变化时改变！ -->
     </component>
   </div>
 </template>
 <script>
   export default {
-    name: "gl-ide-stage-ui",
+    name: "GlIdeStageUi",
     props: {
-      editingFile: {
+      ideStore: {
         type: Object,
         required: true
       },
@@ -29,7 +29,7 @@
       }
     },
     watch: {
-      'editingFile.id': function (val, oldVal) {
+      'ideStore.editingFile.id': function (val, oldVal) {
         // 若未有page信息，则返回
         if (!val) {
           return

@@ -9,13 +9,13 @@ const plugin = {
   description: '页面布局插件',
   file: {
     title: '页面布局',
-    type: 'gl-page-layout',
+    type: 'GlPageLayout',
     icon: 'iconfont icon-file',
     description: '可组合的高级页面',
     toolbar: [],
     stagePanels: [{
       title: '设计',
-      component: 'gl-ide-layout-stage',
+      component: 'GlIdePluginLayoutStage',
       opts: {cardMap: {}},
       query: {}
     },
@@ -38,7 +38,7 @@ const plugin = {
     settingPanels: [
       {
         title: '页面信息',
-        component: 'gl-ide-setting-file-info',
+        component: 'GlIdeSettingFileInfo',
         opts: {},
         query: {}
       },

@@ -79,7 +79,7 @@
   import screenfull from 'screenfull'
 
   export default {
-    name: "gl-designer-toolbar",
+    name: "GlDesignerToolbar",
     mixins: [mixin],
     data() {
       return {

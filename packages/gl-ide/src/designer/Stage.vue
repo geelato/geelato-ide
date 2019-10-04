@@ -1,11 +1,15 @@
 <template>
   <div class="gl-designer-stage">
-    <a-tabs @change="callback" size="small" class="gl-compact">
-      <a-tab-pane v-for="(panel,index) in panels" :tab="panel.title||panel.name" :key="index">
-        <component :is="panel.component" v-bind="panel.opts" :editingFile="editingFile"
+    <a-tabs @change="callback" size="small" class="gl-compact" v-if="ideStore.editingFile&&ideStore.editingFile.type">
+      <a-tab-pane v-for="(panel,index) in ideStore.stagePanels" :tab="panel.title||panel.name" :key="index">
+        <component :is="panel.component" v-bind="panel.opts" :ideStore="ideStore"
                    style="overflow-y: auto"></component>
+        ss
       </a-tab-pane>
     </a-tabs>
+    <div v-else style="text-align: center;margin-top: 12em">
+      未选择文件，双击左边文件打开。
+    </div>
   </div>
 </template>
 
@@ -13,15 +17,22 @@
   import mixin from '../../../mixin'
 
   export default {
-    name: "gl-designer-stage",
+    name: "GlDesignerStage",
     mixins: [mixin],
     props: {},
     data() {
       return {}
     },
+    updated() {
+      console.log('xxxxxxxxxxxxxxxxupdate>>>', this.panels)
+
+    },
+    mounted() {
+      console.log('xxxxxxxxxxxxxxxx', this.panels)
+    },
     methods: {
       callback(key) {
-        console.log('designer > Stage > callback key: ',key)
+        console.log('designer > Stage > callback key: ', key)
       },
     },
   }

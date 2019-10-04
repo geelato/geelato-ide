@@ -8,7 +8,7 @@
   import * as monaco from 'monaco-editor'
 
   export default {
-    name: "gl-ide-stage-code",
+    name: "GlIdeStageCode",
     props: {
       content: {
         type: Object,

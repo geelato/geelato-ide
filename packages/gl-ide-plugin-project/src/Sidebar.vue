@@ -1,7 +1,7 @@
 <template>
   <div>
-    <project-file-tree ref="fileTree" :editing-file="editingFile" :fileTypes="fileTypes"
-                       :project="project"></project-file-tree>
+    <project-file-tree ref="fileTree" :ideStore="ideStore" :fileTypes="fileTypes"
+                       :project="project" @selectProject="showProjectList"></project-file-tree>
   </div>
 </template>
 
@@ -9,14 +9,16 @@
   import ProjectFileTree from './ProjectFileTree.vue'
   import ProjectCreate from './ProjectCreate.vue'
   import ProjectList from './ProjectList.vue'
+  import mixinGui from '../../mixin-gui'
 
   /**
    * 提项目结构管理、项目文件管理，对外提供通用的管理能力
    */
   export default {
     name: "gl-ide-plugin-sidebar-project",
+    mixins: [mixinGui],
     props: {
-      editingFile: Object,
+      ideStore: Object,
       fileTypes: Object
     },
     data() {
@@ -108,13 +110,17 @@
               then: {
                 fn: 'close',
                 ctx: 'modal'
+              },
+              dataMapping: {
+                id: '$ctx.item.id',
+                name: '$ctx.item.name'
               }
             }
           }]
         })
       },
-      onProjectSelected(project) {
-        console.log('project>', project)
+      onProjectSelected(params, project) {
+        console.log('gl-ide-plugin-project > Sidebar.vue > project:', project)
         this.projectId = project.id
         this.project = project
       },

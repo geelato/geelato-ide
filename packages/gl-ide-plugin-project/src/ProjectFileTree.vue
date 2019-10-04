@@ -5,8 +5,7 @@
 
 <script>
   /* eslint-disable no-unused-vars */
-
-  // import SimplePageDefinition from './SimplePageDefinition'
+  import SimplePageDefinition from '../../gl-ide/src/SimplePageDefinition'
 
   export default {
     props: {
@@ -16,7 +15,7 @@
           return {}
         }
       },
-      editingFile: {
+      ideStore: {
         type: Object,
         default() {
           return {}
@@ -32,22 +31,28 @@
         let that = this
         let project = this.project
         let treeData = [{
-          // id: project.id,
+          id: project.id,
           text: project.name || '新项目',
           parent: '#',
           type: 'root'
         }]
         that.$gl.api.query('platform_tree_node', {treeId: project.id}, 'id,parent,text,type').then(function (res) {
-          console.log('res>', res)
-          that.newTree(treeData.concat(res.data.data))
+          console.log('gl-ide-plugin-project-tree > watch() > project.id > res:', res)
+          that.newTree(treeData.concat(res.data))
         })
+      },
+      'editingFile': function (val, oval) {
+        console.log('editingFile > ', val, oval)
       }
     },
     mounted: function () {
+      if (!this.project.id) {
+        this.$emit('selectProject')
+      }
     },
     methods: {
       newTree(treeData) {
-        console.log('treeData>', treeData)
+        console.log('gl-ide-plugin-project-tree> newTree() > treeData:', treeData)
         let that = this
         $.jstree.defaults.contextmenu.select_node = false
         $.jstree.defaults.contextmenu.show_at_node = true
@@ -68,7 +73,6 @@
             icon: 'plus icon'
           },
           edit: {
-//            icon: 'fa fa-edit icon-state-default icon-lg'
             icon: 'edit icon'
           },
           remove: {
@@ -163,6 +167,17 @@
             that.openPage(event, {node: data})
           }
         })
+        $tree.bind('move_node.jstree', function (event, item) {
+          console.log('>>>>>event:', event, 'item:', item)
+          let treeNode = {
+            id: item.node.id,
+            parent: item.parent
+          }
+          console.log('treeNode>>>', treeNode)
+          that.$gl.api.save('platform_tree_node', treeNode).then(function (res) {
+            console.log('更新节点parent.id为“' + treeNode.parent + '”,更新返回：', res)
+          })
+        })
         $tree.jstree(true).open_all()
 
         function getFileNodeData($node) {
@@ -194,7 +209,6 @@
          */
         function createSubmenuItems() {
           let items = {}
-          // console.log('that.fileTypes>', that.fileTypes)
           for (let fileType in that.fileTypes) {
             let item = that.fileTypes[fileType]
             items['create_' + fileType] = createNode(item.name, fileType, function (nodeId) {
@@ -217,9 +231,12 @@
                 treeId: that.project.id
               }
               that.$gl.api.save('platform_tree_node', treeNode, '节点保存成功').then(function (res) {
-                treeNode.id = res.data.data
+                console.log('gl-ide-plugin-project-tree> newTree() > createNode() > save node res:', res)
+
+                treeNode.id = res.result
                 let $ref = $.jstree.reference(data.reference)
                 let nodeId = $ref.create_node(data.reference, treeNode, 'last')
+                console.log('gl-ide-plugin-project-tree> newTree() > createNode() > nodeId:', nodeId)
                 $ref.deselect_all()
                 $ref.select_node(nodeId)
                 // TODO 这里无需用edit，改成弹出页面录入节点名称
@@ -234,13 +251,12 @@
         }
       },
       newPage(data) {
-        // this.editorStore.reset(new SimplePageDefinition({
-        //   extendId: data.id,
-        //   name: data.text,
-        //   type: data.type,
-        //   code: data.type + '_' + this.$gl.utils.uuid(8)
-        // }))
-        // console.log('newPage>that.editorStore1>', this.editorStore)
+        this.$ide.openFile(new SimplePageDefinition({
+          extendId: data.id,
+          name: data.text,
+          type: data.type,
+          code: data.type + '_' + this.$gl.utils.uuid(8)
+        }))
         this.savePage()
       },
       /**
@@ -248,19 +264,18 @@
        * 保存到服务端
        * 记录保存更新状态
        */
-      savePage: function () {
+      savePage: function (data) {
         let that = this
-        console.log('that.editingFile>save>', that.editingFile)
-//        editingFile.component = editingFile.component.outerHTML || editingFile.component
+        console.log('that.ideStore.editingFile>save>', that.ideStore.editingFile)
         that.$gl.api.save('platform_page_config', {
-          id: that.editingFile.id,
-          extendId: that.editingFile.extendId,
-          type: that.editingFile.type,
-          code: that.editingFile.code,
-          description: that.editingFile.description,
-          content: that.editingFile.content
+          id: that.ideStore.editingFile.id,
+          extendId: that.ideStore.editingFile.extendId,
+          type: that.ideStore.editingFile.type,
+          code: that.ideStore.editingFile.code,
+          description: that.ideStore.editingFile.description,
+          content: that.ideStore.editingFile.content
         }).then(function (res) {
-          that.editingFile.id = res.data.data
+          that.ideStore.editingFile.id = res.result
           that.$message.success('页面保存成功')
         }).catch(function (e) {
           that.$message.error('页面保存失败')
@@ -274,10 +289,10 @@
       openPage(event, item) {
         let that = this
         that.$gl.api.query('platform_page_config', {extendId: item.node.id}, 'id,type,code,description,content').then(function (res) {
-//          that.editingFile.reset(res.data.data[0])
-          console.log('res.data.data[0]>', res.data.data[0])
-          // that.editorStore.reset(new SimplePageDefinition(res.data.data[0], true))
-          // console.log('editingFile>', that.editingFile)
+//          that.ideStore.editingFile.reset(res.data[0])
+          console.log('res.data[0]>', res)
+          // that.editorStore.reset(new SimplePageDefinition(res.data[0], true))
+          // console.log('editingFile>', that.ideStore.editingFile)
         }).catch(function (e) {
           console.error(e)
           that.$message.error('从服务端获取、解析信息失败！')
@@ -297,8 +312,8 @@
       loadCachePage: function (extendId) {
         let that = this
         console.log('loadCachePage extendId>' + extendId + '>', this.loadedPages[extendId])
-        that.editingFile = this.loadedPages[extendId]
-        that.editingFile.extendId = extendId
+        that.ideStore.editingFile = this.loadedPages[extendId]
+        that.ideStore.editingFile.extendId = extendId
       },
       updateNode(node, status, cancelled) {
         if (cancelled) {

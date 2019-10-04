@@ -45,7 +45,13 @@ export default {
         return {}
       }
     },
-    editingFile: {
+    // editingFile: {
+    //   type: Object,
+    //   default() {
+    //     return {}
+    //   }
+    // },
+    ideStore: {
       type: Object,
       default() {
         return {}

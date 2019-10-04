@@ -3,6 +3,20 @@ const files = []
 const fileTypes = {}
 const panels = []
 let GlobalVue
+// let editingFile = {
+//   type: 'GlPageLayout',
+//   content: {opts: {ui: ''}}
+// }
+// let editingCard = {}
+let store = {
+  editingFile: {
+    // type: 'GlPageLayout',
+    // content: {opts: {ui: ''}}
+  },
+  editingCard: {},
+  stagePanels: [],
+  settingPanels: []
+}
 
 function checkPlugin() {
   // 是否存在重名的插件
@@ -49,10 +63,11 @@ function findPanels(fileType, panelsGroup) {
           component: parseComponent(panel.component),
           opts: panel.opts ? JSON.parse(JSON.stringify(panel.opts)) : {}
         })
-        console.log('ide > matchPanel> panel.component: ', panel.component, 'panel: ', matchPanels[matchPanels.length - 1])
+        console.log('geelato-ide > ide.js > findPanels() > matchPanel panel.component: ', panel.component, 'panel: ', matchPanels[matchPanels.length - 1])
       })
     }
   }
+  console.log('geelato-ide > ide.js > findPanels() > matchPanels:', matchPanels)
   return matchPanels
 }
 
@@ -71,6 +86,7 @@ export default {
   setVue(Vue) {
     GlobalVue = Vue
   },
+  store: store,
   use(pluginComponent, options) {
     if (!GlobalVue) {
       console.error('安装ide插件失败，必需先调用setVue(Vue)设置Vue。')
@@ -107,19 +123,28 @@ export default {
     background: 'rgb(238, 238, 238)'
     // background: '#2185d0'
   },
-  editingFile: {
-    type: 'gl-page-layout',
-    content: {opts: {ui: ''}}
-  },
   plugins: plugins,
   panels: panels,
   files: files,
-  fileTypes:fileTypes,
+  fileTypes: fileTypes,
   parseComponent: parseComponent,
   findStagePanels: function (fileType) {
     return findPanels(fileType, 'stagePanels')
   },
   findSettingPanels: function (fileType) {
     return findPanels(fileType, 'settingPanels')
+  },
+  openFile(fileConfig) {
+    GlobalVue.set(store, 'editingFile', fileConfig)
+    GlobalVue.set(store, 'stagePanels', findPanels(fileConfig.type, 'stagePanels'))
+    GlobalVue.set(store, 'settingPanels', findPanels(fileConfig.type, 'settingPanels'))
+    GlobalVue.nextTick()
+    console.log('store>', store)
+  },
+  openCard(cardConfig) {
+    GlobalVue.set(store, 'editingCard', cardConfig)
+  },
+  commitFile() {
+
   }
 }

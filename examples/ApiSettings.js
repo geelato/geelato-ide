@@ -13,7 +13,7 @@ export default class ApiSettings {
 
     const err = (error) => {
       if (error.response) {
-        console.log('.vuepress > apiHelper.js > interceptors() > error.response: ', error.response)
+        console.log('geelato-ide > apiHelper.js > interceptors() > error.response: ', error.response)
         error.response.data = builder('', error.response.data, error.response.status)
         const data = error.response.data
         const token = Vue.ls.get(ACCESS_TOKEN)
@@ -40,7 +40,7 @@ export default class ApiSettings {
       return Promise.reject(error)
     }
 
-    console.log('.vuepress > apiHelper.js > interceptors() > service.defaults: ', service.defaults)
+    console.log('geelato-ide > apiHelper.js > interceptors() > service.defaults: ', service.defaults)
 
 // request interceptor
     service.interceptors.request.use(config => {
@@ -61,13 +61,13 @@ export default class ApiSettings {
       // service.defaults.headers.post['Content-Type'] = 'application/json';
       // service.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
-      console.log('.vuepress > apiHelper.js > interceptors() > config: ', config)
+      console.log('geelato-ide > apiHelper.js > interceptors() > config: ', config)
       return config
     }, err)
 
     // response interceptor
     service.interceptors.response.use((response) => {
-      console.log('.vuepress > apiHelper.js > interceptors() > response: ', response)
+      console.log('geelato-ide > apiHelper.js > interceptors() > response: ', response)
       // 处理response.data，若该格式为ApiResult，则转换格式
       if (response.data) {
         if (isApiResult(response)) {
@@ -97,7 +97,7 @@ export default class ApiSettings {
             res.pageNo = parseInt(response.data.page)
             res.totalPage = parseInt(response.data.total)
             res.totalCount = parseInt(response.data.dataSize)
-            console.log('.vuepress > apiHelper.js > interceptors() > res: ', res)
+            console.log('geelato-ide > apiHelper.js > interceptors() > res: ', res)
             return res
           } else {
             return builder(response.data.data, response.data.msg, parseInt(response.data.code))

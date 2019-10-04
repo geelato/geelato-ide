@@ -1,16 +1,22 @@
 <template>
   <div class="gl-ide-layout-stage" style="height: 620px;overflow-x: hidden;padding-left: 0.5em;padding-right: 1em">
-    <gl-ide-layout-stage-item :rows="layout.rows" :cardMap="cardMap" :gutter="layout.gutter"></gl-ide-layout-stage-item>
+    <GlIdePluginLayoutStageItem :rows="layout.rows" :cardMap="cardMap"
+                                :gutter="layout.gutter"></GlIdePluginLayoutStageItem>
   </div>
 </template>
 
 <script>
-  import GlIdeLayoutStageItem from './Item'
+  import GlIdePluginLayoutStageItem from './Item'
 
   export default {
-    name: "gl-ide-layout-stage",
-    components: {GlIdeLayoutStageItem},
-    props: {},
+    name: "GlIdePluginLayoutStage",
+    components: {GlIdePluginLayoutStageItem},
+    props: {
+      ideStore: {
+        type: Object,
+        required: true
+      }
+    },
     data() {
       return {
         cardMap: {},
@@ -49,6 +55,9 @@
             }]
         }
       }
+    },
+    mounted() {
+      console.log('geelato-ide >  GlIdePluginLayoutStage > mounted()')
     },
     methods: {
       onChange(e) {

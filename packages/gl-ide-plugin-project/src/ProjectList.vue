@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--<gl-table ref="magicForm" :opts="config"></gl-table>-->
-    <gl-list v-bind="config"></gl-list>
+    <gl-list v-bind="config" @doAction="onListDoAction"></gl-list>
   </div>
 </template>
 
@@ -27,6 +27,12 @@
     data() {
       return {
         config: config
+      }
+    },
+    methods: {
+      onListDoAction(data) {
+        console.log('gl-ide-plugin-project-list >onListDoAction() > data:', data)
+        this.$emit('doAction', data)
       }
     }
   }

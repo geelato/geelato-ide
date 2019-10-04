@@ -22,7 +22,7 @@
             </a-card>
           </template>
           <template v-else-if="col.rows">
-            <gl-ide-layout-stage-item :rows="col.rows" :cardMap="cardMap"></gl-ide-layout-stage-item>
+            <GlIdePluginLayoutStageItem :rows="col.rows" :cardMap="cardMap"></GlIdePluginLayoutStageItem>
           </template>
           <template v-else>
             <gl-draggable
@@ -79,10 +79,9 @@
 <script>
   import Vue from 'vue'
   import events from '../events'
-  // import utils from '../../../utils'
 
   export default {
-    name: "gl-ide-layout-stage-item",
+    name: "GlIdePluginLayoutStageItem",
     props: {
       cardMap: {
         type: Object,
