@@ -6,9 +6,9 @@ class SimplePageDefinition {
    * @param options
    * @param isFromRemote 是否从服务端加载，默认为false，方便打开页面时区分是否要加载模板的配置信息
    */
-  constructor (options, isFromServer = false) {
+  constructor (options, isInitFromTemplate = false) {
     this.reset(options)
-    this.isFromServer = isFromServer
+    this.isInitFromTemplate = isInitFromTemplate
   }
 
   reset (options) {

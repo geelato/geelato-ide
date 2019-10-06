@@ -46,25 +46,25 @@
         items: [{
           title: '表单',
           icon: 'form',
-          component: 'gl-form',
+          component: 'GlForm',
           img: '',
           description: '',
           show: true,
           bind: {opts: form, query: {}},
-          meta: {component: 'gl-ide-plugin-form-designer', title: '表单编辑器'}
+          meta: {component: 'GlIdePluginFormDesigner', title: '表单编辑器'}
         }, {
           title: '列表',
           icon: 'table',
-          component: 'gl-table',
+          component: 'GlTable',
           img: '',
           description: '',
           show: true,
           bind: {opts: table, query: {}},
-          meta: {component: 'gl-ide-plugin-form-designer', title: '列表编辑器'}
+          meta: {component: 'GlIdePluginFormDesigner', title: '列表编辑器'}
         }, {
           title: '页面引用',
           icon: 'link',
-          component: 'gl-page-loader',
+          component: 'GlPageLoader',
           img: '',
           description: '',
           show: true,
@@ -73,7 +73,7 @@
         }, {
           title: '工具条',
           icon: 'tool',
-          component: 'gl-toolbar',
+          component: 'GlToolbar',
           img: '',
           description: '',
           show: true,
@@ -83,7 +83,7 @@
           {
             title: '标题',
             icon: 'bars',
-            component: 'gl-header',
+            component: 'GlHeader',
             img: '',
             description: '',
             show: true,

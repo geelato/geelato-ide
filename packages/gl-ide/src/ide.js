@@ -1,14 +1,19 @@
+import SimplePageDefinition from "./SimplePageDefinition";
+
 const plugins = []
 const files = []
 const fileTypes = {}
 const panels = []
+const history = {}
 let GlobalVue
 // let editingFile = {
 //   type: 'GlPageLayout',
 //   content: {opts: {ui: ''}}
 // }
 // let editingCard = {}
+let defaultFile = {}
 let store = {
+  refreshToggleFlag: true,
   editingFile: {
     // type: 'GlPageLayout',
     // content: {opts: {ui: ''}}
@@ -16,6 +21,13 @@ let store = {
   editingCard: {},
   stagePanels: [],
   settingPanels: []
+}
+
+function resetStore() {
+  GlobalVue.set(store, 'stagePanels', [])
+  GlobalVue.set(store, 'settingPanels', [])
+  GlobalVue.set(store, 'editingFile', {})
+  GlobalVue.set(store, 'editingCard', {})
 }
 
 function checkPlugin() {
@@ -47,12 +59,12 @@ function parseComponent(component) {
 
 /**
  *
- * @param fileType
- * @param panelsGroup 'stagePanels' or 'SettingPanels'
+ * @param {String} fileType
+ * @param {String} panelsGroup 'stagePanels' or 'SettingPanels'
+ * @return {Array} 返回符合条件的的panel集合copy
  */
-function findPanels(fileType, panelsGroup) {
+function findPanelsCopy(fileType, panelsGroup) {
   let matchPanels = []
-  // console.log('files>', files)
   for (let i in files) {
     let file = files[i]
     if (file.type === fileType) {
@@ -60,14 +72,15 @@ function findPanels(fileType, panelsGroup) {
       file[panelsGroup].forEach((panel) => {
         matchPanels.push({
           title: panel.title,
+          type: panel.type,
           component: parseComponent(panel.component),
           opts: panel.opts ? JSON.parse(JSON.stringify(panel.opts)) : {}
         })
-        console.log('geelato-ide > ide.js > findPanels() > matchPanel panel.component: ', panel.component, 'panel: ', matchPanels[matchPanels.length - 1])
+        console.log('geelato-ide > ide.js > findPanelsCopy() > matchPanel panel.component: ', panel.component, 'panel: ', matchPanels[matchPanels.length - 1])
       })
     }
   }
-  console.log('geelato-ide > ide.js > findPanels() > matchPanels:', matchPanels)
+  console.log('geelato-ide > ide.js > findPanelsCopy() > matchPanels:', matchPanels)
   return matchPanels
 }
 
@@ -112,7 +125,7 @@ export default {
       }
       // use panels
       if (plugin.panels) {
-        panels.push(...(plugin.panels))
+        panels.push(...plugin.panels)
       }
     } else {
       return checkInfo
@@ -129,22 +142,89 @@ export default {
   fileTypes: fileTypes,
   parseComponent: parseComponent,
   findStagePanels: function (fileType) {
-    return findPanels(fileType, 'stagePanels')
+    return findPanelsCopy(fileType, 'stagePanels')
   },
   findSettingPanels: function (fileType) {
-    return findPanels(fileType, 'settingPanels')
+    return findPanelsCopy(fileType, 'settingPanels')
   },
-  openFile(fileConfig) {
+  openDefaultFile(id) {
+    let fileConfig = JSON.parse(JSON.stringify(defaultFile))
+    fileConfig.id = id
+    fileConfig.isInitFromTemplate = true
+    this.openFile(fileConfig)
+  },
+  openFile(fileData) {
+    let fileConfig = new SimplePageDefinition(fileData, fileData.isInitFromTemplate)
+    let stagePanels = findPanelsCopy(fileConfig.type, 'stagePanels')
+    let settingPanels = findPanelsCopy(fileConfig.type, 'settingPanels')
+    if (fileConfig.isInitFromTemplate) {
+      // 来源于模板文件，将模板文件的配置信息设置到editingFile中
+      // 依据约定，有且只有一个type为ui的panel
+      for (let i in stagePanels) {
+        let panel = stagePanels[i]
+        if (panel.type === 'ui') {
+          fileConfig.content.opts = panel.opts
+          console.log('fileConfig.content.opts:', panel.opts)
+          break
+        }
+      }
+      console.log('fileConfig:', fileConfig, stagePanels)
+    } else {
+      // 来源于服务端已存储的实例文件
+    }
+    resetStore()
+    console.log('geelato-ide > gl-ide > openFile > reset store.')
+    GlobalVue.set(store, 'stagePanels', stagePanels)
+    GlobalVue.set(store, 'settingPanels', settingPanels)
     GlobalVue.set(store, 'editingFile', fileConfig)
-    GlobalVue.set(store, 'stagePanels', findPanels(fileConfig.type, 'stagePanels'))
-    GlobalVue.set(store, 'settingPanels', findPanels(fileConfig.type, 'settingPanels'))
-    GlobalVue.nextTick()
-    console.log('store>', store)
+    console.log('geelato-ide > gl-ide > openFile > store after set:', store)
   },
   openCard(cardConfig) {
     GlobalVue.set(store, 'editingCard', cardConfig)
   },
-  commitFile() {
+  commitFile(fileConfig) {
+    if (typeof fileConfig !== 'object') {
+      console.error('geelato-ide > gl-ide > commitFile() > fileConfig is not typeof object, fileConfig:', fileConfig)
+      return
+    }
+    Object.assign(store.editingFile, fileConfig)
+  },
+  // 提交版本
+  commitFileOpts(fileType, data) {
+    console.log('commitOpts>', fileType, data)
+    store.editingFile.content.opts[fileType] = data
+    if (!history[fileType]) {
+      history[fileType] = []
+    }
+    let len = history[fileType].length
+    if (typeof data === 'object') {
+      let strData = JSON.stringify(data)
+      let copyData = JSON.parse(strData)
+      if (len > 0) {
+        // 如果和最后一次提交的一致，则不记录版本
+        let lastData = history[fileType][len - 1]
+        if (JSON.stringify(lastData) !== strData) {
+          history[fileType].push(copyData)
+        }
+      } else {
+        history[fileType].push(copyData)
+      }
+    } else if (typeof data === 'string') {
+      // 对编辑的内容，分代码类做版本管理
+      if (len > 0 && history[fileType][len - 1] === data) {
+        // 如果和最后一次提交的一致，则不记录版本
+      } else {
+        history[fileType].push(data)
+      }
+    } else {
+      console.error('不支持的数据格式，', typeof data, data)
+    }
+  },
 
+  // 回撤
+  retreatOpts(fileType) {
+    let str = history[fileType].length > 0 ? history[fileType].pop() : ''
+    this.store.editingFile.content.opts[fileType] = str
+    return str
   }
 }

@@ -52,7 +52,7 @@
         // // 如果是从服务端加载page配置信息，此时thisVue.editorStore.editingFile已是最新的，不用本地模板panel的配置数据
         // // 增加条件thisVue.editorStore.editingFile.content.component不为空，确保当服务端没有存储有效的配置信息信息，改从模板获取示例进行展示
         // console.log('thisVue.editorStore.editingFile>', thisVue.editorStore.editingFile)
-        // if (thisVue.editorStore.editingFile && thisVue.editorStore.editingFile.isFromServer && thisVue.editorStore.editingFile.content.component) {
+        // if (thisVue.editorStore.editingFile && thisVue.editorStore.editingFile.isInitFromTemplate && thisVue.editorStore.editingFile.content.component) {
         //   thisVue.editorStore.commitOpts('ui', thisVue.editorStore.editingFile.content.opts.ui)
         // } else {
         //   let plugin = this.editorStore.plugins[this.editorStore.editingFile.type]

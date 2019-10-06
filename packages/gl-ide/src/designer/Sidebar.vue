@@ -9,7 +9,7 @@
     </div>
     <div class="rightPanel" :style="{padding:`${panelPadding}px`}" v-show="showPanel">
       <template v-for="(plugin,index) in pluginSidebars">
-        <component v-if="selectedPanelTitle?(selectedPanelTitle===plugin.sidebar.title):index===0"
+        <component v-show="selectedPanelTitle?(selectedPanelTitle===plugin.sidebar.title):index===0"
                    :is="plugin.sidebar.component"
                    :key="index" :style="{width:`${rightPanelWidth}px`}" :ideStore="ideStore" :fileTypes="fileTypes"></component>
       </template>

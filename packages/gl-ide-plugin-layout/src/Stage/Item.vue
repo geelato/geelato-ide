@@ -223,6 +223,11 @@
   /*!*background-color: rgba(255, 202, 17, 0.7);*!*/
   /*}*/
 
+  .gl-ide-layout-stage .gl-dnd-row-handle:hover{
+    /*box-shadow: 0 0 1px #000 inset;*/
+    box-shadow: 0 0 4px #ffca11;
+  }
+
   .gl-ide-layout-stage .gl-dnd-row-handle > div > div {
     background-color: rgba(161, 222, 255, 0.35);
     /*text-align: center;*/

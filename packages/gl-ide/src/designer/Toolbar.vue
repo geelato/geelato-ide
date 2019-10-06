@@ -1,5 +1,5 @@
 <template>
-  <div class="gl-designer-toolbar" :style="{background: theme.background }">
+  <div class="gl-designer-toolbar" :style="{background: theme.background }" v-if="ideStore.refreshToggleFlag">
     <!--<img src="../../../../public/favicon.svg" style="width: 24px;height: 24px">-->
     <img src="../../../../public/logo_words.svg" style="width: 84px;height: 24px">
     <a-dropdown size="small">
@@ -45,7 +45,10 @@
     <a-button size="small" :style="{background: theme.background }">工具</a-button>
     <a-button size="small" :style="{background: theme.background }">插件</a-button>
     <a-button size="small" :style="{background: theme.background }">设置</a-button>
-    <a-button size="small" :style="{background: theme.background }">保存</a-button>
+    <a-button size="small" :style="{background: theme.background }" @click="saveFile">保存</a-button>
+    <a-button size="small" :style="{background: theme.background }" @click="preview"
+              :disabled="!(this.ideStore.editingFile && this.ideStore.editingFile.id)">预览
+    </a-button>
 
     <a-button size="small" :style="{background: theme.background }" style="float: right" v-if="islogined">
       <a-icon type="logout"/>
@@ -84,10 +87,9 @@
     data() {
       return {
         isFullscreen: false,
-        islogined: true
+        islogined: true,
       }
     },
-    props: {},
     methods: {
       showProjectForm() {
         this.$gl.bus.$emit('gl-ide.designer.showProjectForm')
@@ -95,8 +97,18 @@
       showProjectList() {
         this.$gl.bus.$emit('gl-ide.designer.showProjectList')
       },
+      saveFile() {
+        this.$gl.bus.$emit('gl-ide.designer.saveFile')
+      },
+      /**
+       *  打开预览页面
+       */
+      preview() {
+        if (this.ideStore.editingFile && this.ideStore.editingFile.id) {
+          window.open("https://www.geelato.org/preview/" + this.ideStore.editingFile.id, '_blank')
+        }
+      },
       callback(key) {
-        console.log(key)
       },
       toggleFullScreen() {
         screenfull.toggle()

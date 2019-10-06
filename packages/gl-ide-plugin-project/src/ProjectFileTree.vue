@@ -256,7 +256,7 @@
           name: data.text,
           type: data.type,
           code: data.type + '_' + this.$gl.utils.uuid(8)
-        }))
+        }, true))
         this.savePage()
       },
       /**
@@ -264,9 +264,9 @@
        * 保存到服务端
        * 记录保存更新状态
        */
-      savePage: function (data) {
+      savePage: function () {
         let that = this
-        console.log('that.ideStore.editingFile>save>', that.ideStore.editingFile)
+        console.log('geelato-ide > gl-ide-plugin-project > ProjectFileTree > savePage() > editingFile:', that.ideStore.editingFile)
         that.$gl.api.save('platform_page_config', {
           id: that.ideStore.editingFile.id,
           extendId: that.ideStore.editingFile.extendId,
@@ -276,6 +276,7 @@
           content: that.ideStore.editingFile.content
         }).then(function (res) {
           that.ideStore.editingFile.id = res.result
+          // that.$ide.openDefaultFile({id: res.result})
           that.$message.success('页面保存成功')
         }).catch(function (e) {
           that.$message.error('页面保存失败')
@@ -289,10 +290,8 @@
       openPage(event, item) {
         let that = this
         that.$gl.api.query('platform_page_config', {extendId: item.node.id}, 'id,type,code,description,content').then(function (res) {
-//          that.ideStore.editingFile.reset(res.data[0])
           console.log('res.data[0]>', res)
-          // that.editorStore.reset(new SimplePageDefinition(res.data[0], true))
-          // console.log('editingFile>', that.ideStore.editingFile)
+          that.$ide.openFile(res.data[0])
         }).catch(function (e) {
           console.error(e)
           that.$message.error('从服务端获取、解析信息失败！')
@@ -305,9 +304,10 @@
        */
       removePage(nodeId) {
         let that = this
-        // 两张表的删除，合在一个事务中
+        // TODO 两张表的删除，合在一个事务中
         that.$gl.api.delete('platform_page_config', {extendId: nodeId})
         that.$gl.api.delete('platform_tree_node', {id: nodeId})
+        this.$ide.openDefaultFile()
       },
       loadCachePage: function (extendId) {
         let that = this

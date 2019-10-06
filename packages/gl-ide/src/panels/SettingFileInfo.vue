@@ -1,20 +1,6 @@
 <template>
   <div class="gl-content-wrapper">
-    <a-form :form="form" @submit="handleSubmit">
-      <a-form-item label="类型" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
-        {{ideStore.editingFile.type}}
-      </a-form-item>
-      <a-form-item label="模板" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
-        {{ideStore.editingFile.content.component||'无'}}
-      </a-form-item>
-      <a-form-item label="编码" :label-col="{ span: 6 }" :wrapper-col="{ span: 17 }">
-        <a-input placeholder="英文字符，用于前端调用"
-                 v-decorator="[ 'ideStore.editingFile.code',  {rules: [{ required: true, message: '需填写编码' }]} ]"/>
-      </a-form-item>
-      <a-form-item label="描述" :label-col="{ span: 6 }" :wrapper-col="{ span: 17 }">
-        <textarea rows="4" v-decorator="[ 'ideStore.editingFile.description']" style="width: 100%"></textarea>
-      </a-form-item>
-    </a-form>
+    <gl-form ref="form" :opts="formConfig" :query="formQuery" @propertyUpdate="onPropertyUpdate"></gl-form>
   </div>
 </template>
 <script>
@@ -28,40 +14,92 @@
     },
     data() {
       return {
-        formLayout: 'horizontal',
-        form: this.$form.createForm(this),
+        formConfig: {
+          properties: {
+            type: {
+              control: 'input',
+              title: '类型',
+              props: {
+                readonly: true
+              }
+            },
+            component: {
+              control: 'input',
+              title: '组件',
+              props: {
+                readonly: true
+              }
+            },
+            code: {
+              control: 'input',
+              title: '编码',
+              props: {
+                readonly: true
+              }
+            },
+            description: {
+              control: 'textarea',
+              title: '描述',
+            }
+          },
+          layout: {
+            rows: [
+              {
+                cols: [
+                  {span: 8, label: true, field: 'type'}, {span: 16, field: 'type'},
+                ]
+              },
+              {
+                cols: [
+                  {span: 8, label: true, field: 'component'}, {span: 16, field: 'component'},
+                ]
+              },
+              {
+                cols: [
+                  {span: 8, label: true, field: 'code'}, {span: 16, field: 'code'},
+                ]
+              },
+              {
+                cols: [
+                  {span: 8, label: true, field: 'description'}, {span: 16, field: 'description'},
+                ]
+              }
+            ]
+          }
+        },
+        formQuery: {}
       }
     },
-    watch: {
-      // 'ideStore.editingFile.id': {
-      //   handler(val, oval) {
-      //     console.log('setting', this.ideStore.editingFile.code, this.ideStore.editingFile.description, val, oval)
-      //     // this.form.code = this.ideStore.editingFile.code
-      //     // this.form.description = this.ideStore.editingFile.description
-      //   },
-      //   immediate: true,
-      //   deep: true
+    computed: {
+      // formQuery: function () {
+      //   let formQuery = {}
+      //
+      //   return formQuery
       // }
     },
+    watch: {
+      'ideStore.editingFile.id': {
+        handler(val, oval) {
+          let that = this
+          this.$set(this.formQuery, 'code', this.ideStore.editingFile.code)
+          this.$set(this.formQuery, 'description', this.ideStore.editingFile.description)
+          this.$set(this.formQuery, 'component', this.ideStore.editingFile.content.component)
+          this.$set(this.formQuery, 'type', this.ideStore.editingFile.type)
+        },
+        immediate: true,
+        // deep: true
+      }
+    },
     mounted: function () {
-      // this.form.code = this.ideStore.editingFile.code
-      // this.form.description = this.ideStore.editingFile.description
     },
     methods: {
-      handleSubmit(e) {
-        e.preventDefault();
-        this.form.validateFields((err, values) => {
-          if (!err) {
-            console.log('Received values of form: ', values);
-          }
-        });
+      onPropertyUpdate({property, val, oval}) {
+        let values = this.$refs.form.getValues()
+        this.$ide.commitFile({description: values.description})
       },
-      handleSelectChange(value) {
-        console.log(value);
-        this.form.setFieldsValue({
-          note: `Hi, ${value === 'male' ? 'man' : 'lady'}!`,
-        });
-      },
+      getValues() {
+
+      }
     },
     components: {}
   }

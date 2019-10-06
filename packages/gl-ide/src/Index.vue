@@ -1,6 +1,7 @@
 <template>
   <div class="gl-designer">
-    <designer-toolbar :style="{height:`${toolbar.height}px`}" :theme="$ide.theme"></designer-toolbar>
+    <designer-toolbar :style="{height:`${toolbar.height}px`}" :theme="$ide.theme"
+                      :ideStore="ideStore"></designer-toolbar>
     <!--<div>-->
     <!--<designer-sidebar style="width:200px;display: inline-block"></designer-sidebar>-->
     <!--<designer-stage style="width: 100%;display: inline-block"></designer-stage>-->
@@ -8,7 +9,7 @@
     <!-- </div>-->
     <splitpanes class="default-theme"
                 :style="{height:`${designer.height-toolbar.height-status.height}px`}">
-        <span :splitpanes-size="sidebarsWidthPercent" :splitpanes-min="sidebarsMinWidthPercent">
+      <span :splitpanes-size="sidebarsWidthPercent" :splitpanes-min="sidebarsMinWidthPercent">
           <designer-sidebar :layout="sidebar" :plugins="$ide.plugins" :leftToolbarWidth="sidebarLeftToolbarWidth"
                             :ideStore="ideStore" @switchPanel="switchSidebarPanel"
                             :fileTypes="$ide.fileTypes"></designer-sidebar>
@@ -17,11 +18,11 @@
           <designer-stage ref="stage" :layout="stage" :plugins="$ide.plugins" :ideStore="ideStore"></designer-stage>
         </span>
       <span :splitpanes-size="settingsWidthPercent">
-          <designer-settings :layout="settings" :plugins="$ide.plugins" :ideStore="ideStore"
-                             v-if="refreshFlag"></designer-settings>
+          <designer-settings :layout="settings" :plugins="$ide.plugins" :ideStore="ideStore"></designer-settings>
         </span>
     </splitpanes>
-    <designer-status v-if="status.height!==0" :style="{height:`${status.height}px`}" :layout="status"
+    <designer-status v-show="status.height!==0" :style="{height:`${status.height}px`}"
+                     :layout="status"
                      :plugins="$ide.plugins" :ideStore="ideStore"></designer-status>
   </div>
 </template>
@@ -41,7 +42,6 @@
     components: {Splitpanes, DesignerToolbar, DesignerSidebar, DesignerStage, DesignerSettings, DesignerStatus},
     data() {
       return {
-        refreshFlag: true,
         ideStore: this.$ide.store,
         stagePanels: [],
         designer: {
@@ -71,7 +71,16 @@
         }
       }
     },
-    watch: {},
+    watch: {
+      'ideStore.editingFile.id': function (val, oval) {
+        let that = this
+        // 刷新stage等面板的内容
+        that.$set(that.ideStore, 'refreshToggleFlag', false)
+        this.$nextTick(function () {
+          that.$set(that.ideStore, 'refreshToggleFlag', true)
+        })
+      }
+    },
     computed: {
       sidebarsWidthPercent() {
         return this.sidebar.width / this.designer.width * 100

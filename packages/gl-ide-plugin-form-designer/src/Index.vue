@@ -21,7 +21,7 @@
   import formTemplateData from './formTemplateData.js'
 
   export default {
-    name: "gl-ide-plugin-form-designer",
+    name: "GlIdePluginFormDesigner",
     components: {Sidebar, Stage, Settings},
     data() {
       return {

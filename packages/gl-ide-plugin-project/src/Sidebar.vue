@@ -32,16 +32,14 @@
     created() {
       // 默认加载，我的最近一个项目
       this.$gl.bus.$on('gl-ide.designer.showProjectForm', this.showProjectForm)
-      // this.$gl.bus.$on('gl-ide.designer.openProject', this.onProjectSelected)
       this.$gl.bus.$on('gl-ide.designer.showProjectList', this.showProjectList)
-
+      this.$gl.bus.$on('gl-ide.designer.saveFile', this.saveFile)
     },
     mounted() {
     },
     beforeDestroy() {
       // 默认加载，我的最近一个项目
       this.$gl.bus.$off('gl-ide.designer.showProjectForm', this.showProjectForm)
-      // this.$gl.bus.$on('gl-ide.designer.openProject', this.onProjectSelected)
       this.$gl.bus.$off('gl-ide.designer.showProjectList', this.showProjectList)
     },
     methods: {
@@ -135,6 +133,9 @@
         console.log('onSaveProject: ', params, data)
         this.projectId = data.id
         this.project = {id: this.projectId, name: data.name}
+      },
+      saveFile() {
+        this.$refs.fileTree.savePage()
       }
     },
     components: {ProjectFileTree}

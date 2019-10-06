@@ -1,5 +1,5 @@
 <template>
-  <div class="gl-designer-properties">
+  <div class="gl-designer-properties" v-if="ideStore.refreshToggleFlag">
     <a-tabs @change="callback" size="small" class="gl-compact" v-if="ideStore.editingFile&&ideStore.editingFile.type">
       <a-tab-pane v-for="(panel,index) in ideStore.settingPanels" :tab="panel.title" :key="index"
                   :style="{padding:`${panelPadding}px`}">

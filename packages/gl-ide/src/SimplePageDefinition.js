@@ -4,20 +4,20 @@
 class SimplePageDefinition {
   /**
    * @param options
-   * @param isFromRemote 是否从服务端加载，默认为false，方便打开页面时区分是否要加载模板的配置信息
+   * @param isFromRemote 是否从模板初始化，默认为false，方便打开页面时区分是否要加载模板的配置信息还是从服务器加载配置信息
    */
-  constructor (options, isFromServer = false) {
+  constructor (options, isInitFromTemplate = false) {
     this.reset(options)
-    this.isFromServer = isFromServer
+    this.isInitFromTemplate = isInitFromTemplate
   }
 
   reset (options) {
     let params = options || {}
     let defaultContent = {
-      code: {
-        mvel: '',
-        sql: ''
-      },
+      // code: {
+      //   mvel: '',
+      //   sql: ''
+      // },
       // 页面的内容
       // 格式1：'/components/collections/grid'
       // 格式2：vue component对象，{template:''}

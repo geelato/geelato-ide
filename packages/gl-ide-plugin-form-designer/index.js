@@ -3,7 +3,7 @@ import GLIdePluginFormDesigner from './src/Index'
 import events from './src/events'
 
 const plugin = {
-  name: 'gl-ide-plugin-form-designer',
+  name: 'GlIdePluginFormDesigner',
   description: '表单设计器',
 }
 // 默认导出组件
