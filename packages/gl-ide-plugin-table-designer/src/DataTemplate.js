@@ -44,6 +44,7 @@ export default {
         // }
       ],
       layout: {
+        gutter: 48,
         display: 'auto',
         // 取值 1~4、6
         fieldPerRow: 4
@@ -93,8 +94,9 @@ export default {
     css: {align: 'right'}
   },
   alert: null,
-  showPagination: 'auto',
+  showPagination: true,
   table: {
+    showHeader: true,
     // select: {field: 'id', title: '', type: 'checkbox'},
     rowAction: {
       actions: [{

@@ -8,7 +8,7 @@ const plugin = {
   name: 'gl-ide-plugin-layout',
   description: '页面布局插件',
   file: {
-    title: '页面布局',
+    title: '页面',
     type: 'GlPageLayout',
     icon: 'iconfont icon-file',
     description: '可组合的高级页面',
@@ -29,29 +29,9 @@ const plugin = {
           }, {
             title: '一行两列',
             cols: [
-              {span: 12, offset: 0, items: []}, {span: 12, offset: 0, items: []}
+              {span: 7, offset: 0, items: []}, {span: 17, offset: 0, items: []}
             ]
-          }, {
-            title: '一行两列',
-            cols: [
-              {span: 16, offset: 0, items: []}, {span: 8, offset: 0, items: []}
-            ]
-          }, {
-            title: '一行三列',
-            cols: [
-              {span: 8, offset: 0, items: []}, {span: 8, offset: 0, items: []}, {span: 8, offset: 0, items: []}
-            ]
-          },
-            {
-              title: '一行四列',
-              cols: [
-                {span: 6, offset: 0, items: []}, {span: 6, offset: 0, items: []}, {
-                  span: 6,
-                  offset: 0,
-                  items: []
-                }, {span: 6, offset: 0, items: []}
-              ]
-            }]
+          }]
         }
       },
       query: {}

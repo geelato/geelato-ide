@@ -31,3 +31,47 @@
 .gl-card-designer .ant-modal-body {
     padding: 0
 }
+
+
+
+
+/**************************************
+ * 各组件的专用设置页面面板的样式
+   应用于：gl-ide-plugin-table-designer、gl-ide-plugin-form-designer等
+ *************************************/
+.gl-ide-plugin-x-designer-settings .ant-tabs-tab {
+    padding-right: 5px !important;
+    padding-left: 8px !important;
+}
+
+.gl-ide-plugin-x-designer-settings .gl-mini-btn {
+    padding-right: 8px !important;
+    padding-left: 8px !important;
+}
+
+.gl-ide-plugin-x-designer-settings input, .gl-ide-plugin-x-designer-settings button, .gl-ide-plugin-x-designer-settings select {
+    line-height: 2em;
+    padding-left: 0.5em;
+}
+
+.gl-ide-plugin-x-designer-settings th {
+    font-weight: normal;
+    line-height: 2em;
+    background-color: #eeeeee;
+}
+
+.gl-ide-plugin-x-designer-settings .ant-tabs-bar.ant-tabs-top-bar.ant-tabs-default-bar {
+    margin: 0;
+}
+
+.gl-table-cell-sub-label {
+    width: 31%;
+    text-align: right;
+    font-weight: 500;
+    background-color: #f9f9f9;
+}
+
+.gl-table-row-header {
+    background-color: #e1e1e1;
+    text-align: center;
+}

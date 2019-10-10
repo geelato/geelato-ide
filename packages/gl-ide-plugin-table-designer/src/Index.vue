@@ -1,36 +1,61 @@
 <template>
-  <div style="width:100%;overflow-y: scroll">
+  <div style="width:100%;">
     <a-row>
       <a-col :span="18" style="border-right: 1px solid #F2F2F2">
-        <stage v-if="refreshToggleFlag" :size="size" :height="height" :opts="templateData"></stage>
+        <stage v-if="refreshToggleFlag" :size="size" :height="height" :tabPanelStyle="tabPanelStyle"
+               :opts="templateData"></stage>
       </a-col>
       <a-col :span="6">
-        <settings :size="size" :height="height" :opts="templateData" @change="onChange"></settings>
+        <settings :size="size" :height="height" :tabPanelStyle="tabPanelStyle" :opts="templateData"
+                  @change="onChange"></settings>
       </a-col>
     </a-row>
   </div>
 </template>
 
 <script>
-  import Sidebar from './Sidebar'
   import Stage from './Stage'
   import Settings from './Settings'
   import templateData from './DataTemplate.js'
 
   export default {
     name: "GlIdePluginTableDesigner",
-    components: {Sidebar, Stage, Settings},
+    components: {Stage, Settings},
     data() {
       return {
         refreshToggleFlag: true,
-        height: window.innerHeight * .80,
         size: 'default',
-        templateData: {}
+        templateData: {},
+        height: window.innerHeight * .85,
+        tabPanelStyle: {
+          'height': '100%',
+          'min-height': window.innerHeight * .85 - 48 + 'px',
+          'max-height': window.innerHeight * .85 - 48 + 'px',
+          'overflow-y': "scroll"
+        }
       }
+    },
+    watch: {
+      // height() {
+      //   return window.innerHeight * .85
+      // },
+      // tabPanelStyle() {
+      //   return {
+      //     'max-height': window.innerHeight * .85 - 16 - 24,
+      //     'overflow-y': "scroll"
+      //   }
+      // }
     },
     created() {
       // 设置初始化值，确保所有值都可双向绑定
-      // templateData.showPagination = (templateData.showPagination === undefined ? true : templateData.showPagination)
+      // templateData.pagination = (templateData.pagination === undefined ? {position: 'auto'} : templateData.pagination)
+      templateData.table.showHeader = (templateData.table.showHeader === undefined ? true : templateData.table.showHeader)
+      templateData.table.show = (templateData.table.show === undefined ? true : templateData.table.show)
+
+      for (let i in templateData.query.mix.properties) {
+        let property = templateData.query.mix.properties[i]
+        property.props = (property.props === undefined ? {} : property.props)
+      }
 
       for (let i in templateData.table.columns) {
         let column = templateData.table.columns[i]

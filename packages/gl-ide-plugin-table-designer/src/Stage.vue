@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import mixin from './mixin'
+  import mixin from '../../mixin-x-designer'
   import styleTemplate from './style.js'
 
   export default {

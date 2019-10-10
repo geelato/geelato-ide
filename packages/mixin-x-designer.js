@@ -12,7 +12,13 @@ export default {
     height: {
       type: Number,
       default() {
-        return 0
+        return 500
+      }
+    },
+    tabPanelStyle: {
+      type: Object,
+      default() {
+        return {}
       }
     }
   }

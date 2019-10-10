@@ -12,7 +12,7 @@
       </div>
     </gl-draggable>
     <!--<a-button style="text-align: center" block>加载更多...</a-button>-->
-    <div>
+    <div v-if="modalVisible">
       <!--<a-button type="primary" @click="() => modalVisible = true">Vertically centered modal dialog</a-button>-->
       <a-modal class="gl-card-designer"
                :title="modalTitle"
@@ -105,14 +105,11 @@
       onCardOpen(args) {
         if (args.item.meta) {
           this.modalTitle = args.item.meta.title
-          console.log('c>', this.$globalVue.components, this.$options.components[args.item.meta.component])
-          // this.cardDesigner = this.$options.components[args.item.meta.component]
           this.cardDesigner = this.$globalVue.component(args.item.meta.component)
         }
         this.modalVisible = true
       },
       onSelect(keys) {
-        console.log('Trigger Select', keys)
         this.$gl.bus.$emit('project_file_selected', keys)
       },
       onExpand() {

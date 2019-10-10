@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-tabs defaultActiveKey="1" :size="size" :style="{'min-height':`${height}px`,'max-height':`${height}px`}">
+    <a-tabs defaultActiveKey="1" :size="size" :style="{'min-height':`${height}px`,'max-height':`${height}px`}" style="overflow-y: scroll">
       <a-tab-pane key="1">
       <span slot="tab">
         <a-icon type="picture"/>

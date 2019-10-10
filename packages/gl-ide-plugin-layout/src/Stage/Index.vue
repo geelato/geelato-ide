@@ -1,5 +1,5 @@
 <template>
-  <div class="gl-ide-layout-stage" style="height: 620px;overflow-x: hidden;padding-left: 0.5em;padding-right: 1em">
+  <div class="gl-ide-layout-stage" style="height: 760px;overflow-x: hidden;padding-left: 0.5em;padding-right: 1em">
     <GlIdePluginLayoutStageItem :rows="ideStore.editingFile.content.opts.layout.rows"
                                 :cardMap="ideStore.editingFile.content.opts.cardMap"
                                 :gutter="ideStore.editingFile.content.opts.layout.gutter"></GlIdePluginLayoutStageItem>

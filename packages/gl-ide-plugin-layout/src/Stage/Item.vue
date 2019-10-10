@@ -43,20 +43,16 @@
                   </div>&nbsp;
                   <div style="display:inline-block;float: right">
                     <a-button size="small" @click="onCardOpen(col,colItem,colItemIndex)"
-                              title="设置"
-                              style="background-color: #d8d8d8">
+                              title="设置">
                       <a-icon type="setting" theme="filled"/>
                     </a-button>
-                    <a-button size="small" v-if="colItem.show!==false" @click="colItem.show=false" title="隐藏"
-                              style="background-color: #d8d8d8">
+                    <a-button size="small" v-if="colItem.show!==false" @click="colItem.show=false" title="隐藏">
                       <a-icon type="eye-invisible"/>
                     </a-button>
-                    <a-button size="small" v-if="colItem.show===false" @click="colItem.show=true" title="展示"
-                              style="background-color: #d8d8d8">
+                    <a-button size="small" v-if="colItem.show===false" @click="colItem.show=true" title="展示">
                       <a-icon type="eye"/>
                     </a-button>
-                    <a-button size="small" @click="onColDelete(col,colItem,colItemIndex)" type="danger"
-                              title="删除" style="background-color: #d8d8d8">
+                    <a-button size="small" @click="onColDelete(col,colItem,colItemIndex)" type="danger">
                       <a-icon type="delete"></a-icon>
                     </a-button>
                   </div>
@@ -212,7 +208,12 @@
     padding: 0 1em;
     line-height: 2em;
     height: 2em;
-    background-color: #D8D8D8
+    background-color: #e5e5e5
+  }
+
+  .gl-dnd-col-toolbar button {
+    background-color: #e5e5e5;
+    border-color: #e5e5e5
   }
 
   /*.gl-ide-layout-stage .gl-dnd-row-handle > div {*/
@@ -223,7 +224,7 @@
   /*!*background-color: rgba(255, 202, 17, 0.7);*!*/
   /*}*/
 
-  .gl-ide-layout-stage .gl-dnd-row-handle:hover{
+  .gl-ide-layout-stage .gl-dnd-row-handle:hover {
     /*box-shadow: 0 0 1px #000 inset;*/
     box-shadow: 0 0 4px #ffca11;
   }
