@@ -60,7 +60,7 @@
           description: '',
           show: true,
           bind: {opts: table, query: {}},
-          meta: {component: 'GlIdePluginFormDesigner', title: '列表编辑器'}
+          meta: {component: 'GlIdePluginTableDesigner', title: '列表编辑器'}
         }, {
           title: '页面引用',
           icon: 'link',
@@ -69,7 +69,7 @@
           description: '',
           show: true,
           bind: {opts: table, query: {}},
-          meta: {component: 'gl-ide-plugin-pageloader-designer', title: '设置'}
+          meta: {component: 'GlIdePluginPageloaderDesigner', title: '设置'}
         }, {
           title: '工具条',
           icon: 'tool',

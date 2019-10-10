@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <!--<img alt="Vue logo" src="./assets/logo.png">-->
-    <!--<HelloWorld msg="Welcome to Your Vue.js App"/>-->
-    <gl-ide></gl-ide>
+    <!-- 路由出口 -->
+    <!-- 路由匹配到的组件将渲染在这里 -->
+    <router-view></router-view>
   </div>
 </template>
 
@@ -10,9 +10,7 @@
 
   export default {
     name: 'app',
-    components: {
-
-    }
+    components: {}
   }
 </script>
 
@@ -26,7 +24,12 @@
     /*margin-top: 60px;*/
   }
 
-  .splitpanes.default-theme .splitpanes__pane {
+  .splitpanes.default-theme .splitpanes__pane, .gl-table {
     background-color: #FFFFFF !important;
   }
+
+  .gl-table.gl-table-as-list > div {
+    margin: 1em;
+  }
+
 </style>

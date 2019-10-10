@@ -6,6 +6,7 @@ import draggable from 'vuedraggable'
 import GlIde from './gl-ide/index'
 import GlIdePluginLayout from './gl-ide-plugin-layout/index'
 import GlIdePluginFormDesigner from './gl-ide-plugin-form-designer/index'
+import GlIdePluginTableDesigner from './gl-ide-plugin-table-designer/index'
 import GlIdePluginProject from './gl-ide-plugin-project/index'
 import GlIdePluginCards from './gl-ide-plugin-cards/index'
 import GlIdePluginFields from './gl-ide-plugin-fields/index'
@@ -41,6 +42,7 @@ const install = function (Vue, options) {
   ide.use(GlIdePluginProject)
   ide.use(GlIdePluginLayout)
   ide.use(GlIdePluginFormDesigner)
+  ide.use(GlIdePluginTableDesigner)
   // ide.use(GlIdePluginStructure.config)
   ide.use(GlIdePluginCards)
   ide.use(GlIdePluginFields)
@@ -69,7 +71,7 @@ const install = function (Vue, options) {
     errorBagName: 'errorBags',
     fieldsBagName: 'fieldBags'
   })
-  
+
   Vue.use(GlIde)
 
 
