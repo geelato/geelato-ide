@@ -14,10 +14,7 @@ let GlobalVue
 let defaultFile = {}
 let store = {
   refreshToggleFlag: true,
-  editingFile: {
-    // type: 'GlPageLayout',
-    // content: {opts: {ui: ''}}
-  },
+  editingFile: {},
   editingCard: {},
   stagePanels: [],
   settingPanels: []
@@ -163,8 +160,8 @@ export default {
       for (let i in stagePanels) {
         let panel = stagePanels[i]
         if (panel.type === 'ui') {
-          fileConfig.content.opts = panel.opts
-          console.log('fileConfig.content.opts:', panel.opts)
+          fileConfig.sourceContent.opts = panel.opts
+          console.log('gl-ide > openFile() > fileConfig.sourceContent.opts:', panel.opts)
           break
         }
       }
@@ -192,7 +189,7 @@ export default {
   // 提交版本
   commitFileOpts(fileType, data) {
     console.log('commitOpts>', fileType, data)
-    store.editingFile.content.opts[fileType] = data
+    store.editingFile.sourceContent.opts[fileType] = data
     if (!history[fileType]) {
       history[fileType] = []
     }
@@ -224,7 +221,7 @@ export default {
   // 回撤
   retreatOpts(fileType) {
     let str = history[fileType].length > 0 ? history[fileType].pop() : ''
-    this.store.editingFile.content.opts[fileType] = str
+    this.store.editingFile.sourceContent.opts[fileType] = str
     return str
   }
 }

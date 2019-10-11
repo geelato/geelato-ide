@@ -24,27 +24,18 @@
     </a-dropdown>
     <a-dropdown size="small">
       <a-menu slot="overlay">
-        <a-menu-item size="small" key="1" style="font-size: 12px">
+        <a-menu-item size="small" key="1" style="font-size: 12px" @click="comingSoon('工具管理')">
           <a-icon type="user"/>
-          新建文件
-        </a-menu-item>
-        <a-menu-item size="small" key="2" style="font-size: 12px">
-          <a-icon type="user"/>
-          打开项目
-        </a-menu-item>
-        <a-menu-item size="small" key="3" style="font-size: 12px">
-          <a-icon type="user"/>
-          关闭项目
+          部署
         </a-menu-item>
       </a-menu>
       <a-button size="small" :style="{background: theme.background }">
-        文件
+        工具
         <!--<a-icon type="down"/>-->
       </a-button>
     </a-dropdown>
-    <a-button size="small" :style="{background: theme.background }">工具</a-button>
-    <a-button size="small" :style="{background: theme.background }">插件</a-button>
-    <a-button size="small" :style="{background: theme.background }">设置</a-button>
+    <a-button size="small" :style="{background: theme.background }" @click="comingSoon('插件管理')">插件</a-button>
+    <a-button size="small" :style="{background: theme.background }" @click="comingSoon('设置管理')">设置</a-button>
     <a-button size="small" :style="{background: theme.background }" @click="saveFile">保存</a-button>
     <a-button size="small" :style="{background: theme.background }" @click="preview"
               :disabled="!(this.ideStore.editingFile && this.ideStore.editingFile.id)">预览
@@ -92,6 +83,7 @@
       }
     },
     methods: {
+
       showProjectForm() {
         this.$gl.bus.$emit('gl-ide.designer.showProjectForm')
       },
@@ -102,11 +94,20 @@
         this.$gl.bus.$emit('gl-ide.designer.saveFile')
       },
       /**
+       *  打开插件页面
+       */
+      showPlugins() {
+        this.comingSoon()
+      },
+      comingSoon(text) {
+        this.$message.info(text + '正在努力开发中...')
+      },
+      /**
        *  打开预览页面
        */
       preview() {
         if (this.ideStore.editingFile && this.ideStore.editingFile.id) {
-          window.open(window.location.origin+"/#/preview/" + this.ideStore.editingFile.id, '_blank')
+          window.open(window.location.origin + "/#/preview/" + this.ideStore.editingFile.id, '_blank')
         }
       },
       callback(key) {

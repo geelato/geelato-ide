@@ -1,6 +1,9 @@
 <template>
   <div class="gl-ide-plugin-x-designer-settings">
     <a-tabs defaultActiveKey="1" :size="size" :style="{'min-height':`${height}px`,'max-height':`${height}px`}">
+      <!--*******************************************************************************-->
+      <!--******************************* 1、表 ****************************************-->
+      <!--*******************************************************************************-->
       <a-tab-pane key="1">
       <span slot="tab">
         <a-icon type="profile"/>
@@ -49,22 +52,22 @@
               </td>
               <td class="gl-table-cell">
                 <a-switch :defaultChecked="config.toolbar.show"
-                          @change="config.toolbar.show=!config.toolbar.show;onChange()"></a-switch>
+                          @change="config.toolbar.show=!config.toolbar.show;onChange(true)"></a-switch>
               </td>
             </tr>
-            <tr class="gl-table-row">
-              <td class="gl-table-cell gl-table-cell-sub-label">是否展示表头：</td>
-              <td class="gl-table-cell">
-                <a-switch :defaultChecked="config.table.showHeader"
-                          @change="config.table.showHeader=!config.table.showHeader;onChange(true)"/>
-              </td>
-            </tr>
+            <!--<tr class="gl-table-row">-->
+              <!--<td class="gl-table-cell gl-table-cell-sub-label">是否展示表头：</td>-->
+              <!--<td class="gl-table-cell">-->
+                <!--<a-switch :defaultChecked="config.table.showHeader"-->
+                          <!--@change="config.table.showHeader=!config.table.showHeader;onChange(true)"/>-->
+              <!--</td>-->
+            <!--</tr>-->
           </table>
         </div>
         {{tabPanelStyle}}
       </a-tab-pane>
       <!--*******************************************************************************-->
-      <!--******************************* 结果列 ****************************************-->
+      <!--******************************* 2、结果列 ****************************************-->
       <!--*******************************************************************************-->
       <a-tab-pane key="2">
       <span slot="tab">
@@ -355,35 +358,6 @@
                   </a-button>
                 </td>
               </tr>
-              <!--<tr class="gl-table-row" v-if="currentRowActionIndex===rowActionIndex">-->
-              <!--<td colspan="3" style="padding:0.2em;">-->
-              <!--<table class="gl-table" style="border: 1px solid">-->
-              <!--<tr class="gl-table-row">-->
-              <!--<td class="gl-table-cell gl-table-cell-sub-label">控件类型：</td>-->
-              <!--<td class="gl-table-cell">-->
-              <!--<a-select v-model="property.control" :allowClear="false"-->
-              <!--style="min-width: 99%">-->
-              <!--<a-select-option v-for="control in controls" :key="control.value">-->
-              <!--{{control.text}}-->
-              <!--</a-select-option>-->
-              <!--</a-select>-->
-              <!--</td>-->
-              <!--</tr>-->
-              <!--<tr class="gl-table-row">-->
-              <!--<td class="gl-table-cell gl-table-cell-sub-label">占位符：</td>-->
-              <!--<td class="gl-table-cell">-->
-              <!--<input v-model="property.props.placeholder" style="width: 99%"/>-->
-              <!--</td>-->
-              <!--</tr>-->
-              <!--<tr class="gl-table-row">-->
-              <!--<td class="gl-table-cell gl-table-cell-sub-label">默认值：</td>-->
-              <!--<td class="gl-table-cell">-->
-              <!--<input v-model="property.props.defaultValue" style="width: 99%"/>-->
-              <!--</td>-->
-              <!--</tr>-->
-              <!--</table>-->
-              <!--</td>-->
-              <!--</tr>-->
             </template>
             <tr class="gl-table-row">
               <td colspan="3">

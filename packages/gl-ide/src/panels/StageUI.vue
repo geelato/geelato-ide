@@ -1,6 +1,6 @@
 <template>
   <div class="gl-file-content-wrapper">
-    <component :is="content.component" :opts="ideStore.editingFile.content.opts.ui||content.opts" :query="queryString">
+    <component :is="content.component" :opts="ideStore.editingFile.sourceContent.opts.ui||content.opts" :query="queryString">
       <!-- 组件在 vm.currentview 变化时改变！ -->
     </component>
   </div>
@@ -50,10 +50,10 @@
       init() {
         // let thisVue = this
         // // 如果是从服务端加载page配置信息，此时thisVue.editorStore.editingFile已是最新的，不用本地模板panel的配置数据
-        // // 增加条件thisVue.editorStore.editingFile.content.component不为空，确保当服务端没有存储有效的配置信息信息，改从模板获取示例进行展示
+        // // 增加条件thisVue.editorStore.editingFile.sourceContent.component不为空，确保当服务端没有存储有效的配置信息信息，改从模板获取示例进行展示
         // console.log('thisVue.editorStore.editingFile>', thisVue.editorStore.editingFile)
-        // if (thisVue.editorStore.editingFile && thisVue.editorStore.editingFile.isInitFromTemplate && thisVue.editorStore.editingFile.content.component) {
-        //   thisVue.editorStore.commitOpts('ui', thisVue.editorStore.editingFile.content.opts.ui)
+        // if (thisVue.editorStore.editingFile && thisVue.editorStore.editingFile.isInitFromTemplate && thisVue.editorStore.editingFile.sourceContent.component) {
+        //   thisVue.editorStore.commitOpts('ui', thisVue.editorStore.editingFile.sourceContent.opts.ui)
         // } else {
         //   let plugin = this.editorStore.plugins[this.editorStore.editingFile.type]
         //   for (let index in plugin.stagePanels) {
@@ -67,15 +67,15 @@
         //       break
         //     }
         //   }
-        //   thisVue.editorStore.editingFile.content.component = thisVue.uiPanel.opts.component
-        //   // thisVue.editorStore.editingFile.content.opts.ui = thisVue.uiPanel.opts.ui
+        //   thisVue.editorStore.editingFile.sourceContent.component = thisVue.uiPanel.opts.component
+        //   // thisVue.editorStore.editingFile.sourceContent.opts.ui = thisVue.uiPanel.opts.ui
         //   thisVue.editorStore.commitOpts('ui', thisVue.uiPanel.opts.ui)
         // }
         // // console.log('editorStore', thisVue.editorStore)
-        // // console.log('opts>', {ui: this.editorStore.editingFile.content.opts.ui})
+        // // console.log('opts>', {ui: this.editorStore.editingFile.sourceContent.opts.ui})
         // // console.log('query>', this.queryString)
-        // // thisVue.editorStore.commitOpts('json', thisVue.editorStore.editingFile.content.opts.ui)
-        // thisVue.currentView = resolve => require(['../../../../' + thisVue.editorStore.editingFile.content.component.substring(1) + '.vue'], resolve)
+        // // thisVue.editorStore.commitOpts('json', thisVue.editorStore.editingFile.sourceContent.opts.ui)
+        // thisVue.currentView = resolve => require(['../../../../' + thisVue.editorStore.editingFile.sourceContent.component.substring(1) + '.vue'], resolve)
       },
       focus() {
       },

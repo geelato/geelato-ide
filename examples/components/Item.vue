@@ -1,74 +1,27 @@
 <template>
-  <div>
-    <gl-draggable
-        :list="rowItems"
-        handle=".gl-dnd-row-handle"
-        group='layoutItems'
-        :sort="true"
-        @add="onRowAdd"
-        @end="onEnd"
-        @clone="onClone"
-        @change="onRowChange"
-    >
-      <a-row v-for="(row,rowIndex) in rowItems" :gutter="row.gutter||gutter" :key="rowIndex" class="gl-dnd-row-handle">
-        <a-col v-for="(col,colIndex) in row.cols" :span="col.span" :offset="col.offset" :key="colIndex" style="">
-          <template v-if="col.card">
-            <a-card :title="getCardConfig(col.card).title" style="margin-top: 8px">
-              <component :ref="col.card" :is="getCardComponent(col.card)"
-                         :opts="getCardConfig(col.card).opts"
-                         :query="getCardConfig(col.card).query">
-                正在加载...
-              </component>
-            </a-card>
-          </template>
-          <template v-else-if="col.rows">
-            <GlIdePluginLayoutStageItem :rows="col.rows" :cardMap="cardMap"></GlIdePluginLayoutStageItem>
-          </template>
-          <template v-else>
-            <gl-draggable
-                :list="col.items"
-                handle=".gl-dnd-col-handle"
-                group='card'
-                :sort="false"
-                @add="onAddCol"
-                @change="onColChange"
-                @choose="onColChoose"
-                class="gl-dnd-col-wrapper"
-            >
-              <div v-for="(colItem,colItemIndex) in col.items" :key="colItem.id" class="gl-dnd-col-handle">
-                <div class="gl-dnd-col-toolbar">
-                  <div style="text-align: left;display:inline" title="拖动卡片">
-                    <a-icon :type="colItem.icon"/>
-                    {{colItem.title}}
-                  </div>&nbsp;
-                  <div style="display:inline-block;float: right">
-                    <a-button size="small" @click="onCardOpen(col,colItem,colItemIndex)"
-                              title="设置">
-                      <a-icon type="setting" theme="filled"/>
-                    </a-button>
-                    <a-button size="small" v-if="colItem.show!==false" @click="colItem.show=false" title="隐藏该卡片内容">
-                      <a-icon type="eye-invisible"/>
-                    </a-button>
-                    <a-button size="small" v-if="colItem.show===false" @click="colItem.show=true" title="展示该卡片内容">
-                      <a-icon type="eye"/>
-                    </a-button>
-                    <a-button size="small" @click="onColDelete(col,colItem,colItemIndex)" type="danger" title="清空该卡片内容">
-                      <a-icon type="delete"></a-icon>
-                    </a-button>
-                  </div>
-                </div>
-                <!--class="gl-dnd-col-handle"-->
-                <component v-show="colItem.show" :is="$globalVue.component(colItem.component)"
-                           v-bind="colItem.bind"></component>
-              </div>
-            </gl-draggable>
-          </template>
-        </a-col>
-        <div class="gl-dnd-row-toolbar" @click="removeRow(rowIndex)" title="删除行">
-          <a-icon type="close-circle" theme="twoTone" twoToneColor="#f5222d"/>
-        </div>
-      </a-row>
-    </gl-draggable>
+  <div class="gl-ide-preview">
+    <a-row v-for="(row,rowIndex) in rowItems" :gutter="row.gutter||gutter" :key="rowIndex" class="gl-dnd-row-handle">
+      <a-col v-for="(col,colIndex) in row.cols" :span="col.span" :offset="col.offset" :key="colIndex" style="">
+        <template v-if="col.card">
+          <a-card :title="getCardConfig(col.card).title" style="margin-top: 8px">
+            <component :ref="col.card" :is="getCardComponent(col.card)"
+                       :opts="getCardConfig(col.card).opts"
+                       :query="getCardConfig(col.card).query">
+              正在加载...
+            </component>
+          </a-card>
+        </template>
+        <template v-else-if="col.rows">
+          <GlIdePluginLayoutStageItem :rows="col.rows" :cardMap="cardMap"></GlIdePluginLayoutStageItem>
+        </template>
+        <template v-else>
+          <div v-for="(colItem,colItemIndex) in col.items" :key="colItem.id" class="gl-dnd-col-handle">
+            <component :is="$globalVue.component(colItem.component)"
+                       v-bind="colItem.bind"></component>
+          </div>
+        </template>
+      </a-col>
+    </a-row>
   </div>
 </template>
 

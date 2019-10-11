@@ -35,22 +35,7 @@ const plugin = {
         }
       },
       query: {}
-    },
-      // {
-      //   name: 'code',
-      //   title: '配置',
-      //   content: {
-      //     opts: {codes: JSON.stringify(formData)}
-      //   }
-      // }
-      //   {
-      //   name: 'ui',
-      //   title: '预览',
-      //   content: {
-      //     component: 'gl-form',
-      //     opts: formData
-      //   }
-      // }
+    }
     ],
     settingPanels: [
       {

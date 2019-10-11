@@ -46,8 +46,16 @@
       }
     },
     mounted: function () {
+      let that = this
+      // 加载发现没有项目时，检查是否已创建有项目，若没有则弹出创建项目页面，若快已有，则弹出选择项目页面
       if (!this.project.id) {
-        this.$emit('selectProject')
+        that.$gl.api.query('platform_dev_project', {}, 'id,name').then(function (res) {
+          if (res.data.length === 0) {
+            that.$gl.bus.$emit('gl-ide.designer.showProjectForm')
+          } else {
+            that.$gl.bus.$emit('gl-ide.designer.showProjectList')
+          }
+        })
       }
     },
     methods: {
@@ -273,7 +281,9 @@
           type: that.ideStore.editingFile.type,
           code: that.ideStore.editingFile.code,
           description: that.ideStore.editingFile.description,
-          content: that.ideStore.editingFile.content
+          sourceContent: that.ideStore.editingFile.sourceContent,
+          previewContent: that.ideStore.editingFile.sourceContent,
+          releaseContent: that.ideStore.editingFile.sourceContent
         }).then(function (res) {
           that.ideStore.editingFile.id = res.result
           // that.$ide.openDefaultFile({id: res.result})
@@ -289,7 +299,7 @@
        */
       openPage(event, item) {
         let that = this
-        that.$gl.api.query('platform_page_config', {extendId: item.node.id}, 'id,type,code,description,content').then(function (res) {
+        that.$gl.api.query('platform_page_config', {extendId: item.node.id}, 'id,type,code,description,sourceContent').then(function (res) {
           console.log('res.data[0]>', res)
           that.$ide.openFile(res.data[0])
         }).catch(function (e) {

@@ -83,7 +83,7 @@
           let that = this
           this.$set(this.formQuery, 'code', this.ideStore.editingFile.code)
           this.$set(this.formQuery, 'description', this.ideStore.editingFile.description)
-          this.$set(this.formQuery, 'component', this.ideStore.editingFile.content.component)
+          this.$set(this.formQuery, 'component', this.ideStore.editingFile.sourceContent.component)
           this.$set(this.formQuery, 'type', this.ideStore.editingFile.type)
         },
         immediate: true,

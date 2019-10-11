@@ -1,8 +1,8 @@
 <template>
   <div class="gl-ide-layout-stage" style="height: 760px;overflow-x: hidden;padding-left: 0.5em;padding-right: 1em">
-    <GlIdePluginLayoutStageItem :rows="ideStore.editingFile.content.opts.layout.rows"
-                                :cardMap="ideStore.editingFile.content.opts.cardMap"
-                                :gutter="ideStore.editingFile.content.opts.layout.gutter"></GlIdePluginLayoutStageItem>
+    <GlIdePluginLayoutStageItem :rows="ideStore.editingFile.sourceContent.opts.layout.rows"
+                                :cardMap="ideStore.editingFile.sourceContent.opts.cardMap"
+                                :gutter="ideStore.editingFile.sourceContent.opts.layout.gutter"></GlIdePluginLayoutStageItem>
   </div>
 </template>
 
@@ -58,7 +58,7 @@
       }
     },
     mounted() {
-      console.log('geelato-ide >  GlIdePluginLayoutStage > mounted()', this.ideStore.editingFile.content.opts.layout.rows)
+      console.log('geelato-ide >  GlIdePluginLayoutStage > mounted()', this.ideStore.editingFile.sourceContent.opts.layout.rows)
     },
     methods: {
       commit() {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <project-file-tree ref="fileTree" :ideStore="ideStore" :fileTypes="fileTypes"
-                       :project="project" @selectProject="showProjectList"></project-file-tree>
+                       :project="project"></project-file-tree>
   </div>
 </template>
 
@@ -45,13 +45,7 @@
     methods: {
       showProjectForm() {
         console.log('showProjectForm>bus')
-        // // TODO 是否保存旧项目
-        // let thisVue = this
-        // // 重置，并通过数据驱动，各页面板进入初始状态
-        // this.editorStore.reset()
-        // thisVue.editorStore.project = {name: '新项目', tree: ''}
-        // this.saveProject()
-        // this.$emit('showProjectForm')
+        //TODO 是否保存旧项目
         this.$gl.ui.openModal(this, {
           title: '创建项目',
           width: '1000px',
@@ -72,6 +66,10 @@
               then: {
                 fn: 'close',
                 ctx: 'modal'
+              },
+              dataMapping: {
+                id: '$ctx.id',
+                name: '$ctx.name'
               }
             }
           }, {
@@ -80,7 +78,6 @@
             text: '取消'
           }]
         })
-        // this.project = {id: '', name: '新项目', tree: ''}
         console.log('this.project>', this.project)
       },
       showProjectList() {
@@ -130,7 +127,7 @@
         })
       },
       onSaveProject(params, data) {
-        console.log('onSaveProject: ', params, data)
+        console.log('gl-ide > gl-ide-plugin-project > onSaveProject() > params,data: ', params, data)
         this.projectId = data.id
         this.project = {id: this.projectId, name: data.name}
       },

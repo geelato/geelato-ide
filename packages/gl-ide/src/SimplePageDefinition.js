@@ -6,12 +6,12 @@ class SimplePageDefinition {
    * @param options
    * @param isFromRemote 是否从模板初始化，默认为false，方便打开页面时区分是否要加载模板的配置信息还是从服务器加载配置信息
    */
-  constructor (options, isInitFromTemplate = false) {
+  constructor(options, isInitFromTemplate = false) {
     this.reset(options)
     this.isInitFromTemplate = isInitFromTemplate
   }
 
-  reset (options) {
+  reset(options) {
     let params = options || {}
     let defaultContent = {
       // code: {
@@ -49,14 +49,18 @@ class SimplePageDefinition {
     // 描述
     this.description = params.description || ''
     // 包含component、opts、params等内容
-    this.content = params.content ? this.parseContent(params.content) : defaultContent
+    this.sourceContent = params.sourceContent ? this.parseContent(params.sourceContent) : JSON.parse(JSON.stringify(defaultContent))
+    // 预览的内容
+    this.previewContent = params.previewContent ? this.parseContent(params.previewContent) : JSON.parse(JSON.stringify(defaultContent))
+    // 发布的内容
+    this.releaseContent = params.releaseContent ? this.parseContent(params.releaseContent) : JSON.parse(JSON.stringify(defaultContent))
   }
 
   /**
    * @param content 字符串
    * @returns {*} content 对象
    */
-  parseContent (content) {
+  parseContent(content) {
     if (typeof content === 'string') {
       let c = JSON.parse(content)
       return {
@@ -69,16 +73,6 @@ class SimplePageDefinition {
       return content
     }
   }
-
-  // 组合里面的code、component、opts、params等，转换成pageCfg的格式
-  // toPageCfg () {
-  //   return {
-  //     code: this.code,
-  //     component: this.content.component,
-  //     opts: this.content.opts,
-  //     params: this.content.params
-  //   }
-  // }
 }
 
 export default SimplePageDefinition
