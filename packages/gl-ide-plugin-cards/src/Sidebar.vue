@@ -11,23 +11,6 @@
         <div class="gl-card-body"></div>
       </div>
     </gl-draggable>
-    <!--<a-button style="text-align: center" block>加载更多...</a-button>-->
-    <div v-if="modalVisible">
-      <!--<a-button type="primary" @click="() => modalVisible = true">Vertically centered modal dialog</a-button>-->
-      <a-modal class="gl-card-designer"
-               :title="modalTitle"
-               centered
-               :width=modalWidth
-               v-model="modalVisible"
-               @ok="() => modalVisible = false"
-               :footer="null"
-               okText="保存"
-               cancelText="取消"
-               :maskClosable="false"
-      >
-        <component :is="cardDesigner"></component>
-      </a-modal>
-    </div>
   </div>
 </template>
 
@@ -90,11 +73,10 @@
             bind: {opts: table, query: {}},
             meta: {component: 'GlIdePluginHeaderDesigner', title: '工具条设置', inSettingPanel: true}
           }],
-        color: '#FFF',
-        modalTitle: '&nbsp;',
-        modalVisible: false,
-        modalWidth: (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) * .98,
-        cardDesigner: null
+        // color: '#FFF',
+        // modalTitle: '&nbsp;',
+        // modalVisible: false,
+        // modalWidth: (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) * .98,
       }
     },
     created() {
@@ -102,28 +84,18 @@
 
     },
     methods: {
-      onCardOpen(args) {
-        if (args.item.meta) {
-          this.modalTitle = args.item.meta.title
-          this.cardDesigner = this.$globalVue.component(args.item.meta.component)
-        }
-        this.modalVisible = true
-      },
-      onSelect(keys) {
-        this.$gl.bus.$emit('project_file_selected', keys)
-      },
-      onExpand() {
-        console.log('Trigger Expand');
-      },
+      // onSelect(keys) {
+      //   this.$gl.bus.$emit('project_file_selected', keys)
+      // },
+      // onExpand() {
+      //   console.log('Trigger Expand');
+      // },
       customClone(item) {
         let result = {
           id: utils.uuid(16)
         }
         Object.assign(result, item)
         return result
-      },
-      setModal1Visible(modal1Visible) {
-        this.modal1Visible = modal1Visible;
       }
     }
   }

@@ -3,10 +3,10 @@
     <a-row>
       <a-col :span="18" style="border-right: 1px solid #F2F2F2">
         <stage v-if="refreshToggleFlag" :size="size" :height="height" :tabPanelStyle="tabPanelStyle"
-               :opts="templateData"></stage>
+               :opts="cardBind"></stage>
       </a-col>
       <a-col :span="6">
-        <settings :size="size" :height="height" :tabPanelStyle="tabPanelStyle" :opts="templateData"
+        <settings :size="size" :height="height" :tabPanelStyle="tabPanelStyle" :opts="cardBind"
                   @change="onChange"></settings>
       </a-col>
     </a-row>
@@ -16,16 +16,21 @@
 <script>
   import Stage from './Stage'
   import Settings from './Settings'
-  import templateData from './DataTemplate.js'
 
   export default {
     name: "GlIdePluginTableDesigner",
     components: {Stage, Settings},
+    props: {
+      opts: {
+        type: Object,
+        required: true
+      }
+    },
     data() {
       return {
         refreshToggleFlag: true,
         size: 'default',
-        templateData: {},
+        cardBind: {},
         height: window.innerHeight * .85,
         tabPanelStyle: {
           'height': '100%',
@@ -36,33 +41,23 @@
       }
     },
     watch: {
-      // height() {
-      //   return window.innerHeight * .85
-      // },
-      // tabPanelStyle() {
-      //   return {
-      //     'max-height': window.innerHeight * .85 - 16 - 24,
-      //     'overflow-y': "scroll"
-      //   }
-      // }
     },
     created() {
       // 设置初始化值，确保所有值都可双向绑定
-      // templateData.pagination = (templateData.pagination === undefined ? {position: 'auto'} : templateData.pagination)
-      templateData.table.showHeader = (templateData.table.showHeader === undefined ? true : templateData.table.showHeader)
-      templateData.table.show = (templateData.table.show === undefined ? true : templateData.table.show)
+      this.opts.table.showHeader = (this.opts.table.showHeader === undefined ? true : this.opts.table.showHeader)
+      this.opts.table.show = (this.opts.table.show === undefined ? true : this.opts.table.show)
 
-      for (let i in templateData.query.mix.properties) {
-        let property = templateData.query.mix.properties[i]
+      for (let i in this.opts.query.mix.properties) {
+        let property = this.opts.query.mix.properties[i]
         property.props = (property.props === undefined ? {} : property.props)
       }
 
-      for (let i in templateData.table.columns) {
-        let column = templateData.table.columns[i]
+      for (let i in this.opts.table.columns) {
+        let column = this.opts.table.columns[i]
         column.needTotal = (column.needTotal === undefined ? false : column.needTotal)
         column.sorter = (column.sorter === undefined ? false : column.sorter)
       }
-      this.templateData = JSON.parse(JSON.stringify(templateData))
+      this.cardBind = this.opts
     },
     methods: {
       refreshStage() {

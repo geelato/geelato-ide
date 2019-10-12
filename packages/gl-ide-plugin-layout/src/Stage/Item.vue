@@ -42,6 +42,10 @@
                     {{colItem.title}}
                   </div>&nbsp;
                   <div style="display:inline-block;float: right">
+                    <!--<a-button size="small" @click="onCardReload(col,colItem,colItemIndex)"-->
+                    <!--title="刷新">-->
+                    <!--<a-icon type="reload"/>-->
+                    <!--</a-button>-->
                     <a-button size="small" @click="onCardOpen(col,colItem,colItemIndex)"
                               title="设置">
                       <a-icon type="setting" theme="filled"/>
@@ -58,7 +62,8 @@
                   </div>
                 </div>
                 <!--class="gl-dnd-col-handle"-->
-                <component v-show="colItem.show" :is="$globalVue.component(colItem.component)"
+                <component v-if="colItem.show"
+                           :is="$globalVue.component(colItem.component)"
                            v-bind="colItem.bind"></component>
               </div>
             </gl-draggable>
@@ -69,6 +74,23 @@
         </div>
       </a-row>
     </gl-draggable>
+    <div v-if="modalVisible">
+      <!--<a-button type="primary" @click="() => modalVisible = true">Vertically centered modal dialog</a-button>-->
+      <a-modal class="gl-card-designer" :title="modalTitle" centered :width=modalWidth v-model="modalVisible"
+               @ok="() => modalVisible = false" @cancel="onCloseModal" okText="保存" cancelText="取消"
+               :maskClosable="false">
+        <component :is="$globalVue.component(currentOpenedCard.meta.component)"
+                   v-bind="currentOpenedCard.bind"></component>
+        <template slot="footer">
+          <div style="text-align: center">
+            <!--<a-button type="primary" @click="saveCardComponent">暂存</a-button>-->
+            <a-button type="danger" @click="onCloseModal">
+              关闭
+            </a-button>
+          </div>
+        </template>
+      </a-modal>
+    </div>
   </div>
 </template>
 
@@ -98,14 +120,34 @@
     },
     data() {
       return {
+        color: '#FFF',
+        modalTitle: '&nbsp;',
+        modalWidth: (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) * .98,
+        currentOpenedCard: {},
+        modalVisible: false,
         rowItems: this.rows,
         colItems: [],
         // {id:component}
         colCards: {},
+        currentCardId: ''
       }
     },
     computed: {},
     methods: {
+      saveCardComponent(e) {
+        console.log('saveCardComponent>', e)
+      },
+      onCloseModal(e) {
+        this.modalVisible = false
+        this.onCardReload(this.currentOpenedCard)
+      },
+      onCardOpen(col, item, index) {
+        if (item.meta) {
+          this.modalTitle = item.meta.title
+          this.currentOpenedCard = item
+        }
+        this.modalVisible = true
+      },
       getCardConfig(cardId) {
         return this.cardMap[cardId]
       },
@@ -148,13 +190,14 @@
       onColChoose(e) {
         console.log('gl-ide-plugin-layout > stage > onColChoose: ', e)
       },
-      onCardOpen(col, item, index) {
-        if (typeof item.onOpen === 'function') {
-          item.onOpen({item: item, col: col, index: index})
-        }
-        this.$gl.bus.$emit(events.card_open, {col: col, item: item, index: index})
-        console.log('gl-ide-plugin-layout > stage > onCardOpen: ', col, item, index)
-      },
+      // onCardOpen(col, item, index) {
+      //   if (typeof item.onOpen === 'function') {
+      //     item.onOpen({item: item, col: col, index: index})
+      //   }
+      //   this.onCardOpen(col, item, index)
+      //   // this.$gl.bus.$emit(events.card_open, {col: col, item: item, index: index})
+      //   console.log('gl-ide-plugin-layout > stage > onCardOpen: ', col, item, index)
+      // },
       onColDelete(col, item, index) {
         console.log('gl-ide-plugin-layout > stage > onColDelete: ', col, item, index)
         this.$confirm({
@@ -168,6 +211,12 @@
             col.items.splice(index, 1);
           },
         });
+      },
+      onCardReload(item) {
+        item.show = !item.show
+        this.$nextTick(() => {
+          item.show = !item.show
+        })
       }
     }
   }

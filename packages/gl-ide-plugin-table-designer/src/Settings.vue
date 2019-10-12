@@ -55,12 +55,20 @@
                           @change="config.toolbar.show=!config.toolbar.show;onChange(true)"></a-switch>
               </td>
             </tr>
+            <tr class="gl-table-row">
+              <td class="gl-table-cell gl-table-cell-sub-label">
+                每页默认展示多少行：
+              </td>
+              <td class="gl-table-cell">
+                <a-input-number v-model="config.table.pageSize" style="width: 5em"></a-input-number>
+              </td>
+            </tr>
             <!--<tr class="gl-table-row">-->
-              <!--<td class="gl-table-cell gl-table-cell-sub-label">是否展示表头：</td>-->
-              <!--<td class="gl-table-cell">-->
-                <!--<a-switch :defaultChecked="config.table.showHeader"-->
-                          <!--@change="config.table.showHeader=!config.table.showHeader;onChange(true)"/>-->
-              <!--</td>-->
+            <!--<td class="gl-table-cell gl-table-cell-sub-label">是否展示表头：</td>-->
+            <!--<td class="gl-table-cell">-->
+            <!--<a-switch :defaultChecked="config.table.showHeader"-->
+            <!--@change="config.table.showHeader=!config.table.showHeader;onChange(true)"/>-->
+            <!--</td>-->
             <!--</tr>-->
           </table>
         </div>
