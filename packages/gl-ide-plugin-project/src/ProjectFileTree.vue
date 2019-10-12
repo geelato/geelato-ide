@@ -36,7 +36,7 @@
           parent: '#',
           type: 'root'
         }]
-        that.$gl.api.query('platform_tree_node', {treeId: project.id}, 'id,parent,text,type').then(function (res) {
+        that.$gl.api.query('platform_tree_node', 'id,parent,text,type', {treeId: project.id}).then(function (res) {
           console.log('gl-ide-plugin-project-tree > watch() > project.id > res:', res)
           that.newTree(treeData.concat(res.data))
         })
@@ -49,7 +49,7 @@
       let that = this
       // 加载发现没有项目时，检查是否已创建有项目，若没有则弹出创建项目页面，若快已有，则弹出选择项目页面
       if (!this.project.id) {
-        that.$gl.api.query('platform_dev_project', {}, 'id,name').then(function (res) {
+        that.$gl.api.query('platform_dev_project', 'id,name', {}).then(function (res) {
           if (res.data.length === 0) {
             that.$gl.bus.$emit('gl-ide.designer.showProjectForm')
           } else {
@@ -299,7 +299,7 @@
        */
       openPage(event, item) {
         let that = this
-        that.$gl.api.query('platform_page_config', {extendId: item.node.id}, 'id,type,code,description,sourceContent').then(function (res) {
+        that.$gl.api.query('platform_page_config', 'id,type,code,description,sourceContent', {extendId: item.node.id}).then(function (res) {
           console.log('res.data[0]>', res)
           that.$ide.openFile(res.data[0])
         }).catch(function (e) {

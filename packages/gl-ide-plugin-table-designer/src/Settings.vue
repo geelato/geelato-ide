@@ -449,7 +449,7 @@
     mounted() {
       let that = this
       // 初始化
-      that.$gl.api.query('platform_dev_table', {tableName: this.config.entity}, 'id,tableName,tableComment').then(function (res) {
+      that.$gl.api.query('platform_dev_table', 'id,tableName,tableComment', {tableName: this.config.entity}).then(function (res) {
         that.loadEntityMeta({tableId: res.data[0].id})
       })
     },
@@ -510,7 +510,7 @@
       },
       loadEntityMeta(kvConditions) {
         let that = this
-        that.$gl.api.query('platform_dev_column', kvConditions, 'id,title,name,description').then(function (res) {
+        that.$gl.api.query('platform_dev_column', 'id,title,name,description', kvConditions).then(function (res) {
           that.currentEntityColumns = res.data
         })
       },

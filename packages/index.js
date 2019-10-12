@@ -13,7 +13,7 @@ import GlIdePluginFields from './gl-ide-plugin-fields/index'
 
 // import GlIdePluginStructure from './gl-ide-plugin-structure/index'
 import ide from './gl-ide/src/ide'
-import Api from './Api'
+// import Api from './Api'
 // import geelatoAui from "geelato-ui-ant";
 
 // 导入依赖表单验证
@@ -30,7 +30,7 @@ const components = [
 ]
 
 
-let uiApi = new Api()
+// let uiApi = new Api()
 // 定义 install 方法，接收 Vue 作为参数。如果使用 use 注册插件，则所有的组件都将被注册
 const install = function (Vue, options) {
   // 判断是否安装
@@ -82,14 +82,14 @@ if (typeof window !== 'undefined' && window.Vue) {
   install(window.Vue)
 }
 
-function setApi(api) {
-  uiApi = api || new Api()
-}
+// function setApi(api) {
+//   uiApi = api || new Api()
+// }
 
 export default {
   // 导出的对象必须具有 install，才能被 Vue.use() 方法安装
   install,
   // 服务端访问api
-  setApi,
-  api: uiApi
+  // setApi
+  // api: uiApi
 }
