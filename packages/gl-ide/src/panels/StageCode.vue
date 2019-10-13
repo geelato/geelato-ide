@@ -101,6 +101,7 @@
       RunResult() {
         console.log(this.monacoEditor.getValue());
       },
+      // eslint-disable-next-line no-unused-vars
       themeChange(val) {
         this.initEditor();
       }

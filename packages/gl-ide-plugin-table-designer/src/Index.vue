@@ -40,8 +40,7 @@
         }
       }
     },
-    watch: {
-    },
+    watch: {},
     created() {
       // 设置初始化值，确保所有值都可双向绑定
       this.opts.table.showHeader = (this.opts.table.showHeader === undefined ? true : this.opts.table.showHeader)
@@ -56,6 +55,17 @@
         let column = this.opts.table.columns[i]
         column.needTotal = (column.needTotal === undefined ? false : column.needTotal)
         column.sorter = (column.sorter === undefined ? false : column.sorter)
+        // 列格式化辅助字段
+        column.customRenderString = (column.customRenderString === undefined ? '' : column.customRenderString)
+        // if (column.customRenderString) {
+        //   try {
+        //     column.customRender = eval(column.customRenderString)
+        //   } catch (e) {
+        //     console.error('gl-ide > gl-ide-plugin-table-designer > The format of column.customRenderString is incorrect:', column.customRenderString + '.', e)
+        //   }
+        // } else {
+        //   column.customRender = undefined
+        // }
       }
       this.cardBind = this.opts
     },

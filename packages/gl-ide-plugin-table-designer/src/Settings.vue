@@ -95,16 +95,19 @@
                 <td class="gl-table-cell">
                   <a-select v-model="col.dataIndex" :allowClear="true" v-if="!isOperateColumn(col)"
                             style="min-width: 99%">
-                    <a-select-option v-for="(colMeta,colMetaIndex) in currentEntityColumns" :key="colMeta.name">
-                      {{colMeta.name}}
+                    <a-select-option v-for="colMeta in currentEntityColumns" :key="colMeta.fieldName"
+                                     :title="colMeta.title">
+                      {{colMeta.fieldName}}
                     </a-select-option>
                   </a-select>
                 </td>
                 <td class="gl-table-cell">
-                  <a-button class="gl-mini-btn" v-if="currentColIndex!==colIndex" @click="currentColIndex = colIndex">
+                  <a-button class="gl-mini-btn" v-if="currentColIndex!==colIndex" @click="currentColIndex = colIndex"
+                            title="显示更多设置">
                     <a-icon type="eye"/>
                   </a-button>
-                  <a-button class="gl-mini-btn" v-if="currentColIndex===colIndex" @click="currentColIndex = -1">
+                  <a-button class="gl-mini-btn" v-if="currentColIndex===colIndex" @click="currentColIndex = -1"
+                            title="隐藏更多设置">
                     <a-icon type="eye-invisible"/>
                   </a-button>
                   <a-button class="gl-mini-btn" v-if="colIndex!==0"
@@ -136,9 +139,30 @@
                       </td>
                     </tr>
                     <tr class="gl-table-row">
-                      <td class="gl-table-cell gl-table-cell-sub-label">值格式化：</td>
+                      <td class="gl-table-cell gl-table-cell-sub-label">
+                        <a-icon type="info-circle" title="未设置该值转换格式时，直接以数据库查询的结果进行展示。"/>
+                        值格式化：
+                      </td>
                       <td class="gl-table-cell">
-                        <input v-model="col._format" style="width: 99%"/>
+                        <div>
+                          <input v-model="col.customRenderString" style="width: 99%"
+                                 @change="changeColumnCustomRender(col)" placeholder="鼠标移上来展示示例"/>
+                        </div>
+                        <div class="gl-ide-designer-tips">
+                          填写示例1，展示固定的字段内容：<br>
+                          () =>'内容'<br>
+                          填写示例2，判断并展示不同的内容：<br>
+                          (text) => text === 1 ? 'A' : 'B'<br>
+                          填写示例3，结合其它列进行展示：<br>
+                          (record) => record.loginName+'_'+record.sex
+                        </div>
+                        <!--<a-input-search placeholder="更新查看值效果" v-model="col.customRenderString"-->
+                        <!--@search="changeColumnCustomRender()">-->
+                        <!--<a-button type="primary" slot="enterButton">-->
+                        <!--<a-icon type="reload"/>-->
+                        <!--更新-->
+                        <!--</a-button>-->
+                        <!--</a-input-search>-->
                       </td>
                     </tr>
                     <tr class="gl-table-row">
@@ -168,7 +192,10 @@
                       </td>
                     </tr>
                     <tr class="gl-table-row">
-                      <td class="gl-table-cell gl-table-cell-sub-label">是否统计：</td>
+                      <td class="gl-table-cell gl-table-cell-sub-label">
+                        <a-icon type="info-circle" title="操作栏可见时才生效"/>
+                        是否统计：
+                      </td>
                       <td class="gl-table-cell">
                         <!--<a-switch :checked="col.needTotal" @change="col.needTotal=!col.needTotal"/>-->
                         <a-switch :defaultChecked="col.needTotal"
@@ -236,28 +263,27 @@
               <tr class="gl-table-row" :key="propertyColIndex">
                 <td class="gl-table-cell"><input v-model="property.title" style="width: 99%"/></td>
                 <td class="gl-table-cell">
-                  <a-select v-model="property.field" :allowClear="true"
-                            style="min-width: 99%">
-                    <a-select-option v-for="(colMeta,colMetaIndex) in currentEntityColumns" :key="colMeta.name">
-                      {{colMeta.name}}
+                  <a-select v-model="property.field" :allowClear="true" style="min-width: 99%">
+                    <a-select-option v-for="colMeta in currentEntityColumns" :key="colMeta.fieldName"
+                                     :title="colMeta.title">
+                      {{colMeta.fieldName}}
                     </a-select-option>
                   </a-select>
                 </td>
                 <td class="gl-table-cell">
-                  <a-select v-model="property.cop" :allowClear="true"
-                            style="min-width: 99%">
-                    <a-select-option v-for="cop in cops" :key="cop.value">
+                  <a-select v-model="property.cop" style="min-width: 99%">
+                    <a-select-option v-for="cop in cops" :key="cop.value" :title="cop.text">
                       {{cop.text}}
                     </a-select-option>
                   </a-select>
                 </td>
                 <td class="gl-table-cell">
                   <a-button class="gl-mini-btn" v-if="currentQueryIndex!==propertyColIndex"
-                            @click="currentQueryIndex = propertyColIndex">
+                            @click="currentQueryIndex = propertyColIndex" title="显示更多设置">
                     <a-icon type="eye"/>
                   </a-button>
                   <a-button class="gl-mini-btn" v-if="currentQueryIndex===propertyColIndex"
-                            @click="currentQueryIndex = -1">
+                            @click="currentQueryIndex = -1" title="隐藏更多设置">
                     <a-icon type="eye-invisible"/>
                   </a-button>
                   <a-button class="gl-mini-btn" v-if="propertyColIndex!==0"
@@ -345,11 +371,11 @@
                 </td>
                 <td class="gl-table-cell">
                   <a-button class="gl-mini-btn" v-if="currentRowActionIndex!==rowActionIndex"
-                            @click="currentRowActionIndex = rowActionIndex">
+                            @click="currentRowActionIndex = rowActionIndex" title="显示更多设置">
                     <a-icon type="eye"/>
                   </a-button>
                   <a-button class="gl-mini-btn" v-if="currentRowActionIndex===rowActionIndex"
-                            @click="currentRowActionIndex = -1">
+                            @click="currentRowActionIndex = -1" title="隐藏更多设置">
                     <a-icon type="eye-invisible"/>
                   </a-button>
                   <a-button class="gl-mini-btn" v-if="rowActionIndex!==0"
@@ -386,13 +412,11 @@
 
 <script>
   import mixin from '../../mixin-x-designer'
-  import Checkbox from "ant-design-vue/es/vc-checkbox/src/Checkbox";
-  import Table from "ant-design-vue/es/table/Table";
   import SelectEntityList from './SelectEntityList'
 
   export default {
     name: "Settings",
-    components: {Table, Checkbox, SelectEntityList},
+    components: {},
     mixins: [mixin],
     props: {
       opts: {
@@ -457,6 +481,14 @@
       onChange(needRefreshStage = false, data) {
         this.$emit('change', {needRefreshStage: needRefreshStage, data: data})
       },
+      changeColumnCustomRender(col) {
+        console.log('args', col)
+        try {
+          this.onChange(true)
+        } catch (e) {
+          console.error(e)
+        }
+      },
       convertCop(cop) {
         return this.dict[cop]
       },
@@ -510,7 +542,7 @@
       },
       loadEntityMeta(kvConditions) {
         let that = this
-        that.$gl.api.query('platform_dev_column', 'id,title,name,description', kvConditions).then(function (res) {
+        that.$gl.api.query('platform_dev_column', 'id,title,fieldName,name,description', kvConditions).then(function (res) {
           that.currentEntityColumns = res.data
         })
       },

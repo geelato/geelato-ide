@@ -95,8 +95,9 @@
 </template>
 
 <script>
+  /* eslint-disable no-unused-vars */
+
   import Vue from 'vue'
-  import events from '../events'
 
   export default {
     name: "GlIdePluginLayoutStageItem",
@@ -137,6 +138,7 @@
       saveCardComponent(e) {
         console.log('saveCardComponent>', e)
       },
+
       onCloseModal(e) {
         this.modalVisible = false
         this.onCardReload(this.currentOpenedCard)
@@ -190,14 +192,6 @@
       onColChoose(e) {
         console.log('gl-ide-plugin-layout > stage > onColChoose: ', e)
       },
-      // onCardOpen(col, item, index) {
-      //   if (typeof item.onOpen === 'function') {
-      //     item.onOpen({item: item, col: col, index: index})
-      //   }
-      //   this.onCardOpen(col, item, index)
-      //   // this.$gl.bus.$emit(events.card_open, {col: col, item: item, index: index})
-      //   console.log('gl-ide-plugin-layout > stage > onCardOpen: ', col, item, index)
-      // },
       onColDelete(col, item, index) {
         console.log('gl-ide-plugin-layout > stage > onColDelete: ', col, item, index)
         this.$confirm({

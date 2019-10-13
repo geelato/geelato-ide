@@ -72,9 +72,21 @@
     text-align: center;
 }
 
+.gl-ide-designer-tips {
+    font-size: 0.9em;
+    padding: 0.5em;
+    display: none;
+    border: 1px solid #91d5ff;
+    background-color: #e6f7ff;
+}
+
+.gl-table-cell:hover .gl-ide-designer-tips {
+    display: block;
+}
+
 /**************************************
  * ide preview
  *************************************/
-.gl-ide-preview .gl-dnd-col-toolbar,.gl-ide-preview .gl-dnd-row-toolbar{
+.gl-ide-preview .gl-dnd-col-toolbar, .gl-ide-preview .gl-dnd-row-toolbar {
     display: none;
 }
