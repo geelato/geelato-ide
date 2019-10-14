@@ -275,7 +275,7 @@
       savePage: function () {
         let that = this
         console.log('geelato-ide > gl-ide-plugin-project > ProjectFileTree > savePage() > editingFile:', that.ideStore.editingFile)
-        that.$gl.api.save('platform_page_config', {
+        that.$gl.api.save('platform_dev_page', {
           id: that.ideStore.editingFile.id,
           extendId: that.ideStore.editingFile.extendId,
           type: that.ideStore.editingFile.type,
@@ -299,7 +299,7 @@
        */
       openPage(event, item) {
         let that = this
-        that.$gl.api.query('platform_page_config', 'id,type,code,description,sourceContent', {extendId: item.node.id}).then(function (res) {
+        that.$gl.api.query('platform_dev_page', 'id,type,code,description,sourceContent', {extendId: item.node.id}).then(function (res) {
           console.log('res.data[0]>', res)
           that.$ide.openFile(res.data[0])
         }).catch(function (e) {
@@ -315,7 +315,7 @@
       removePage(nodeId) {
         let that = this
         // TODO 两张表的删除，合在一个事务中
-        that.$gl.api.delete('platform_page_config', {extendId: nodeId})
+        that.$gl.api.delete('platform_dev_page', {extendId: nodeId})
         that.$gl.api.delete('platform_tree_node', {id: nodeId})
         this.$ide.openDefaultFile()
       },

@@ -73,6 +73,9 @@
           <a-icon type="close-circle" theme="twoTone" twoToneColor="#f5222d"/>
         </div>
       </a-row>
+      <div v-if="!rowItems||rowItems.length===0" style="text-align: center;padding-top: 1em">
+        从左边【布局】栏目中拖动布局行列到该区域，再从【组件】栏目拖动组件到布局行列中。
+      </div>
     </gl-draggable>
     <div v-if="modalVisible">
       <!--<a-button type="primary" @click="() => modalVisible = true">Vertically centered modal dialog</a-button>-->

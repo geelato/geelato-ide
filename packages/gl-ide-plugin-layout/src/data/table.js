@@ -30,7 +30,7 @@ export default {
           props: {AddPreOptionText: '全部', AddPreOptionValue: undefined, placeholder: '请选择'}
         },
         {field: 'description', title: '描述', cop: 'contains', control: 'input', lop: 'and'},
-        {field: 'checkState', title: '激活', cop: 'eq', control: 'checkbox', props: {defaultValue: 1}},
+        {field: 'enableStatus', title: '激活', cop: 'eq', control: 'checkbox', props: {defaultValue: 1}},
         // {
         //   field: 'birthday',
         //   title: '生日',
@@ -153,7 +153,7 @@ export default {
         _format: 'text === 2 ? \'保密\' : (text === 1 ? \'男\' : \'女\''
       },
       {title: '邮箱', dataIndex: 'email'},
-      {title: '次序', dataIndex: 'seq', needTotal: true},
+      {title: '次序', dataIndex: 'seqNo', needTotal: true},
       {title: '描述', dataIndex: 'description'},
       // {
       //   title: '服务调用次数',

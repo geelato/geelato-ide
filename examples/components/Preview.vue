@@ -29,7 +29,7 @@
     methods: {
       refresh() {
         let that = this
-        that.$gl.api.query('platform_page_config', 'id,type,code,description,sourceContent', {id: this.$route.params.pageId}).then(function (res) {
+        that.$gl.api.query('platform_dev_page', 'id,type,code,description,sourceContent', {id: this.$route.params.pageId}).then(function (res) {
           that.config = JSON.parse(res.data[0].sourceContent).opts
         }).catch(function (e) {
           console.error(e)

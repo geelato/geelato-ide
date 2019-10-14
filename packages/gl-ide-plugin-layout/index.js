@@ -21,17 +21,19 @@ const plugin = {
         cardMap: {},
         layout: {
           gutter: 4,
-          rows: [{
-            title: '一行一列',
-            cols: [
-              {span: 24, offset: 0, items: []}
-            ]
-          }, {
-            title: '一行两列',
-            cols: [
-              {span: 7, offset: 0, items: []}, {span: 17, offset: 0, items: []}
-            ]
-          }]
+          rows: [
+          //   {
+          //   title: '一行一列',
+          //   cols: [
+          //     {span: 24, offset: 0, items: []}
+          //   ]
+          // }, {
+          //   title: '一行两列',
+          //   cols: [
+          //     {span: 7, offset: 0, items: []}, {span: 17, offset: 0, items: []}
+          //   ]
+          // }
+          ]
         }
       },
       query: {}

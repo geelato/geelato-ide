@@ -1,8 +1,8 @@
 import FormData from './form'
 
 export default {
-  title: '用户信息',
-  entity: 'platform_user',
+  title: '示例信息',
+  entity: 'platform_demo_entity',
   query: {
     // 是否隐藏整个查询区域
     show: true,
@@ -18,29 +18,20 @@ export default {
           title: '名称',
           cop: 'eq',
           control: 'input',
-          lop: 'or',
+          lop: 'and',
           props: {placeholder: '姓名', defaultValue: ''}
         },
-        {field: 'loginName', title: '账号', cop: 'contains', control: 'input', lop: 'or', props: {placeholder: '登录名'}},
+        {field: 'code', title: '编码', cop: 'contains', control: 'input', lop: 'and', props: {placeholder: ''}},
         {
-          field: 'sex',
-          title: '性别',
+          field: 'type',
+          title: '类型',
           cop: 'eq',
           control: 'select',
-          data: [{text: '保密', value: 2}, {text: '男', value: 1}, {text: '女', value: 0}],
+          data: [{text: '默认', value: 0}, {text: '类型一', value: 1}, {text: '类型二', value: 2}],
           // 增加指定选择项，如所有项、默认项，AddPreOptionText：为项的展示内容，AddPreOptionValue为项的展示值
           props: {AddPreOptionText: '全部', AddPreOptionValue: undefined, placeholder: '请选择'}
         },
         {field: 'description', title: '描述', cop: 'contains', control: 'input', lop: 'and'},
-        // {
-        //   field: 'birthday',
-        //   title: '生日',
-        //   cop: 'gte',
-        //   type: 'date',
-        //   control: 'range-picker',
-        //   placeholder: ['生日开始日期', '生日结束日期'],
-        //   format: 'yyyy-mm-dd'
-        // }
       ],
       layout: {
         display: 'auto',
@@ -58,7 +49,7 @@ export default {
       // opener、content、modal、handler，默认为handler
       ctx: 'this',
       params: {
-        title: '编辑用户信息',
+        title: '编辑DEMO实体',
         width: '1200px',
         height: '480px',
         body: {
@@ -104,13 +95,12 @@ export default {
         // opener、content、modal、handler，默认为handler
         ctx: 'this',
         params: {
-          title: '编辑用户信息',
+          title: '编辑DEMO实体',
           width: '1200px',
           height: '480px',
           body: {
             type: 'staticPage',
             component: 'GlForm',
-            // component: resolve => require(['/components/Form/Base/Example.vue'], resolve),
             props: {opts: JSON.parse(JSON.stringify(FormData))}
           },
           actions: [{
@@ -142,34 +132,14 @@ export default {
     columns: [
       {title: '#', dataIndex: 'id', scopedSlots: {customRender: 'serial'}},
       {title: '名称', dataIndex: 'name', sorter: true},
-      {title: '登录名', dataIndex: 'loginName', sorter: true},
-      {title: '电话', dataIndex: 'telephone'},
+      {title: '编码', dataIndex: 'code', sorter: true},
       {
-        title: '性别',
-        dataIndex: 'sex',
+        title: '类型',
+        dataIndex: 'type',
         sorter: true,
-        customRenderString: `(text) => text === 2 ? '保密' : (text === 1 ? '男' : '女')`
+        customRenderString: `(text) => text == 2 ? '类型二' : (text == 1 ? '类型一' : '默认类型')`
       },
-      {title: '邮箱', dataIndex: 'email'},
-      {title: '次序', dataIndex: 'seq', needTotal: true},
       {title: '描述', dataIndex: 'description'},
-      // {
-      //   title: '服务调用次数',
-      //   dataIndex: 'callNo',
-      //   sorter: true,
-      //   needTotal: true,
-      //   customRender: (text) => text + ' 次'
-      // },
-      // {
-      //   title: '状态',
-      //   dataIndex: 'status',
-      //   needTotal: true
-      // },
-      // {
-      //   title: '更新时间',
-      //   dataIndex: 'updatedAt',
-      //   sorter: true
-      // },
       {
         title: '操作',
         dataIndex: '',
