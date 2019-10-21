@@ -2,7 +2,7 @@
   <div style="padding: 2em">
     <div v-if="config.layout.rows">
       <GlIdePluginLayoutStageItem :rows="config.layout.rows"
-                                  :cardMap="config.cardMap"
+                                  :componentRefs="config.componentRefs"
                                   :gutter="config.layout.gutter"></GlIdePluginLayoutStageItem>
     </div>
   </div>
@@ -18,7 +18,7 @@
     data() {
       return {
         config: {
-          cardMap: {},
+          componentRefs: {},
           layout: {}
         }
       }

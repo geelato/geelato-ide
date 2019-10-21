@@ -1,7 +1,7 @@
 <template>
   <div class="gl-ide-layout-stage" style="height: 760px;overflow-x: hidden;padding-left: 0.5em;padding-right: 1em">
     <GlIdePluginLayoutStageItem :rows="ideStore.editingFile.sourceContent.opts.layout.rows"
-                                :cardMap="ideStore.editingFile.sourceContent.opts.cardMap"
+                                :componentRefs="ideStore.editingFile.sourceContent.opts.componentRefs"
                                 :gutter="ideStore.editingFile.sourceContent.opts.layout.gutter"></GlIdePluginLayoutStageItem>
   </div>
 </template>

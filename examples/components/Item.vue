@@ -12,7 +12,7 @@
           </a-card>
         </template>
         <template v-else-if="col.rows">
-          <GlIdePluginLayoutStageItem :rows="col.rows" :cardMap="cardMap"></GlIdePluginLayoutStageItem>
+          <GlIdePluginLayoutStageItem :rows="col.rows" :componentRefs="componentRefs"></GlIdePluginLayoutStageItem>
         </template>
         <template v-else>
           <div v-for="(colItem,colItemIndex) in col.items" :key="colItem.id" class="gl-dnd-col-handle">
@@ -32,7 +32,7 @@
   export default {
     name: "GlIdePluginLayoutStageItem",
     props: {
-      cardMap: {
+      componentRefs: {
         type: Object,
         required: true
       },
@@ -60,7 +60,7 @@
     computed: {},
     methods: {
       getCardConfig(cardId) {
-        return this.cardMap[cardId]
+        return this.componentRefs[cardId]
       },
       getCardComponent(cardId) {
         let card = this.getCardConfig(cardId)
@@ -93,7 +93,7 @@
         console.log('gl-ide-plugin-layout > stage > onClone: ', e)
       },
       onAddCol: function (e) {
-        console.log('gl-ide-plugin-layout > stage > onAddCol: ', e, this.cardMap)
+        console.log('gl-ide-plugin-layout > stage > onAddCol: ', e, this.componentRefs)
       },
       onColChange(e) {
         console.log('gl-ide-plugin-layout > stage > onColChange: ', e)

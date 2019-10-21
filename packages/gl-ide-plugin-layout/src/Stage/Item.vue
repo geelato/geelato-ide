@@ -22,7 +22,8 @@
             </a-card>
           </template>
           <template v-else-if="col.rows">
-            <GlIdePluginLayoutStageItem :rows="col.rows" :cardMap="cardMap"></GlIdePluginLayoutStageItem>
+            <GlIdePluginLayoutStageItem :rows="col.rows" :componentRefs="componentRefs"
+                                        :gutter="gutter" :treeNodes="treeNodes"></GlIdePluginLayoutStageItem>
           </template>
           <template v-else>
             <gl-draggable
@@ -30,7 +31,7 @@
                 handle=".gl-dnd-col-handle"
                 group='card'
                 :sort="false"
-                @add="onAddCol"
+                @add="onAddCol($event,col)"
                 @change="onColChange"
                 @choose="onColChoose"
                 class="gl-dnd-col-wrapper"
@@ -62,9 +63,13 @@
                   </div>
                 </div>
                 <!--class="gl-dnd-col-handle"-->
-                <component v-if="colItem.show"
+                <component :ref="colItem.id" v-show="colItem.show"
                            :is="$globalVue.component(colItem.component)"
                            v-bind="colItem.bind"></component>
+              </div>
+              <div v-if="rowItems.length===1&&(!col.items||col.items.length===0)"
+                   style="text-align: center;padding-top:.2em">
+                从左边【组件】栏目拖动组件到此。
               </div>
             </gl-draggable>
           </template>
@@ -105,11 +110,17 @@
   export default {
     name: "GlIdePluginLayoutStageItem",
     props: {
-      cardMap: {
+      componentRefs: {
         type: Object,
         required: true
       },
       rows: {
+        type: Array,
+        default() {
+          return []
+        }
+      },
+      treeNodes: {
         type: Array,
         default() {
           return []
@@ -136,8 +147,137 @@
         currentCardId: ''
       }
     },
-    computed: {},
+    watch: {
+      'rowItems.length'(val, oval) {
+        console.log(val, oval)
+        console.log('this.props>>>>>>>>>>>>', this.componentRefs)
+        console.log('this.props>>>>>>>>>>>>', this.rows)
+        console.log('this.props>>>>>>>>>>>>', this.treeNodes)
+        console.log('this.props>>>>>>>>>>>>', this.gutter)
+      }
+    },
+    mounted() {
+      console.log('this.props>>>>>>>>>>>>', this.componentRefs)
+      console.log('this.props>>>>>>>>>>>>', this.rows)
+      console.log('this.props>>>>>>>>>>>>', this.treeNodes)
+      console.log('this.props>>>>>>>>>>>>', this.gutter)
+      this.generateTreeNodeData()
+    },
     methods: {
+      /**
+       * 初始化创建树节点
+       */
+      generateTreeNodeData() {
+        let that = this
+        if (that.treeNodes !== undefined && that.treeNodes.length > 0) {
+          // 已创建，不重复创建
+          return;
+        }
+        that.rows.filter((row) => !!row.cols).forEach((row) => {
+          row.cols.filter((col) => !!col.items).forEach((col) => {
+            // ==========item为卡片内一个组件的配置信息，例如下方所示
+            // {id:'',title: '列表',icon: 'table',component: 'GlTable',bind: {opts: table, query: {}},
+            //   meta: {
+            //     component: 'GlIdePluginTableDesigner',
+            //       title: '列表编辑器',
+            //       objectTree: [{title: '查询栏', path: 'query.mix.properties'}, {title: '工具栏', path: 'toolbar.actions'}]
+            //   }
+            // }
+
+            col.items.forEach((item) => {
+              that.generateObjectTreeNode(item)
+            })
+          })
+        })
+        console.log('gl-ide > gl-ide-plugin-item > generateTreeData() > componentRefs:', this.componentRefs)
+      },
+      /**
+       * 创建该组件(treeNodes)下的树节点
+       * @param item 组件配置信息item
+       */
+      generateObjectTreeNode(item) {
+        let that = this
+        // 如果已存在treeNodes中，则不添加
+        if (that.treeNodes.filter((node) => node.key === item.id).length > 0) {
+          return
+        }
+        // 加载每张卡片组件配置cardComponent
+        //  {id: item.id, component: this.$refs[item.id][0], type: item.type, meta: item.meta}
+        let cardComponent = that.componentRefs[item.id]
+        // console.log('gl-ide > gl-ide-plugin-item > generateObjectTreeNode() > cardComponent:', cardComponent)
+        let groups = []
+        if (cardComponent && cardComponent.meta && cardComponent.meta.objectTree) {
+          cardComponent.meta.objectTree.forEach((treeNodeObject) => {
+            // treeNodeObject: {title:xx,path:xx.yy.zz}
+            let childrenNodes = []
+            let childrenObjects = eval('item.bind.opts.' + treeNodeObject.path)
+            console.log('gl-ide > gl-ide-plugin-layout > generateTreeData() > childrenObjects:', cardComponent.title, childrenObjects)
+            if (childrenObjects && typeof childrenObjects === "object") {
+              for (let key in childrenObjects) {
+                let childObj = childrenObjects[key]
+                if (childObj.control) {
+                  // 未设置control值的，可能为form的隐藏属性，这里需过滤掉
+                  console.log('childObj>', childObj)
+                  childrenNodes.push({
+                    title: childObj.title + ' [' + childObj.control + ']',
+                    key: childObj.gid, // that.$gl.utils.uuid(8),
+                    slots: {
+                      icon: 'link',
+                    }
+                  })
+                }
+              }
+              // // 数组类型
+              // if (childrenObjects.length > 0) {
+              //   // 数组类型[]
+              //   childrenObjects.forEach((childObj) => {
+              //     childrenNodes.push({
+              //       title: childObj.title + ' [' + childObj.control + ']',
+              //       key: that.$gl.utils.uuid(8),
+              //       slots: {
+              //         icon: 'link',
+              //       }
+              //     })
+              //   })
+              // } else if (childrenObjects.length === undefined) {
+              //   // 键值对象类型{}
+              // }
+            }
+
+            groups.push({
+              title: treeNodeObject.title + '[组]',
+              key: that.$gl.utils.uuid(8),
+              disabled: true,
+              slots: {
+                icon: 'folder',
+              },
+              children: childrenNodes
+            })
+            // console.log('gl-ide > gl-ide-plugin-layout > generateTreeData() > component.$refs.query:', eval('item.bind.opts.' + treeNodeObject.path))
+          })
+        }
+
+        that.treeNodes.push({
+          title: item.title,
+          key: item.id,
+          slots: {
+            icon: item.icon,
+          },
+          children: groups
+        })
+      },
+      /**
+       * 移除objectTree相应的节点
+       * @param item 组件配置信息item
+       */
+      removeObjectTreeNode(item) {
+        let that = this
+        that.treeNodes.forEach((node, index) => {
+          if (node.key === item.id) {
+            that.treeNodes.splice(index, 1)
+          }
+        })
+      },
       saveCardComponent(e) {
         console.log('saveCardComponent>', e)
       },
@@ -154,17 +294,17 @@
         this.modalVisible = true
       },
       getCardConfig(cardId) {
-        return this.cardMap[cardId]
+        return this.componentRefs[cardId]
       },
       getCardComponent(cardId) {
         let card = this.getCardConfig(cardId)
         return Vue.component(card.type)
       },
-      onEnd: function (e) {
-        console.log('gl-ide-plugin-layout > stage > onEnd: ', e)
+      onEnd: function (args) {
+        console.log('gl-ide-plugin-layout > stage > onEnd: ', args)
       },
-      onRowAdd: function (e) {
-        console.log('gl-ide-plugin-layout > stage > onRowAdd: ', e)
+      onRowAdd: function (args) {
+        console.log('gl-ide-plugin-layout > stage > onRowAdd: ', args)
       },
       removeRow(rowIndex) {
         let that = this
@@ -186,8 +326,23 @@
       onClone(e) {
         console.log('gl-ide-plugin-layout > stage > onClone: ', e)
       },
-      onAddCol: function (e) {
-        console.log('gl-ide-plugin-layout > stage > onAddCol: ', e, this.cardMap)
+      onAddCol: function (e, col) {
+        console.log('gl-ide-plugin-layout > stage > onAddCol() > event.newIndex: ', e.newIndex)
+        console.log('gl-ide-plugin-layout > stage > onAddCol() > items: ', col.items.length)
+        let item = col.items[col.items.length === e.newIndex && e.newIndex > 0 ? e.newIndex - 1 : e.newIndex]
+        this.componentRefs[item.id] = {id: item.id, component: this.$refs[item.id][0], type: item.type, meta: item.meta}
+        this.generateObjectTreeNode(item)
+        // 依据 this.refs中的组件，删除this.cardMap中多余的组件
+        // if (this.$refs) {
+        //   for (let refKey in this.$refs) {
+        //     console.log('refKey>', refKey)
+        //     if (this.$refs[refKey].length === 0) {
+        //       delete  this.componentRefs[refKey]
+        //     }
+        //   }
+        // }
+        console.log('gl-ide-plugin-layout > stage > onAddCol() > this.refs: ', this.$refs)
+        console.log('gl-ide-plugin-layout > stage > onAddCol() > this.componentRefs: ', this.componentRefs)
       },
       onColChange(e) {
         console.log('gl-ide-plugin-layout > stage > onColChange: ', e)
@@ -197,6 +352,7 @@
       },
       onColDelete(col, item, index) {
         console.log('gl-ide-plugin-layout > stage > onColDelete: ', col, item, index)
+        let that = this
         this.$confirm({
           title: '是否删除该卡片内容?',
           cancelText: '是',
@@ -206,6 +362,9 @@
           },
           onCancel() {
             col.items.splice(index, 1);
+            delete  that.componentRefs[item.id]
+            that.removeObjectTreeNode(item)
+            console.log('gl-ide-plugin-layout > stage > onColDelete() > this.componentRefs: ', that.componentRefs)
           },
         });
       },

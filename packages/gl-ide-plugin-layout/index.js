@@ -2,6 +2,7 @@
 import Sidebar from './src/Sidebar'
 import Stage from './src/Stage/Index'
 import events from './src/events'
+import GlIdeSettingObjectTree from './src/Settings/GlIdeSettingObjectTree'
 // import formData from "../gl-ide-plugin-file-combination/src/formData";
 
 const plugin = {
@@ -18,21 +19,21 @@ const plugin = {
       type: 'ui',
       component: 'GlIdePluginLayoutStage',
       opts: {
-        cardMap: {},
+        componentRefs: {},
         layout: {
           gutter: 4,
           rows: [
-          //   {
-          //   title: '一行一列',
-          //   cols: [
-          //     {span: 24, offset: 0, items: []}
-          //   ]
-          // }, {
-          //   title: '一行两列',
-          //   cols: [
-          //     {span: 7, offset: 0, items: []}, {span: 17, offset: 0, items: []}
-          //   ]
-          // }
+            //   {
+            //   title: '一行一列',
+            //   cols: [
+            //     {span: 24, offset: 0, items: []}
+            //   ]
+            // }, {
+            //   title: '一行两列',
+            //   cols: [
+            //     {span: 7, offset: 0, items: []}, {span: 17, offset: 0, items: []}
+            //   ]
+            // }
           ]
         }
       },
@@ -46,6 +47,12 @@ const plugin = {
         opts: {},
         query: {}
       },
+      {
+        title: '对象树',
+        component: 'GlIdeSettingObjectTree',
+        opts: {},
+        query: {}
+      }
     ]
   },
   sidebar: {
@@ -58,6 +65,7 @@ export default {
   name: plugin.name,
   install: function (Vue) {
     Vue.component(Stage.name, Stage)
+    Vue.component(GlIdeSettingObjectTree.name, GlIdeSettingObjectTree)
   },
   config: plugin,
   events: events

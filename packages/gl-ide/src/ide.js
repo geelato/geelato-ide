@@ -14,7 +14,10 @@ let GlobalVue
 let defaultFile = {}
 let store = {
   refreshToggleFlag: true,
-  editingFile: {},
+  editingFile: {
+    objectTree: [],
+    events: {}
+  },
   editingCard: {},
   stagePanels: [],
   settingPanels: []
@@ -169,6 +172,9 @@ export default {
     } else {
       // 来源于服务端已存储的实例文件
     }
+    // 初始化对象树
+    fileConfig.objectTree = []
+
     resetStore()
     console.log('geelato-ide > gl-ide > openFile > reset store.')
     GlobalVue.set(store, 'stagePanels', stagePanels)

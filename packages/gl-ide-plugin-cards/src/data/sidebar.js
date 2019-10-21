@@ -3,7 +3,7 @@ import tableData from './table.js'
 
 
 export default {
-  cardMap: {
+  componentRefs: {
     table1: {
       id: 'table1',
       title: '这是一个列表Card',

@@ -15,8 +15,7 @@
 </template>
 
 <script>
-  import form from './data/form.js'
-  import table from './data/table.js'
+  import cards from './data/cards.js'
   import utils from "../../utils";
   import events from '../../gl-ide-plugin-layout/src/events'
 
@@ -26,57 +25,7 @@
     props: {},
     data() {
       return {
-        items: [{
-          title: '表单',
-          icon: 'form',
-          component: 'GlForm',
-          img: '',
-          description: '',
-          show: true,
-          bind: {opts: form, query: {}},
-          meta: {component: 'GlIdePluginFormDesigner', title: '表单编辑器'}
-        }, {
-          title: '列表',
-          icon: 'table',
-          component: 'GlTable',
-          img: '',
-          description: '',
-          show: true,
-          bind: {opts: table, query: {}},
-          meta: {component: 'GlIdePluginTableDesigner', title: '列表编辑器'}
-        }, {
-          title: '页面引用',
-          icon: 'link',
-          component: 'GlPageLoader',
-          img: '',
-          description: '',
-          show: true,
-          bind: {opts: table, query: {}},
-          meta: {component: 'GlIdePluginPageloaderDesigner', title: '设置'}
-        }, {
-          title: '工具条',
-          icon: 'tool',
-          component: 'GlToolbar',
-          img: '',
-          description: '',
-          show: true,
-          bind: {opts: table, query: {}},
-          meta: {component: 'GlIdePluginToolbarDesigner', title: '工具条设置'}
-        },
-          {
-            title: '标题',
-            icon: 'bars',
-            component: 'GlHeader',
-            img: '',
-            description: '',
-            show: true,
-            bind: {opts: table, query: {}},
-            meta: {component: 'GlIdePluginHeaderDesigner', title: '工具条设置', inSettingPanel: true}
-          }],
-        // color: '#FFF',
-        // modalTitle: '&nbsp;',
-        // modalVisible: false,
-        // modalWidth: (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) * .98,
+        items: cards.items
       }
     },
     created() {

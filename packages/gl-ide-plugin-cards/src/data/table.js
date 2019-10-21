@@ -43,6 +43,8 @@ export default {
   toolbar: {
     actions: [{
       text: '创建',
+      title: '创建',
+      control: 'button',
       icon: 'plus',
       type: 'primary',
       fn: 'openModal',
