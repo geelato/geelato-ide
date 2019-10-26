@@ -1,9 +1,13 @@
 <template>
   <div style="padding: 2em">
-    <div v-if="config.layout.rows">
-      <GlIdePluginLayoutStageItem :rows="config.layout.rows"
+    <div v-if="config.opts.layout.rows">
+      <GlIdePluginLayoutStageItem :rows="config.opts.layout.rows"
                                   :componentRefs="config.componentRefs"
-                                  :gutter="config.layout.gutter"></GlIdePluginLayoutStageItem>
+                                  :events="config.events"
+                                  :bindEvents="config._bindEvents"
+                                  :gutter="config.opts.layout.gutter"
+                                  :treeNodes="config.objectTree"
+      ></GlIdePluginLayoutStageItem>
     </div>
   </div>
 </template>
@@ -19,7 +23,8 @@
       return {
         config: {
           componentRefs: {},
-          layout: {}
+          opts: {layout: {}},
+          events: {}
         }
       }
     },
@@ -30,7 +35,10 @@
       refresh() {
         let that = this
         that.$gl.api.query('platform_dev_page', 'id,type,code,description,sourceContent', {id: this.$route.params.pageId}).then(function (res) {
-          that.config = JSON.parse(res.data[0].sourceContent).opts
+          that.config = JSON.parse(res.data[0].sourceContent)
+          that.config.componentRefs = that.config.componentRefs || {}
+          that.config._bindEvents = {}
+          console.log('that.config>', that.config)
         }).catch(function (e) {
           console.error(e)
           that.$message.error('从服务端获取、解析信息失败！')
