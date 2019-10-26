@@ -157,18 +157,18 @@
     },
     watch: {
       'rowItems.length'(val, oval) {
-        console.log(val, oval)
-        console.log('this.props>>>>>>>>>>>>', this.componentRefs)
-        console.log('this.props>>>>>>>>>>>>', this.rows)
-        console.log('this.props>>>>>>>>>>>>', this.treeNodes)
-        console.log('this.props>>>>>>>>>>>>', this.gutter)
+        // console.log(val, oval)
+        // console.log('this.props>>>>>>>>>>>>', this.componentRefs)
+        // console.log('this.props>>>>>>>>>>>>', this.rows)
+        // console.log('this.props>>>>>>>>>>>>', this.treeNodes)
+        // console.log('this.props>>>>>>>>>>>>', this.gutter)
       }
     },
     mounted() {
-      console.log('this.props>>>>>>>>>>>>', this.componentRefs)
-      console.log('this.props>>>>>>>>>>>>', this.rows)
-      console.log('this.props>>>>>>>>>>>>', this.treeNodes)
-      console.log('this.props>>>>>>>>>>>>', this.gutter)
+      // console.log('this.props>>>>>>>>>>>>', this.componentRefs)
+      // console.log('this.props>>>>>>>>>>>>', this.rows)
+      // console.log('this.props>>>>>>>>>>>>', this.treeNodes)
+      // console.log('this.props>>>>>>>>>>>>', this.gutter)
       this.editingFileParser = new EditingFileParser().init(this.$root)
       this.initComponentRefs()
       this.generateTreeNodeData()
@@ -182,6 +182,7 @@
         let that = this
         if (that.treeNodes !== undefined && that.treeNodes.length > 0) {
           // 已创建，不重复创建
+          console.warn('已创建，不重复创建')
           return;
         }
         that.rows.filter((row) => !!row.cols).forEach((row) => {

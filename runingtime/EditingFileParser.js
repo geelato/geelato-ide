@@ -39,7 +39,7 @@ export default class EditingFileParser {
           })
         })
       })
-      console.log('gl-ide > gl-ide-plugin-item > generateTreeData() > componentRefs:', this.componentRefs)
+      console.log('gl-ide > EditingFileParser > generateTreeData() > componentRefs:', this.componentRefs)
     }
 
     /**
@@ -51,21 +51,21 @@ export default class EditingFileParser {
       let that = this
       // 如果已存在treeNodes中，则不添加
       if (treeNodes.filter((node) => node.key === item.id).length > 0) {
-        console.warn('gl-ide > gl-ide-plugin-item > generateObjectTreeNode() > 已存在treeNodes中，不添加item:', item)
+        console.warn('gl-ide > EditingFileParser > generateObjectTreeNode() > 已存在treeNodes中，不添加item:', item)
         return
       }
       // 加载每张卡片组件配置cardComponent
       //  {id: item.id, component: this.$refs[item.id][0], type: item.type, meta: item.meta}
       let cardComponent = that.componentRefs[item.id]
 
-      // console.log('gl-ide > gl-ide-plugin-item > generateObjectTreeNode() > cardComponent:', cardComponent)
+      // console.log('gl-ide > EditingFileParser > generateObjectTreeNode() > cardComponent:', cardComponent)
       let groups = []
       if (cardComponent && cardComponent.meta && cardComponent.meta.objectTree) {
         cardComponent.meta.objectTree.forEach((treeNodeObject) => {
           // treeNodeObject: {title:xx,path:xx.yy.zz}
           let childrenNodes = []
           let childrenObjects = eval('item.bind.opts.' + treeNodeObject.path)
-          console.log('gl-ide > gl-ide-plugin-layout > generateTreeData() > childrenObjects:', cardComponent.title, childrenObjects)
+          console.log('gl-ide > EditingFileParser > generateTreeData() > childrenObjects:', cardComponent.title, childrenObjects)
           if (childrenObjects && typeof childrenObjects === "object") {
             for (let key in childrenObjects) {
               let childObj = childrenObjects[key]
@@ -82,21 +82,6 @@ export default class EditingFileParser {
                 })
               }
             }
-            // // 数组类型
-            // if (childrenObjects.length > 0) {
-            //   // 数组类型[]
-            //   childrenObjects.forEach((childObj) => {
-            //     childrenNodes.push({
-            //       title: childObj.title + ' [' + childObj.control + ']',
-            //       key: that.$gl.utils.uuid(8),
-            //       slots: {
-            //         icon: 'link',
-            //       }
-            //     })
-            //   })
-            // } else if (childrenObjects.length === undefined) {
-            //   // 键值对象类型{}
-            // }
           }
 
           groups.push({
@@ -108,7 +93,6 @@ export default class EditingFileParser {
             },
             children: childrenNodes
           })
-          // console.log('gl-ide > gl-ide-plugin-layout > generateTreeData() > component.$refs.query:', eval('item.bind.opts.' + treeNodeObject.path))
         })
       }
 
@@ -150,8 +134,8 @@ export default class EditingFileParser {
     }
 
     function generateComponentRef(item) {
-      console.log('gl-ide > gl-ide-plugin-item > generateComponentRef() > item:', item)
-      console.log('gl-ide > gl-ide-plugin-item > generateComponentRef() > this.$refs[item.id]:', this.$refs[item.id])
+      console.log('gl-ide > EditingFileParser > generateComponentRef() > item:', item)
+      console.log('gl-ide > EditingFileParser > generateComponentRef() > this.$refs[item.id]:', this.$refs[item.id])
       editingFile.sourceContent.opts._componentRefs[item.id] = {
         id: item.id,
         component: stageVue.$refs[item.id][0],
@@ -159,14 +143,6 @@ export default class EditingFileParser {
         meta: item.meta
       }
     }
-
-    /**
-     * 从events的配置信息中读取并绑定事件
-     */
-    function initBindEvent() {
-
-    }
-
   }
 
 

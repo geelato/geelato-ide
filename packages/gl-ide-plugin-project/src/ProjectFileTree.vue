@@ -182,7 +182,6 @@
             id: item.node.id,
             parent: item.parent
           }
-          console.log('treeNode>>>', treeNode)
           that.$gl.api.save('platform_tree_node', treeNode).then(function (res) {
             console.log('更新节点parent.id为“' + treeNode.parent + '”,更新返回：', res)
           })
@@ -314,8 +313,11 @@
       openPage(event, item) {
         let that = this
         that.$gl.api.query('platform_dev_page', 'id,type,code,description,sourceContent', {extendId: item.node.id}).then(function (res) {
-          console.log('res.data[0]>', res)
-          that.$ide.openFile(res.data[0])
+          that.$ide.resetStore()
+          // 确保重新加载文件能刷新
+          that.$nextTick(() => {
+            that.$ide.openFile(res.data[0])
+          })
         }).catch(function (e) {
           console.error(e)
           that.$message.error('从服务端获取、解析信息失败！')

@@ -43,7 +43,7 @@ function checkPlugin() {
  * @returns {*}
  */
 function parseComponent(component) {
-  console.log('ide > parseComponent > component: ', component)
+  console.log('geelato-ide > ide.js > parseComponent > component: ', component)
   if (!component) {
     return component
   }
@@ -165,13 +165,14 @@ export default {
     // 初始化对象树
     // fileConfig.objectTree = []
 
-    resetStore()
+    // resetStore()
     console.log('geelato-ide > gl-ide > openFile > reset store.')
     GlobalVue.set(store, 'stagePanels', stagePanels)
     GlobalVue.set(store, 'settingPanels', settingPanels)
     GlobalVue.set(store, 'editingFile', fileConfig)
     console.log('geelato-ide > gl-ide > openFile > store after set:', store)
   },
+  resetStore: resetStore,
   openCard(cardConfig) {
     GlobalVue.set(store, 'editingCard', cardConfig)
   },
