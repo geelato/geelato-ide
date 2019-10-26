@@ -1,81 +1,174 @@
 <template>
   <div>
-    <a-form :form="form" @submit="handleSubmit">
-      <a-form-item label="窗口标题" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
-        <a-input v-decorator="['title', { rules: [{ required: true, message: 'Please input your note!' }] }]" />
-      </a-form-item>
-      <a-form-item label="窗口宽度" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
-        <a-input-number v-decorator="['width', { rules: [{ required: true, message: 'Please input your note!' }] }]" />&nbsp;px(像素)
-      </a-form-item>
-      <a-form-item label="窗口高度" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
-        <a-input-number v-decorator="['height', { rules: [{ required: true, message: 'Please input your note!' }] }]" />&nbsp;px(像素)
-      </a-form-item>
-      <a-form-item label="窗口宽度" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
-        <a-select
-            v-decorator="[
-          'width',
-          { rules: [{ required: true, message: 'Please select your gender!' }] },
-        ]"
-            placeholder="Select a option and change input text above"
-            @change="handleSelectChange"
-        >
-          <a-select-option value="male">
-            male
-          </a-select-option>
-          <a-select-option value="female">
-            female
-          </a-select-option>
-        </a-select>
-      </a-form-item>
-      <a-form-item :wrapper-col="{ span: 12, offset: 5 }">
-        <a-button type="primary" html-type="submit">
-          Submit
-        </a-button>
-      </a-form-item>
-    </a-form>
+    <gl-form ref="form" :opts="opts" :query="params" @propertyUpdate="onPropertyUpdate"></gl-form>
   </div>
 </template>
 
 <script>
   export default {
-    name: "GlIdeSettingEvent",
     props: {
-      // ideStore: {
-      //   type: Object,
-      //   required: true
-      // },
-      // currentControl: {
-      //   type: Object,
-      //   default() {
-      //     return {
-      //       gid: '',
-      //       title: '',
-      //       component: ''
-      //     }
-      //   }
-      // }
+      params: {
+        type: Object,
+        default() {
+          return {
+            title: '',
+            width: '',
+            height: ''
+          }
+        }
+      }
     },
     data() {
       return {
         formLayout: 'horizontal',
-        form: this.$form.createForm(this, { name: 'coordinated' }),
+        opts: {
+          type: 'object',
+          // 表单可绑定多实体，这是默认第一实体
+          defaultEntity: '_form',
+          // update|create|read
+          state: 'save',
+          properties: {
+            // 设置该id:{}，便于子实体中依赖该id
+            id: {},
+            title: {
+              control: 'input',
+              title: '窗口标题'
+            },
+            width: {
+              control: 'input',
+              title: '窗口宽度(px)',
+              rules: {
+                required: true,
+              },
+              props: {
+                placeholder: '1200px'
+              }
+            },
+            height: {
+              control: 'input',
+              title: '窗口高度(px)',
+              rules: {
+                required: true,
+              },
+              props: {
+                placeholder: '800px'
+              }
+            },
+            page: {
+              control: 'input',
+              title: '打开页面的编码',
+              rules: {
+                required: true,
+              },
+              props: {
+                placeholder: 'GlPageLayout_GtOkj2Sd'
+              }
+            },
+            // page: {
+            //   control: 'select',
+            //   title: '页面内容',
+            //   // 若数据是动态生产成，可配置ds，基于ds加载的数据最终会设置到data中
+            //   data: [
+            //     {text: '保密', value: 'none'},
+            //     {text: '男', value: 'male'},
+            //     {text: '女', value: 'female'}
+            //   ],
+            //   value: 'none'
+            // },
+            description: {
+              control: 'textarea',
+              title: '描述'
+            }
+          },
+          layout: {
+            type: 'table',
+            rows: [{
+              cols: [{
+                span: 24,
+                rows: [{cols: [{span: 6, label: true, field: 'title'}, {span: 18, field: 'title'}]}]
+              }]
+            }, {
+              cols: [
+                {span: 6, label: true, field: 'width'}, {span: 6, field: 'width'},
+                {span: 6, label: true, field: 'height'}, {span: 6, field: 'height'}
+              ]
+            }, {
+              cols: [{
+                span: 24,
+                rows: [{cols: [{span: 6, label: true, field: 'page'}, {span: 18, field: 'page'}]}]
+              }]
+            }],
+            hidden: {
+              // 各表单状态，需隐藏的内容
+              common: {
+                typeA: 'gs:$ctx.form.type!=="typeA"',
+                typeB: 'gs:$ctx.form.type!=="typeB"',
+                typeC: 'gs:$ctx.form.type!=="typeC"'
+              },
+              update: {password: 1, confirmPassword: 2},
+              create: {},
+              read: {}
+            }
+          },
+          ds: {
+            province: {
+              entity: 'platform_province',
+              // default false
+              lazy: false,
+              // 支持字段重命名
+              fields: 'name,code',
+              resultMapping: {
+                text: 'name',
+                value: 'code'
+              },
+              description: '这是一个下拉列表数据源'
+            },
+            city: {
+              entity: 'platform_city',
+              lazy: true,
+              fields: 'name,code',
+              resultMapping: {
+                text: 'name',
+                value: 'code'
+              },
+              // 带参数查询的数据源
+              params: {
+                // 该信息会自动加入计算属性中，当province的值变动时，该数据源会重新加载计算
+                provinceCode: 'gs:$ctx.form.province'
+              },
+              description: '这是一个下拉列表数据源，带参数'
+            }
+          },
+          vars: {
+            myVarA: {
+              description: '这是一个变量，变量名字为myVarA，值为30',
+              value: '30'
+            }
+          },
+          watch: {
+            'code': function () {
+
+            }
+          }
+        }
       };
     },
+    mounted() {
+
+    },
     methods: {
-      handleSubmit(e) {
-        e.preventDefault();
-        this.form.validateFields((err, values) => {
-          if (!err) {
-            console.log('Received values of form: ', values);
-          }
-        });
-      },
-      handleSelectChange(value) {
-        console.log(value);
-        this.form.setFieldsValue({
-          note: `Hi, ${value === 'male' ? 'man' : 'lady'}!`,
-        });
-      },
+      onPropertyUpdate(property, val, oval) {
+        let form = this.$refs.form.getValues()
+        // this.params.title = form.title
+        // this.params.width = form.width
+        // this.params.height = form.height
+        this.$emit('update', {
+          title: form.title,
+          width: form.width,
+          height: form.height,
+          page: form.page
+        })
+      }
     },
   }
 </script>

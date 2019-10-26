@@ -33,6 +33,11 @@ class SimplePageDefinition {
         // tree:['id1':['id3','id4'],'id2']
         // tree: {}
       },
+      // 运行时生成的组件引用，不保存
+      _componentRefs: {},
+      events: {},
+      // 运行时生成的组件引用，不保存
+      _bindEvents: {},
       // 默认查询参数，与opts不同，query是同一页面定义下的不同参数
       params: {}
     }
@@ -50,10 +55,24 @@ class SimplePageDefinition {
     this.description = params.description || ''
     // 包含component、opts、params等内容
     this.sourceContent = params.sourceContent ? this.parseContent(params.sourceContent) : JSON.parse(JSON.stringify(defaultContent))
+    this.sourceContent._componentRefs = this.sourceContent._componentRefs || {}
+    this.sourceContent.events = this.sourceContent.events || {}
+    this.sourceContent._bindEvents = this.sourceContent._bindEvents || {}
+
     // 预览的内容
     this.previewContent = params.previewContent ? this.parseContent(params.previewContent) : JSON.parse(JSON.stringify(defaultContent))
+    this.previewContent._componentRefs = this.previewContent._componentRefs || {}
+    this.previewContent.events = this.previewContent.events || {}
+    this.previewContent._bindEvents = this.previewContent._bindEvents || {}
+
     // 发布的内容
     this.releaseContent = params.releaseContent ? this.parseContent(params.releaseContent) : JSON.parse(JSON.stringify(defaultContent))
+    this.releaseContent._componentRefs = this.releaseContent._componentRefs || {}
+    this.releaseContent.events = this.releaseContent.events || {}
+    this.releaseContent._bindEvents = this.releaseContent._bindEvents || {}
+
+
+    this.objectTree = []
   }
 
   /**
@@ -66,8 +85,8 @@ class SimplePageDefinition {
       return {
         component: c.component,
         opts: c.opts,
-        params: c.params
-        // code: c.code
+        params: c.params,
+        events: c.events
       }
     } else {
       return content

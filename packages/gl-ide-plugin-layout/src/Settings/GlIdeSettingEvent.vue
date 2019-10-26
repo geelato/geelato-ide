@@ -9,11 +9,11 @@
               <span style="background-color: #ffca11">{{currentControl.title}}</span>
               <span>&nbsp;&nbsp;进行设置。</span>
             </div>
-            <div class="line" v-for="(action,actionIndex) in actions" :key="actionIndex">
+            <div class="line" v-for="(action,actionIndex) in currentActions" :key="actionIndex">
               <div>
                 <span>当&nbsp;&nbsp;</span>
                 <span>
-                  <a-select :defaultValue="action.trigger" style="width: 200px"
+                  <a-select :defaultValue="action.on" style="width: 200px"
                             @change="handleChange($event,action,actionIndex)">
                     <a-select-opt-group label="鼠标">
                        <a-select-option value="click">单击</a-select-option>
@@ -31,61 +31,20 @@
                   </a-select>
                 </span>
                 <span>&nbsp;&nbsp;时</span>
-                <span @click="action.do.push({fn:''})">
-                  <a-button type="link"><a-icon type="plus-circle"/>触发动作</a-button>
+                <span @click="action.do.push({handler:'',fn:'',params:{}})">
+                  <a-button type="link" title="触发动作"><a-icon type="plus-circle"/></a-button>
                 </span>
               </div>
-              <div class="line trigger-action" v-for="(fnItem,fnIndex) in action.do" :key="actionIndex+'_'+fnIndex">
-                <div>
-                  <span>触发动作&nbsp;&nbsp;</span>
-                  <span>
-                    <a-select :defaultValue="fnItem.fn" style="width: 200px" @change="handleChange" :allowClear="true">
-                      <a-select-opt-group label="链接动作">
-                         <a-select-option value="OpenModal">弹出窗口（modal）</a-select-option>
-                        <a-select-option value="closeModal">关闭窗口（modal）</a-select-option>
-                        <a-select-option value="openWin">打开新窗口（window）</a-select-option>
-                      </a-select-opt-group>
-                      <a-select-opt-group label="控件动作">
-                        <a-select-option value="keyup.enter">调用当前控件方法</a-select-option>
-                        <a-select-option value="keyup.esc">显示/隐藏</a-select-option>
-                      </a-select-opt-group>
-                       <a-select-opt-group label="其它动作">
-                        <a-select-option value="setVars">设置变量值</a-select-option>
-                        <a-select-option value="triggerEvent">触发事件</a-select-option>
-                      </a-select-opt-group>
-                    </a-select>
-                  </span>
-                  <span @click="action.do.push({fn:''})">
-                    <a-button type="link"><a-icon type="plus-circle"/>触发动作</a-button>
-                   </span>
-                  <span @click="action.do.splice(fnIndex,1)" class="remove">{{fnIndex}}
-                    <a-button type="link" style="color: red"><a-icon type="close-circle"/>删除动作</a-button>
-                  </span>
-                </div>
-                <div class="line" @mouseover="showDetail('aaa')">
-                  <template>
-                    <span>完毕回调&nbsp;&nbsp;</span>
-                    <span>
-                      <a-select defaultValue="OpenModal" style="width: 200px" @change="handleChange">
-                        <a-select-opt-group label="链接动作">
-                        <a-select-option value="empty">请选择</a-select-option>
-                        </a-select-opt-group>
-                        <a-select-opt-group label="链接动作">
-                           <a-select-option value="OpenModal">弹出窗口（modal）</a-select-option>
-                          <a-select-option value="closeModal">关闭窗口（modal）</a-select-option>
-                          <a-select-option value="openWin">打开新窗口（window）</a-select-option>
-                        </a-select-opt-group>
-                        <a-select-opt-group label="控件动作">
-                          <a-select-option value="keyup.enter">调用当前控件方法</a-select-option>
-                          <a-select-option value="keyup.esc">显示/隐藏</a-select-option>
-                        </a-select-opt-group>
-                         <a-select-opt-group label="其它动作">
-                          <a-select-option value="setVars">设置变量值</a-select-option>
-                          <a-select-option value="triggerEvent">触发事件</a-select-option>
-                        </a-select-opt-group>
-                      </a-select>
-                    </span>
-                  </template>
+              <div class="line event-action" v-for="(doItem,doItemIndex) in action.do"
+                   :key="actionIndex+'_'+doItemIndex">
+                <action-bar label="触发动作" :doItems="action.do" :doItem="doItem" :doItemIndex="doItemIndex"
+                            @doActionSetting="doActionSetting" @doActionRemove="doActionRemove"
+                            @doActionChange="doActionChange"></action-bar>
+                <div class="line" v-if="doItem.then" v-for="(thenItem,thenItemIndex) in doItem.then"
+                     :key="actionIndex+'_'+doItemIndex+'_'+thenItemIndex">
+                  <action-bar label="回调动作" :doItems="doItem.then" :doItem="thenItem" :doItemIndex="thenItemIndex"
+                              @doActionSetting="doActionSetting" @doActionRemove="doActionRemove"
+                              @doActionChange="doActionChange"></action-bar>
                 </div>
               </div>
             </div>
@@ -94,7 +53,8 @@
         <a-col :span="12">
           <a-card title="动作详细设置" :bordered="false">
             <p>
-              <open-modal></open-modal>
+              <component :is="currentDetailComponentName" v-bind="currentDoItem"
+                         @update="(params)=>currentDoItem.params = params"></component>
             </p>
           </a-card>
         </a-col>
@@ -106,11 +66,16 @@
 </template>
 
 <script>
+  import ActionBar from './ActionBar'
   import OpenModal from './event-detail/OpenModal'
+  import ShowMessage from './event-detail/ShowMessage'
+  import Empty from './event-detail/Empty'
+
+  let localComponents = {ActionBar, OpenModal, ShowMessage, Empty}
 
   export default {
     name: "GlIdeSettingEvent",
-    components: {OpenModal},
+    components: localComponents,
     props: {
       ideStore: {
         type: Object,
@@ -125,58 +90,21 @@
             component: ''
           }
         }
+      },
+      currentActions: {
+        type: Array,
+        default() {
+          return []
+        }
       }
     },
     data() {
       return {
-        actions: [{
-          trigger: 'click',
-          if: '',
-          do: [
-            {
-              fn: 'OpenModal', params: {},
-              dataMapping: {
-                query: {tableSchema: '$ctx.code'}
-              },
-              actions: [{trigger: 'callback', do: [{fn: 'ShowMessage'}]}]
-            }
-          ],
-          ctx: 'this',
-          // opener、content、modal、handler，默认为handler
-
-          params: {
-            title: '编辑数据库连接信息',
-            width: '1200px',
-            height: '480px',
-            body: {
-              type: 'staticPage',
-              component: 'GlForm',
-              props: {},
-            },
-            actions: [{
-              text: '保存',
-              type: 'primary',
-              fn: 'save',
-              // opener、content、modal，默认为content
-              ctx: 'content',
-              params: {},
-              then: {
-                fn: 'close',
-                ctx: 'modal',
-                then: {
-                  fn: 'refresh',
-                  ctx: 'opener'
-                }
-              }
-            }, {
-              fn: 'close',
-              text: '取消',
-              ctx: 'modal'
-            }]
-          },
-          // 输入数据的转换
-
-        }],
+        // 当前选中操作的参数
+        params: {},
+        currentDoItem: {},
+        currentDoItemIndex: -1,
+        currentDetailComponentName: 'Empty',
         style: {'min-height': (window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight) * .80 + 'px'},
       }
     },
@@ -184,8 +112,36 @@
       handleChange(e, action, actionIndex) {
         console.log(e, action, actionIndex)
       },
-      showDetail(a) {
-        console.log(a)
+      doActionChange($event, doItem, actionIndex) {
+        console.log('doActionChange>', $event, doItem, actionIndex)
+        doItem.handler = $event
+        this.doActionSetting($event, doItem, actionIndex)
+      },
+      doActionSetting($event, doItem, doItemIndex) {
+        let that = this
+        console.log($event, doItem, doItemIndex)
+        this.currentDoItem = doItem
+        this.currentDoItemIndex = doItemIndex
+        this.currentDetailComponentName = 'Empty'
+        this.$nextTick(() => {
+          that.currentDetailComponentName = that.hasDetailComponent($event) ? $event : 'Empty'
+        })
+      },
+      doActionRemove($event, doItems, index) {
+        console.log($event, doItems, index)
+        console.log(this.currentDoItemIndex, doItems, index)
+        if (index === this.currentDoItemIndex) {
+          this.currentDoItemIndex = -1
+          this.currentDoItem = {}
+          this.currentDetailComponentName = 'Empty'
+        }
+        doItems.splice(index, 1)
+        // this.$gl.utils.remove(doItems, index)
+      },
+      hasDetailComponent(name) {
+        return !!localComponents[name]
+      },
+      showDetail() {
       }
     }
   }
@@ -203,8 +159,13 @@
     display: none;
   }
 
-  .trigger-action:hover .remove {
+  .event-action:hover .remove {
     display: inline-block;
+  }
+
+  .ant-btn.ant-btn-link {
+    padding: 0;
+    margin: 0 5px;
   }
 
   /*.line + .line {*/

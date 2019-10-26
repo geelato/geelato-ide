@@ -5,7 +5,8 @@
 
 <script>
   /* eslint-disable no-unused-vars */
-  import SimplePageDefinition from '../../gl-ide/src/SimplePageDefinition'
+  import SimplePageDefinition from '../../../runingtime/SimplePageDefinition'
+  import EditingFileParser from '../../../runingtime/EditingFileParser'
 
   export default {
     props: {
@@ -275,20 +276,33 @@
       savePage: function () {
         let that = this
         console.log('geelato-ide > gl-ide-plugin-project > ProjectFileTree > savePage() > editingFile:', that.ideStore.editingFile)
-        that.$gl.api.save('platform_dev_page', {
-          id: that.ideStore.editingFile.id,
-          extendId: that.ideStore.editingFile.extendId,
-          type: that.ideStore.editingFile.type,
-          code: that.ideStore.editingFile.code,
-          description: that.ideStore.editingFile.description,
-          sourceContent: that.ideStore.editingFile.sourceContent,
-          previewContent: that.ideStore.editingFile.sourceContent,
-          releaseContent: that.ideStore.editingFile.sourceContent
-        }).then(function (res) {
+        let editingFileParser = new EditingFileParser().init(this.$root)
+        let editingFile = editingFileParser.convertSourceToSave(that.ideStore.editingFile)
+        // let sourceContent = {
+        //   component: that.ideStore.editingFile.sourceContent.component,
+        //   opts: {
+        //     layout: that.ideStore.editingFile.sourceContent.opts.layout,
+        //     params: that.ideStore.editingFile.sourceContent.opts.params
+        //   },
+        //   events: that.ideStore.editingFile.sourceContent.events,
+        // }
+        that.$gl.api.save('platform_dev_page', editingFile
+          //   {
+          //   id: that.ideStore.editingFile.id,
+          //   extendId: that.ideStore.editingFile.extendId,
+          //   type: that.ideStore.editingFile.type,
+          //   code: that.ideStore.editingFile.code,
+          //   description: that.ideStore.editingFile.description,
+          //   sourceContent: sourceContent,
+          //   previewContent: sourceContent,
+          //   releaseContent: sourceContent
+          // }
+        ).then(function (res) {
           that.ideStore.editingFile.id = res.result
           // that.$ide.openDefaultFile({id: res.result})
           that.$message.success('页面保存成功')
         }).catch(function (e) {
+          console.log('页面保存失败。', 'ideStore：', that.ideStore, e,)
           that.$message.error('页面保存失败')
         })
       },

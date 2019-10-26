@@ -1,4 +1,4 @@
-import SimplePageDefinition from "./SimplePageDefinition";
+import SimplePageDefinition from "../../../runingtime/SimplePageDefinition";
 
 const plugins = []
 const files = []
@@ -15,8 +15,10 @@ let defaultFile = {}
 let store = {
   refreshToggleFlag: true,
   editingFile: {
-    objectTree: [],
-    events: {}
+    // 加载时，动态渲染的组件树
+    // objectTree: [],
+    // 该文件绑定的事件集合，key为控件gid，需持久化
+    // events: {}
   },
   editingCard: {},
   stagePanels: [],
@@ -83,17 +85,6 @@ function findPanelsCopy(fileType, panelsGroup) {
   console.log('geelato-ide > ide.js > findPanelsCopy() > matchPanels:', matchPanels)
   return matchPanels
 }
-
-// function findPanelComponent(name) {
-//   for (let i in panels) {
-//     let panel = panels[i]
-//     if (panel.name === name) {
-//       return panel.component
-//     }
-//   }
-//   console.warn('ide > findPanelComponent > name: ', name, ' panels: ', panels)
-//   return undefined
-// }
 
 export default {
   setVue(Vue) {
@@ -164,16 +155,15 @@ export default {
         let panel = stagePanels[i]
         if (panel.type === 'ui') {
           fileConfig.sourceContent.opts = panel.opts
-          console.log('gl-ide > openFile() > fileConfig.sourceContent.opts:', panel.opts)
+          // console.log('gl-ide > openFile() > fileConfig.sourceContent.opts:', panel.opts)
           break
         }
       }
-      console.log('fileConfig:', fileConfig, stagePanels)
     } else {
       // 来源于服务端已存储的实例文件
     }
     // 初始化对象树
-    fileConfig.objectTree = []
+    // fileConfig.objectTree = []
 
     resetStore()
     console.log('geelato-ide > gl-ide > openFile > reset store.')

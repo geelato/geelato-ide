@@ -22,7 +22,7 @@
             </a-card>
           </template>
           <template v-else-if="col.rows">
-            <GlIdePluginLayoutStageItem :rows="col.rows" :componentRefs="componentRefs"
+            <GlIdePluginLayoutStageItem :rows="col.rows" :componentRefs="componentRefs" :bindEvents="bindEvents"
                                         :gutter="gutter" :treeNodes="treeNodes"></GlIdePluginLayoutStageItem>
           </template>
           <template v-else>
@@ -40,7 +40,7 @@
                 <div class="gl-dnd-col-toolbar">
                   <div style="text-align: left;display:inline" title="拖动卡片">
                     <a-icon :type="colItem.icon"/>
-                    {{colItem.title}}
+                    {{colItem.title}}-{{colItem.id}}
                   </div>&nbsp;
                   <div style="display:inline-block;float: right">
                     <!--<a-button size="small" @click="onCardReload(col,colItem,colItemIndex)"-->
@@ -63,8 +63,7 @@
                   </div>
                 </div>
                 <!--class="gl-dnd-col-handle"-->
-                <component :ref="colItem.id" v-show="colItem.show"
-                           :is="$globalVue.component(colItem.component)"
+                <component :ref="colItem.id" v-show="colItem.show" :is="$globalVue.component(colItem.component)"
                            v-bind="colItem.bind"></component>
               </div>
               <div v-if="rowItems.length===1&&(!col.items||col.items.length===0)"
@@ -104,13 +103,22 @@
 
 <script>
   /* eslint-disable no-unused-vars */
-
+  import EditingFileParser from '../../../../runingtime/EditingFileParser'
   import Vue from 'vue'
+
 
   export default {
     name: "GlIdePluginLayoutStageItem",
     props: {
       componentRefs: {
+        type: Object,
+        required: true
+      },
+      events: {
+        type: Object,
+        required: true
+      },
+      bindEvents: {
         type: Object,
         required: true
       },
@@ -161,6 +169,8 @@
       console.log('this.props>>>>>>>>>>>>', this.rows)
       console.log('this.props>>>>>>>>>>>>', this.treeNodes)
       console.log('this.props>>>>>>>>>>>>', this.gutter)
+      this.editingFileParser = new EditingFileParser().init(this.$root)
+      this.initComponentRefs()
       this.generateTreeNodeData()
     },
     methods: {
@@ -168,6 +178,7 @@
        * 初始化创建树节点
        */
       generateTreeNodeData() {
+        console.log('gl-ide > gl-ide-plugin-item > generateTreeData() > treeNodes:', this.treeNodes)
         let that = this
         if (that.treeNodes !== undefined && that.treeNodes.length > 0) {
           // 已创建，不重复创建
@@ -185,26 +196,48 @@
             // }
 
             col.items.forEach((item) => {
-              that.generateObjectTreeNode(item)
+              that.generateObjectTreeNodeAndBindEvent(item)
             })
           })
         })
         console.log('gl-ide > gl-ide-plugin-item > generateTreeData() > componentRefs:', this.componentRefs)
       },
       /**
+       * 初始化组件树中的组件引用
+       */
+      initComponentRefs() {
+        for (let rowIndex in this.rowItems) {
+          let row = this.rowItems[rowIndex]
+          for (let colIndex in row.cols) {
+            for (let colItemIndex in row.cols[colIndex].items) {
+              this.generateComponentRef(row.cols[colIndex].items[colItemIndex])
+            }
+          }
+        }
+      },
+      generateComponentRef(item) {
+        console.log('gl-ide > gl-ide-plugin-item > generateComponentRef() > item:', item)
+        console.log('gl-ide > gl-ide-plugin-item > generateComponentRef() > this.$refs[item.id]:', this.$refs[item.id])
+        this.componentRefs[item.id] = {id: item.id, component: this.$refs[item.id][0], type: item.type, meta: item.meta}
+      },
+      /**
        * 创建该组件(treeNodes)下的树节点
        * @param item 组件配置信息item
        */
-      generateObjectTreeNode(item) {
+      generateObjectTreeNodeAndBindEvent(item) {
+
         let that = this
         // 如果已存在treeNodes中，则不添加
         if (that.treeNodes.filter((node) => node.key === item.id).length > 0) {
+          console.warn('gl-ide > gl-ide-plugin-item > generateObjectTreeNodeAndBindEvent() > 已存在treeNodes中，不添加item:', item)
           return
         }
         // 加载每张卡片组件配置cardComponent
         //  {id: item.id, component: this.$refs[item.id][0], type: item.type, meta: item.meta}
         let cardComponent = that.componentRefs[item.id]
-        // console.log('gl-ide > gl-ide-plugin-item > generateObjectTreeNode() > cardComponent:', cardComponent)
+        console.log('gl-ide > gl-ide-plugin-item > generateObjectTreeNodeAndBindEvent() > item.id,cardComponent:', item.id, cardComponent, that.componentRefs)
+
+        // console.log('gl-ide > gl-ide-plugin-item > generateObjectTreeNodeAndBindEvent() > cardComponent:', cardComponent)
         let groups = []
         if (cardComponent && cardComponent.meta && cardComponent.meta.objectTree) {
           cardComponent.meta.objectTree.forEach((treeNodeObject) => {
@@ -217,33 +250,29 @@
                 let childObj = childrenObjects[key]
                 if (childObj.control) {
                   // 未设置control值的，可能为form的隐藏属性，这里需过滤掉
-                  console.log('childObj>', childObj)
+                  // console.log('childObj>', childObj)
                   childrenNodes.push({
                     title: childObj.title + ' [' + childObj.control + ']',
-                    key: childObj.gid, // that.$gl.utils.uuid(8),
+                    // 组件id+组件内的控件id
+                    key: item.id + '_$_' + childObj.gid, // that.$gl.utils.uuid(8),
                     slots: {
                       icon: 'link',
                     }
                   })
+                  // 基于配置的事件初始化绑定
+                  let componentItem = that.componentRefs[item.id]
+                  let controlComponent = componentItem.component.$_getRefByGid(childObj.gid)
+                  let control = {
+                    gid: childObj.gid,
+                    title: childObj.title,
+                    component: controlComponent
+                  }
+                  if (controlComponent && that.events[childObj.gid]) {
+                    that.editingFileParser.bindEvent(that.bindEvents, control, that.events[childObj.gid])
+                  }
                 }
               }
-              // // 数组类型
-              // if (childrenObjects.length > 0) {
-              //   // 数组类型[]
-              //   childrenObjects.forEach((childObj) => {
-              //     childrenNodes.push({
-              //       title: childObj.title + ' [' + childObj.control + ']',
-              //       key: that.$gl.utils.uuid(8),
-              //       slots: {
-              //         icon: 'link',
-              //       }
-              //     })
-              //   })
-              // } else if (childrenObjects.length === undefined) {
-              //   // 键值对象类型{}
-              // }
             }
-
             groups.push({
               title: treeNodeObject.title + '[组]',
               key: that.$gl.utils.uuid(8),
@@ -330,20 +359,12 @@
         console.log('gl-ide-plugin-layout > stage > onAddCol() > event.newIndex: ', e.newIndex)
         console.log('gl-ide-plugin-layout > stage > onAddCol() > items: ', col.items.length)
         let item = col.items[col.items.length === e.newIndex && e.newIndex > 0 ? e.newIndex - 1 : e.newIndex]
-        this.componentRefs[item.id] = {id: item.id, component: this.$refs[item.id][0], type: item.type, meta: item.meta}
-        this.generateObjectTreeNode(item)
-        // 依据 this.refs中的组件，删除this.cardMap中多余的组件
-        // if (this.$refs) {
-        //   for (let refKey in this.$refs) {
-        //     console.log('refKey>', refKey)
-        //     if (this.$refs[refKey].length === 0) {
-        //       delete  this.componentRefs[refKey]
-        //     }
-        //   }
-        // }
+        this.generateComponentRef(item)
+        this.generateObjectTreeNodeAndBindEvent(item)
         console.log('gl-ide-plugin-layout > stage > onAddCol() > this.refs: ', this.$refs)
         console.log('gl-ide-plugin-layout > stage > onAddCol() > this.componentRefs: ', this.componentRefs)
       },
+
       onColChange(e) {
         console.log('gl-ide-plugin-layout > stage > onColChange: ', e)
       },
