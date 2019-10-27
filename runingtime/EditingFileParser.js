@@ -186,13 +186,22 @@ export default class EditingFileParser {
 
   convertSourceToSave(editingFile) {
     let sourceContent = {
-      component: editingFile.sourceContent.component,
-      opts: {
-        layout: editingFile.sourceContent.opts.layout,
-        params: editingFile.sourceContent.opts.params
-      },
-      events: editingFile.sourceContent.events,
+      component: {},
+      opts: {layout: [], params: {}},
+      events: {}
     }
+    // 对于非新建的页面
+    if (editingFile.sourceContent) {
+      sourceContent = {
+        component: editingFile.sourceContent.component,
+        opts: {
+          layout: editingFile.sourceContent.opts.layout,
+          params: editingFile.sourceContent.opts.params
+        },
+        events: editingFile.sourceContent.events,
+      }
+    }
+
     return {
       id: editingFile.id,
       extendId: editingFile.extendId,

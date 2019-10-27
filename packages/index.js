@@ -10,6 +10,7 @@ import GlIdePluginTableDesigner from './gl-ide-plugin-table-designer/index'
 import GlIdePluginProject from './gl-ide-plugin-project/index'
 import GlIdePluginCards from './gl-ide-plugin-cards/index'
 import GlIdePluginFields from './gl-ide-plugin-fields/index'
+import GlPage from '../runingtime/gl-page/index'
 
 // import GlIdePluginStructure from './gl-ide-plugin-structure/index'
 import ide from './gl-ide/src/ide'
@@ -26,7 +27,8 @@ import './ide.css'
 
 // 存储组件列表
 const components = [
-  GlIde
+  GlIde,
+  GlPage
 ]
 
 

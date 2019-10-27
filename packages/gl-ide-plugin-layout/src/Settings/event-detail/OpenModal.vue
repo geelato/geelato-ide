@@ -54,9 +54,19 @@
                 placeholder: '800px'
               }
             },
-            page: {
+            pageName: {
               control: 'input',
-              title: '打开页面的编码',
+              title: '打开页面的名称',
+              rules: {
+              },
+              props: {
+                placeholder: 'XX表单',
+                readonly: true
+              }
+            },
+            pageId: {
+              control: 'input',
+              title: '打开页面的ID',
               rules: {
                 required: true,
               },
@@ -95,7 +105,12 @@
             }, {
               cols: [{
                 span: 24,
-                rows: [{cols: [{span: 6, label: true, field: 'page'}, {span: 18, field: 'page'}]}]
+                rows: [{cols: [{span: 6, label: true, field: 'pageId'}, {span: 18, field: 'pageId'}]}]
+              }]
+            }, {
+              cols: [{
+                span: 24,
+                rows: [{cols: [{span: 6, label: true, field: 'pageName'}, {span: 18, field: 'pageName'}]}]
               }]
             }],
             hidden: {
@@ -166,7 +181,8 @@
           title: form.title,
           width: form.width,
           height: form.height,
-          page: form.page
+          pageId: form.pageId,
+          pageName: form.pageName
         })
       }
     },

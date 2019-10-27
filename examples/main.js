@@ -13,6 +13,8 @@ import './../packages/ide.css'
 
 import Ide from './components/Ide'
 import Preview from './components/Preview'
+import GlPage from '../runingtime/gl-page/index.js'
+
 
 Vue.config.productionTip = false
 
@@ -27,6 +29,7 @@ Vue.use(VueRouter)
 Vue.use(Antd)
 Vue.use(geelatoAui, auiOptions)
 Vue.use(geelatoIde)
+Vue.use(GlPage)
 
 
 // 2. 定义路由

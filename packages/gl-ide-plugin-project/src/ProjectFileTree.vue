@@ -264,8 +264,7 @@
           name: data.text,
           type: data.type,
           code: data.type + '_' + this.$gl.utils.uuid(8)
-        }, true))
-        this.savePage()
+        }, true), this.savePage)
       },
       /**
        * 加入本地缓存
@@ -313,11 +312,7 @@
       openPage(event, item) {
         let that = this
         that.$gl.api.query('platform_dev_page', 'id,type,code,description,sourceContent', {extendId: item.node.id}).then(function (res) {
-          that.$ide.resetStore()
-          // 确保重新加载文件能刷新
-          that.$nextTick(() => {
-            that.$ide.openFile(res.data[0])
-          })
+          that.$ide.openFile(res.data[0])
         }).catch(function (e) {
           console.error(e)
           that.$message.error('从服务端获取、解析信息失败！')

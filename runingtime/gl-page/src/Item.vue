@@ -12,8 +12,8 @@
           </a-card>
         </template>
         <template v-else-if="col.rows">
-          <GlIdePluginLayoutStageItem :rows="col.rows" :componentRefs="componentRefs" :bindEvents="bindEvents"
-                                      :gutter="gutter" :treeNodes="treeNodes"></GlIdePluginLayoutStageItem>
+          <gl-page-item :rows="col.rows" :componentRefs="componentRefs" :bindEvents="bindEvents"
+                                      :gutter="gutter" :treeNodes="treeNodes"></gl-page-item>
         </template>
         <template v-else>
           <div v-for="(colItem,colItemIndex) in col.items" :key="colItem.id" class="gl-dnd-col-handle">
@@ -29,10 +29,10 @@
 <script>
   import Vue from 'vue'
   // import events from '../events'
-  import EditingFileParser from "../../runingtime/EditingFileParser";
+  import EditingFileParser from "../../EditingFileParser";
 
   export default {
-    name: "GlIdePluginLayoutStageItem",
+    name: "GlPageItem",
     props: {
       componentRefs: {
         type: Object,

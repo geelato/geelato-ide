@@ -144,7 +144,7 @@ export default {
     fileConfig.isInitFromTemplate = true
     this.openFile(fileConfig)
   },
-  openFile(fileData) {
+  openFile(fileData, callback) {
     let fileConfig = new SimplePageDefinition(fileData, fileData.isInitFromTemplate)
     let stagePanels = findPanelsCopy(fileConfig.type, 'stagePanels')
     let settingPanels = findPanelsCopy(fileConfig.type, 'settingPanels')
@@ -162,17 +162,20 @@ export default {
     } else {
       // 来源于服务端已存储的实例文件
     }
-    // 初始化对象树
-    // fileConfig.objectTree = []
-
-    // resetStore()
-    console.log('geelato-ide > gl-ide > openFile > reset store.')
-    GlobalVue.set(store, 'stagePanels', stagePanels)
-    GlobalVue.set(store, 'settingPanels', settingPanels)
-    GlobalVue.set(store, 'editingFile', fileConfig)
-    console.log('geelato-ide > gl-ide > openFile > store after set:', store)
+    // 重置存储
+    resetStore()
+    // 确保重新加载文件能刷新
+    GlobalVue.nextTick(() => {
+      console.log('geelato-ide > gl-ide > openFile > reset store.')
+      GlobalVue.set(store, 'stagePanels', stagePanels)
+      GlobalVue.set(store, 'settingPanels', settingPanels)
+      GlobalVue.set(store, 'editingFile', fileConfig)
+      console.log('geelato-ide > gl-ide > openFile > store after set:', store)
+      if (typeof callback === 'function') {
+        callback()
+      }
+    })
   },
-  resetStore: resetStore,
   openCard(cardConfig) {
     GlobalVue.set(store, 'editingCard', cardConfig)
   },
