@@ -26,7 +26,8 @@ export default {
     meta: {
       component: 'GlIdePluginTableDesigner',
       title: '列表编辑器',
-      objectTree: [{title: '查询栏', path: 'query.mix.properties'}, {title: '工具栏', path: 'toolbar.actions'}]
+      objectTree: [{title: '查询栏', path: 'query.mix.properties'}, {title: '工具栏', path: 'toolbar.actions'}],
+      methods: [{code: 'refresh', title: '刷新', description: '刷新列表'}]
     }
   }, {
     title: '页面引用',

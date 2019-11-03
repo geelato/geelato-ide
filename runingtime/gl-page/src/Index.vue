@@ -1,14 +1,12 @@
 <template>
-  <div style="padding: 2em">
-    <div v-if="config.opts.layout.rows">
-      <gl-page-item :rows="config.opts.layout.rows"
-                    :componentRefs="config.componentRefs"
-                    :events="config.events"
-                    :bindEvents="config._bindEvents"
-                    :gutter="config.opts.layout.gutter"
-                    :treeNodes="config.objectTree"
-      ></gl-page-item>
-    </div>
+  <div v-if="config.opts.layout.rows">
+    <gl-page-item :rows="config.opts.layout.rows"
+                  :componentRefs="config.componentRefs"
+                  :events="config.events"
+                  :bindEvents="config._bindEvents"
+                  :gutter="config.opts.layout.gutter"
+                  :treeNodes="config.objectTree"
+    ></gl-page-item>
   </div>
 </template>
 

@@ -20,6 +20,7 @@
     "lodash.get": "^4.4.2",
     "lodash.pick": "^4.4.0",
     "monaco-editor": "0.18.1",
+    "prettier": "1.18.2",
     "screenfull": "^4.2.0",
     "splitpanes": "^1.14.2",
     "vee-validate": "^2.2.9",

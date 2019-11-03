@@ -1,6 +1,7 @@
 // 导入组件，组件必须声明 name
 import Sidebar from './src/Sidebar'
-import Stage from './src/Stage/Index'
+import StageUI from './src/Stage/UI'
+import StageSrc from './src/Stage/Src'
 import events from './src/events'
 import GlIdeSettingObjectTree from './src/Settings/GlIdeSettingObjectTree'
 // import formData from "../gl-ide-plugin-file-combination/src/formData";
@@ -17,7 +18,7 @@ const plugin = {
     stagePanels: [{
       title: '设计',
       type: 'ui',
-      component: 'GlIdePluginLayoutStage',
+      component: 'GlIdePluginLayoutStageUI',
       opts: {
         componentRefs: {},
         layout: {
@@ -34,6 +35,19 @@ const plugin = {
             //     {span: 7, offset: 0, items: []}, {span: 17, offset: 0, items: []}
             //   ]
             // }
+          ]
+        }
+      },
+      query: {}
+    }, {
+      title: '源码',
+      type: 'src',
+      component: 'GlIdePluginLayoutStageSrc',
+      opts: {
+        componentRefs: {},
+        layout: {
+          gutter: 4,
+          rows: [
           ]
         }
       },
@@ -64,7 +78,8 @@ const plugin = {
 export default {
   name: plugin.name,
   install: function (Vue) {
-    Vue.component(Stage.name, Stage)
+    Vue.component(StageUI.name, StageUI)
+    Vue.component(StageSrc.name, StageSrc)
     Vue.component(GlIdeSettingObjectTree.name, GlIdeSettingObjectTree)
   },
   config: plugin,

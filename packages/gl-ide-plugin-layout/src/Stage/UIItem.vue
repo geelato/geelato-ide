@@ -22,8 +22,8 @@
             </a-card>
           </template>
           <template v-else-if="col.rows">
-            <GlIdePluginLayoutStageItem :rows="col.rows" :componentRefs="componentRefs" :bindEvents="bindEvents"
-                                        :gutter="gutter" :treeNodes="treeNodes"></GlIdePluginLayoutStageItem>
+            <GlIdePluginLayoutStageUIItem :rows="col.rows" :componentRefs="componentRefs" :bindEvents="bindEvents"
+                                        :gutter="gutter" :treeNodes="treeNodes"></GlIdePluginLayoutStageUIItem>
           </template>
           <template v-else>
             <gl-draggable
@@ -108,7 +108,7 @@
 
 
   export default {
-    name: "GlIdePluginLayoutStageItem",
+    name: "GlIdePluginLayoutStageUIItem",
     props: {
       componentRefs: {
         type: Object,

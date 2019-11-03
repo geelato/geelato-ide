@@ -1,11 +1,17 @@
+<!--
+  基础代码组件
+-->
 <template>
   <div class="myEditor">
-    <div id="container" ref="container" style="height:600px"></div>
+    <div id="container" ref="container" :style="{height:(layout.height-56)+`px`}"></div>
   </div>
 </template>
 
 <script>
   import * as monaco from 'monaco-editor'
+  import prettier from 'prettier/standalone'
+  import prettierBabylon from 'prettier/parser-babylon'
+  // import prettierTypescript from 'prettier/parser-typescript'
 
   export default {
     name: "GlIdeStageCode",
@@ -13,7 +19,7 @@
       content: {
         type: Object,
         default() {
-          return {opts: {codes: ''}}
+          return {}
         }
       },
       // codes: {
@@ -28,28 +34,38 @@
           return 'json'
         }
       },
-      editorOptions: {
+      opts: {
         type: Object,
         default: function () {
+          return {}
+        }
+      },
+      layout: {
+        type: Object,
+        default() {
           return {
-            selectOnLineNumbers: true,
-            roundedSelection: false,
-            readOnly: false,        // 只读
-            cursorStyle: 'line',        //光标样式
-            glyphMargin: true,  //字形边缘
-            useTabStops: false,
-            fontSize: 14,       //字体大小
-            autoIndent: true, //自动布局
-            automaticLayout: true, //自动布局
-            formatOnPaste: true,
-            formatOnType: true,
-            //quickSuggestionsDelay: 500,   //代码提示延时
+            width: 1024,
+            height: 600
           }
         }
       }
     },
     data() {
       return {
+        editorOptions: {
+          selectOnLineNumbers: true,
+          roundedSelection: false,
+          readOnly: false,        // 只读
+          cursorStyle: 'line',        //光标样式
+          glyphMargin: true,  //字形边缘
+          useTabStops: false,
+          fontSize: 14,       //字体大小
+          autoIndent: true, //自动布局
+          automaticLayout: true, //自动布局
+          formatOnPaste: true,
+          formatOnType: true,
+          //quickSuggestionsDelay: 500,   //代码提示延时
+        },
         themeOption: [
           {
             value: 'vs',
@@ -65,37 +81,56 @@
           },
         ],
         theme: 'vs',
-        codesCopy: null,//内容备份
+        codeCopyString: '',//内容备份
+      }
+    },
+    watch: {
+      'ideStore.editingFile.id': function (val, oldVal) {
+        // 若未有page信息，则返回
+        if (!val) {
+          return
+        }
+        this.reset()
       }
     },
     mounted() {
-      this.initEditor();
+      this.reset();
       let that = this
       window.onresize = () => {
         return (() => {
-          that.initEditor()
+          that.reset()
         })()
       }
     },
     methods: {
-      initEditor() {
-        let self = this;
-        self.$refs.container.innerHTML = '';
+      reset() {
+        let that = this;
+        that.$refs.container.innerHTML = '';
+        console.log('that.content>', that.content, typeof that.content)
+        that.codeCopyString = JSON.stringify(that.content, function (key, value) {
+          // 去掉vue组件
+          if (value && value._isVue) {
+            return undefined
+          }
+          return value;
+        });
+
+        that.codeCopyformatString = prettier.format(that.codeCopyString, {parser: "json", plugins: [prettierBabylon]})
         let options = {
-          value: self.codesCopy || self.content.opts.codes,
-          language: self.language,
-          theme: self.theme
+          value: that.codeCopyformatString,
+          language: that.language,
+          theme: that.theme
         }
-        Object.assign(options, self.editorOptions)
-        self.monacoEditor = monaco.editor.create(self.$refs.container, options);
-        self.$emit('onMounted', self.monacoEditor);//编辑器创建完成回调
-        self.monacoEditor.onDidChangeModelContent(function (event) {//编辑器内容changge事件
-          self.codesCopy = self.monacoEditor.getValue();
-          self.$emit('onCodeChange', self.monacoEditor.getValue(), event);
+        Object.assign(options, that.editorOptions, that.opts)
+        that.monacoEditor = monaco.editor.create(that.$refs.container, options);
+        that.$emit('onMounted', that.monacoEditor);//编辑器创建完成回调
+        that.monacoEditor.onDidChangeModelContent(function (event) {//编辑器内容changge事件
+          that.codeCopyString = that.monacoEditor.getValue();
+          that.$emit('onCodeChange', that.monacoEditor.getValue(), event);
         });
         //编辑器随窗口自适应
         window.addEventListener('resize', function () {
-          // initEditor();
+          // reset();
         })
       },
       RunResult() {
@@ -103,7 +138,7 @@
       },
       // eslint-disable-next-line no-unused-vars
       themeChange(val) {
-        this.initEditor();
+        this.reset();
       }
     }
   }

@@ -41,6 +41,9 @@
               :disabled="!(this.ideStore.editingFile && this.ideStore.editingFile.id)">预览
       <!--<router-link target="_blank" to="/preview"></router-link>-->
     </a-button>
+    <a-button size="small" :style="{background: theme.background }" @click="showSource"
+              :disabled="!(this.ideStore.editingFile && this.ideStore.editingFile.id)">源码
+    </a-button>
 
     <a-button size="small" :style="{background: theme.background }" style="float: right" v-if="islogined">
       <a-icon type="logout"/>
@@ -108,6 +111,11 @@
       preview() {
         if (this.ideStore.editingFile && this.ideStore.editingFile.id) {
           window.open(window.location.origin + "/#/preview/" + this.ideStore.editingFile.id, '_blank')
+        }
+      },
+      showSource(){
+        if (this.ideStore.editingFile && this.ideStore.editingFile.id) {
+          window.open(window.location.origin + "/#/source/" + this.ideStore.editingFile.id, '_blank')
         }
       },
       callback(key) {
