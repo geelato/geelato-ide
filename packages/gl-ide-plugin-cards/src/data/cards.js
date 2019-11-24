@@ -1,5 +1,6 @@
 import form from './form.js'
 import table from './table.js'
+import header from './header.js'
 
 export default {
   items: [{
@@ -9,6 +10,7 @@ export default {
     img: '',
     description: '',
     show: true,
+    // 初始化的模板数据
     bind: {opts: form, query: {}},
     meta: {
       component: 'GlIdePluginFormDesigner',
@@ -37,7 +39,7 @@ export default {
     description: '',
     show: true,
     bind: {opts: table, query: {}},
-    meta: {component: 'GlIdePluginPageloaderDesigner', title: '设置'}
+    meta: {component: 'GlIdePluginPageLoaderDesigner', title: '设置'}
   }, {
     title: '工具条',
     icon: 'tool',
@@ -45,7 +47,7 @@ export default {
     img: '',
     description: '',
     show: true,
-    bind: {opts: table, query: {}},
+    bind: {opts: {}, query: {}},
     meta: {component: 'GlIdePluginToolbarDesigner', title: '工具条设置'}
   },
     {
@@ -55,7 +57,7 @@ export default {
       img: '',
       description: '',
       show: true,
-      bind: {opts: table, query: {}},
-      meta: {component: 'GlIdePluginHeaderDesigner', title: '工具条设置', inSettingPanel: true}
+      bind: header,
+      meta: {component: 'GlIdePluginHeaderDesigner', title: '标题设置', objectTree: [], inSettingPanel: true}
     }],
 }

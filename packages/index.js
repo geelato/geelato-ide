@@ -5,6 +5,7 @@
 import draggable from 'vuedraggable'
 import GlIde from './gl-ide/index'
 import GlIdePluginLayout from './gl-ide-plugin-layout/index'
+import GlIdePluginHeaderDesigner from './gl-ide-plugin-header-designer/index'
 import GlIdePluginFormDesigner from './gl-ide-plugin-form-designer/index'
 import GlIdePluginTableDesigner from './gl-ide-plugin-table-designer/index'
 import GlIdePluginProject from './gl-ide-plugin-project/index'
@@ -22,11 +23,15 @@ import VeeValidate from 'vee-validate'
 //引入中文包，提示信息可以以中文形式显示
 import zh_CN from 'vee-validate/dist/locale/zh_CN'
 import VueI18n from 'vue-i18n'
+// color
+import Verte from 'verte';
+import 'verte/dist/verte.css';
 
 import './ide.css'
 
 // 存储组件列表
 const components = [
+  Verte,
   GlIde,
   GlPage
 ]
@@ -43,9 +48,9 @@ const install = function (Vue, options) {
   // ide.use(GlIdePluginFileCombination.config)
   ide.use(GlIdePluginProject)
   ide.use(GlIdePluginLayout)
+  ide.use(GlIdePluginHeaderDesigner)
   ide.use(GlIdePluginFormDesigner)
   ide.use(GlIdePluginTableDesigner)
-  // ide.use(GlIdePluginStructure.config)
   ide.use(GlIdePluginCards)
   ide.use(GlIdePluginFields)
 
@@ -58,6 +63,7 @@ const install = function (Vue, options) {
     Vue.component(component.name, component)
   })
   Vue.component('gl-draggable', draggable)
+  Vue.component('gl-color-picker', Verte)
 
   // 注册组件库
   Vue.use(VueI18n)

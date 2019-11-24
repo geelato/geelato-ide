@@ -47,40 +47,40 @@ export default {
       control: 'button',
       icon: 'plus',
       type: 'primary',
-      fn: 'openModal',
-      // opener、content、modal、handler，默认为handler
-      ctx: 'this',
-      params: {
-        title: '编辑DEMO实体',
-        width: '1200px',
-        height: '480px',
-        body: {
-          type: 'staticPage',
-          component: 'GlForm',
-          // component: resolve => require(['/components/Form/Base/Example.vue'], resolve),
-          props: {opts: JSON.parse(JSON.stringify(FormData))}
-        },
-        actions: [{
-          text: '保存',
-          type: 'primary',
-          fn: 'save',
-          // opener、content、modal，默认为content
-          ctx: 'content',
-          params: {},
-          then: {
-            fn: 'close',
-            ctx: 'modal',
-            then: {
-              fn: 'refresh',
-              ctx: 'opener'
-            }
-          }
-        }, {
-          fn: 'close',
-          text: '取消',
-          ctx: 'modal'
-        }]
-      }
+      // fn: 'openModal',
+      // // opener、content、modal、handler，默认为handler
+      // ctx: 'this',
+      // params: {
+      //   title: '编辑DEMO实体',
+      //   width: '1200px',
+      //   height: '480px',
+      //   body: {
+      //     type: 'staticPage',
+      //     component: 'GlForm',
+      //     // component: resolve => require(['/components/Form/Base/Example.vue'], resolve),
+      //     props: {opts: JSON.parse(JSON.stringify(FormData))}
+      //   },
+      //   actions: [{
+      //     text: '保存',
+      //     type: 'primary',
+      //     fn: 'save',
+      //     // opener、content、modal，默认为content
+      //     ctx: 'content',
+      //     params: {},
+      //     then: {
+      //       fn: 'close',
+      //       ctx: 'modal',
+      //       then: {
+      //         fn: 'refresh',
+      //         ctx: 'opener'
+      //       }
+      //     }
+      //   }, {
+      //     fn: 'close',
+      //     text: '取消',
+      //     ctx: 'modal'
+      //   }]
+      // }
     }],
     css: {align: 'right'}
   },

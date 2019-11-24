@@ -38,6 +38,8 @@ class SimplePageDefinition {
       events: {},
       // 运行时生成的组件引用，不保存
       _bindEvents: {},
+      // 当前页面的子页面，如弹层的页面[{type:modal,page:{}}]、如嵌入页面[{type:inner,page:{}}]
+      _subPages: [],
       // 默认查询参数，与opts不同，query是同一页面定义下的不同参数
       params: {}
     }

@@ -107,7 +107,7 @@
         this.modalVisible = false
         // bind actions
         this.editingFileParser.bindEvent(this.ideStore.editingFile.sourceContent._bindEvents, this.currentControl, this.currentActions)
-        console.log('currentActions>>', this.currentActions)
+        console.log('gl-ide > gl-ide-plugin-layout > onCloseModal() > bind currentActions: ', this.currentActions)
       },
       onSelect(selectedKeys, e) {
         let that = this

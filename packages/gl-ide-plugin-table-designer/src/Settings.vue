@@ -349,35 +349,91 @@
       <a-tab-pane key="4">
       <span slot="tab">
         <a-icon type="thunderbolt"/>
-        行操作
+        操作
       </span>
         <div :style="tabPanelStyle">
+          <h4 style="margin: 0.5em 1em">工具栏</h4>
           <table class="gl-table">
             <tr class="gl-table-row gl-table-row-header">
-              <th class="gl-table-cell" style="width: 35%">按钮名称</th>
+              <th class="gl-table-cell" style="width: 20%">按钮名称</th>
               <th class="gl-table-cell" style="width: 25%">类型</th>
+              <th class="gl-table-cell" style="width: 20%">图标</th>
               <th class="gl-table-cell">设置</th>
             </tr>
-            <template v-for="(rowAction,rowActionIndex) in config.table.rowAction.actions">
-              <tr class="gl-table-row" :key="rowActionIndex">
-                <td class="gl-table-cell"><input v-model="rowAction.text" style="width: 99%"/></td>
+            <template v-for="(toolbarAction,toolbarActionIndex) in config.toolbar.actions">
+              <tr class="gl-table-row" :key="toolbarActionIndex">
+                <td class="gl-table-cell"><input v-model="toolbarAction.text" style="width: 99%"/></td>
                 <td class="gl-table-cell">
-                  <a-select v-model="rowAction.type" :allowClear="true"
+                  <a-select v-model="toolbarAction.type" :allowClear="true"
                             style="min-width: 99%">
                     <a-select-option v-for="btnType in btnTypes" :key="btnType.value">
                       {{btnType.text}}
                     </a-select-option>
                   </a-select>
                 </td>
+                <td class="gl-table-cell"><input v-model="toolbarAction.icon" style="width: 99%"/></td>
                 <td class="gl-table-cell">
-                  <a-button class="gl-mini-btn" v-if="currentRowActionIndex!==rowActionIndex"
-                            @click="currentRowActionIndex = rowActionIndex" title="显示更多设置">
-                    <a-icon type="eye"/>
+                  <!--<a-button class="gl-mini-btn" v-if="currentRowActionIndex!==toolbarActionIndex"-->
+                  <!--@click="currentRowActionIndex = toolbarActionIndex" title="显示更多设置">-->
+                  <!--<a-icon type="eye"/>-->
+                  <!--</a-button>-->
+                  <!--<a-button class="gl-mini-btn" v-if="currentRowActionIndex===toolbarActionIndex"-->
+                  <!--@click="currentRowActionIndex = -1" title="隐藏更多设置">-->
+                  <!--<a-icon type="eye-invisible"/>-->
+                  <!--</a-button>-->
+                  <a-button class="gl-mini-btn" v-if="toolbarActionIndex!==0"
+                            @click="$gl.utils.moveup(config.toolbar.actions,toolbarActionIndex)">
+                    <a-icon type="arrow-up"/>
                   </a-button>
-                  <a-button class="gl-mini-btn" v-if="currentRowActionIndex===rowActionIndex"
-                            @click="currentRowActionIndex = -1" title="隐藏更多设置">
-                    <a-icon type="eye-invisible"/>
+                  <a-button class="gl-mini-btn" v-if="toolbarActionIndex!==config.toolbar.actions.length-1"
+                            @click="$gl.utils.movedown(config.toolbar.actions,toolbarActionIndex)">
+                    <a-icon type="arrow-down"/>
                   </a-button>
+                  <a-button class="gl-mini-btn"
+                            @click="$gl.utils.remove(config.toolbar.actions,toolbarActionIndex)">
+                    <a-icon type="delete" theme="twoTone" twoToneColor="#eb2f96"/>
+                  </a-button>
+                </td>
+              </tr>
+            </template>
+            <tr class="gl-table-row">
+              <td colspan="4">
+                <a-button size="small" block
+                          @click="config.toolbar.actions.push({text: '操作',icon: 'plus',type: 'primary',fn: 'openModal',ctx: 'this',params: {}})"
+                          style="line-height: 1.499em">
+                  <a-icon type="plus" size="small"/>
+                  添加工具栏按钮
+                </a-button>
+              </td>
+            </tr>
+          </table>
+          <h4 style="margin: 0.5em 1em">操作栏</h4>
+          <table class="gl-table">
+            <tr class="gl-table-row gl-table-row-header">
+              <th class="gl-table-cell" style="width: 65%">按钮名称</th>
+              <!--<th class="gl-table-cell" style="width: 25%">类型</th>-->
+              <th class="gl-table-cell">设置</th>
+            </tr>
+            <template v-for="(rowAction,rowActionIndex) in config.table.rowAction.actions">
+              <tr class="gl-table-row" :key="rowActionIndex">
+                <td class="gl-table-cell"><input v-model="rowAction.text" style="width: 99%"/></td>
+                <!--<td class="gl-table-cell">-->
+                  <!--<a-select v-model="rowAction.type" :allowClear="true"-->
+                            <!--style="min-width: 99%">-->
+                    <!--<a-select-option v-for="btnType in btnTypes" :key="btnType.value">-->
+                      <!--{{btnType.text}}-->
+                    <!--</a-select-option>-->
+                  <!--</a-select>-->
+                <!--</td>-->
+                <td class="gl-table-cell">
+                  <!--<a-button class="gl-mini-btn" v-if="currentRowActionIndex!==rowActionIndex"-->
+                            <!--@click="currentRowActionIndex = rowActionIndex" title="显示更多设置">-->
+                    <!--<a-icon type="eye"/>-->
+                  <!--</a-button>-->
+                  <!--<a-button class="gl-mini-btn" v-if="currentRowActionIndex===rowActionIndex"-->
+                            <!--@click="currentRowActionIndex = -1" title="隐藏更多设置">-->
+                    <!--<a-icon type="eye-invisible"/>-->
+                  <!--</a-button>-->
                   <a-button class="gl-mini-btn" v-if="rowActionIndex!==0"
                             @click="$gl.utils.moveup(config.table.rowAction.actions,rowActionIndex)">
                     <a-icon type="arrow-up"/>
@@ -394,12 +450,12 @@
               </tr>
             </template>
             <tr class="gl-table-row">
-              <td colspan="3">
+              <td colspan="2">
                 <a-button size="small" block
                           @click="config.table.rowAction.actions.push({text: '操作',icon: 'plus',type: 'primary',fn: 'openModal',ctx: 'this',params: {}})"
                           style="line-height: 1.499em">
                   <a-icon type="plus" size="small"/>
-                  添加行操作按钮
+                  添加操作栏按钮
                 </a-button>
               </td>
             </tr>
@@ -412,6 +468,7 @@
 
 <script>
   import mixin from '../../mixin-x-designer'
+  import ideConfig from '../../gl-ide/src/data.js'
   import SelectEntityList from './SelectEntityList'
 
   export default {
@@ -431,42 +488,10 @@
         currentQueryIndex: -1,
         currentRowActionIndex: -1,
         currentEntityColumns: [],
-        dict: {
-          eq: '等于',
-          neq: '不等于',
-          lt: '小于',
-          lte: '小于等于',
-          gt: '大于',
-          gte: '大于等于',
-          sw: '开头包括',
-          ew: '结尾包括',
-          contains: '包括'
-        },
-        cops: [
-          {text: '等于', value: 'eq'},
-          {text: '不等于', value: 'neq'},
-          {text: '小于', value: 'lt'},
-          {text: '小于等于', value: 'lte'},
-          {text: '大于', value: 'gt'},
-          {text: '大于等于', value: 'gte'},
-          {text: '开头包括', value: 'sw'},
-          {text: '结尾包括', value: 'ew'},
-          {text: '包括', value: 'contains'}
-        ],
-        controls: [
-          {text: '文本', icon: '', value: 'input'},
-          {text: '日期', icon: '', value: 'date'},
-          {text: '时间', icon: '', value: 'time'},
-          {text: '复选', icon: '', value: 'checkbox'},
-          {text: '下拉', icon: '', value: 'select'}
-        ],
-        btnTypes: [
-          {text: '主按钮', value: 'primary'},
-          {text: '次按钮', value: ''},
-          {text: '虚线按钮', value: 'dashed'},
-          {text: '危险按钮', value: 'danger'},
-          {text: '链接按钮', value: 'link'},
-        ]
+        dict: ideConfig.copDict,
+        cops: ideConfig.cops,
+        controls: ideConfig.controls,
+        btnTypes: ideConfig.btnTypes
       }
     },
     computed: {},

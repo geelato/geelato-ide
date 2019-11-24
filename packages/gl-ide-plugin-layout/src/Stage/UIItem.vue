@@ -14,16 +14,21 @@
         <a-col v-for="(col,colIndex) in row.cols" :span="col.span" :offset="col.offset" :key="colIndex" style="">
           <template v-if="col.card">
             <a-card :title="getCardConfig(col.card).title" style="margin-top: 8px">
+              <!--<component :ref="col.card" :is="getCardComponent(col.card)"-->
+              <!--:opts="getCardConfig(col.card).opts"-->
+              <!--:query="getCardConfig(col.card).query">-->
+              <!--正在加载...-->
+              <!--</component>-->
+              aaaa
               <component :ref="col.card" :is="getCardComponent(col.card)"
-                         :opts="getCardConfig(col.card).opts"
-                         :query="getCardConfig(col.card).query">
+                         v-bind="getCardConfig(col.card).bind">
                 正在加载...
               </component>
             </a-card>
           </template>
           <template v-else-if="col.rows">
             <GlIdePluginLayoutStageUIItem :rows="col.rows" :componentRefs="componentRefs" :bindEvents="bindEvents"
-                                        :gutter="gutter" :treeNodes="treeNodes"></GlIdePluginLayoutStageUIItem>
+                                          :gutter="gutter" :treeNodes="treeNodes"></GlIdePluginLayoutStageUIItem>
           </template>
           <template v-else>
             <gl-draggable
@@ -169,11 +174,14 @@
       // console.log('this.props>>>>>>>>>>>>', this.rows)
       // console.log('this.props>>>>>>>>>>>>', this.treeNodes)
       // console.log('this.props>>>>>>>>>>>>', this.gutter)
-      this.editingFileParser = new EditingFileParser().init(this.$root)
-      this.initComponentRefs()
-      this.generateTreeNodeData()
+      this.reset()
     },
     methods: {
+      reset() {
+        this.editingFileParser = new EditingFileParser().init(this.$root)
+        this.initComponentRefs()
+        this.generateTreeNodeData()
+      },
       /**
        * 初始化创建树节点
        */
@@ -218,8 +226,15 @@
       },
       generateComponentRef(item) {
         console.log('gl-ide > gl-ide-plugin-item > generateComponentRef() > item:', item)
+        console.log('gl-ide > gl-ide-plugin-item > generateComponentRef() > this.$refs:', this.$refs)
         console.log('gl-ide > gl-ide-plugin-item > generateComponentRef() > this.$refs[item.id]:', this.$refs[item.id])
-        this.componentRefs[item.id] = {id: item.id, component: this.$refs[item.id][0], type: item.type, meta: item.meta}
+        this.componentRefs[item.id] = {
+          id: item.id,
+          component: this.$refs[item.id][0],
+          type: item.type,
+          bind: item.bind,
+          meta: item.meta
+        }
       },
       /**
        * 创建该组件(treeNodes)下的树节点

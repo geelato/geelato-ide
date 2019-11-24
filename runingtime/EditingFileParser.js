@@ -1,5 +1,9 @@
 import ActionHandler from "./ActionHandler";
 
+/**
+ * 解析pageFile配置信息，构建对象树、绑定事件
+ * 用于页面设计器及页面执行器
+ */
 export default class EditingFileParser {
 
   constructor() {
@@ -10,7 +14,7 @@ export default class EditingFileParser {
     return this
   }
 
-  convertSourceToRunningTime(stageVue, editingFile) {
+  convertSourceToRunningTime(currentVue, editingFile) {
     let rows = editingFile.sourceContent.opts.layout.rows
     let treeNodes = editingFile.objectTree
     generateTreeNodeData()
@@ -111,7 +115,6 @@ export default class EditingFileParser {
      * @param item 组件配置信息item
      */
     function removeObjectTreeNode(item) {
-      let that = this
       treeNodes.forEach((node, index) => {
         if (node.key === item.id) {
           treeNodes.splice(index, 1)
@@ -138,13 +141,25 @@ export default class EditingFileParser {
       console.log('gl-ide > EditingFileParser > generateComponentRef() > this.$refs[item.id]:', this.$refs[item.id])
       editingFile.sourceContent.opts._componentRefs[item.id] = {
         id: item.id,
-        component: stageVue.$refs[item.id][0],
+        component: currentVue.$refs[item.id][0],
         type: item.type,
         meta: item.meta
       }
     }
   }
 
+  /**
+   *
+   * @param file 当前editingFile的子页面，如弹层页面
+   * @param toParentFile 所添加子页面的父页面
+   */
+  addSubFile(file, toParentFile) {
+    // 在结构树中添加页面结构
+  }
+
+  removeSubFile(file, fromParentFile) {
+
+  }
 
   /**
    * 关闭设置窗口时，绑定事件
