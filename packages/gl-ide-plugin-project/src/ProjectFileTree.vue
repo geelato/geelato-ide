@@ -33,7 +33,7 @@
         let project = this.project
         let treeData = [{
           id: project.id,
-          text: project.name || '新项目',
+          text: project.name || '新应用',
           parent: '#',
           type: 'root'
         }]
@@ -48,7 +48,7 @@
     },
     mounted: function () {
       let that = this
-      // 加载发现没有项目时，检查是否已创建有项目，若没有则弹出创建项目页面，若快已有，则弹出选择项目页面
+      // 加载发现没有应用时，检查是否已创建有应用，若没有则弹出创建应用页面，若快已有，则弹出选择应用页面
       if (!this.project.id) {
         that.$gl.api.query('platform_dev_project', 'id,name', {}).then(function (res) {
           if (res.data.length === 0) {
@@ -342,10 +342,10 @@
         }
         let that = this
         if (node.parent === '#') {
-          // 如果是根节点，则更改项目名称
+          // 如果是根节点，则更改应用名称
           let project = {id: node.id, name: node.text}
           that.$gl.api.save('platform_dev_project', project).then(function (res) {
-            console.log('更新项目名称为' + node.text + ',更新返回：', res)
+            console.log('更新应用名称为' + node.text + ',更新返回：', res)
           })
         } else {
           // 如果是叶节点，则更改文件或目录名称

@@ -12,7 +12,7 @@
   import mixinGui from '../../mixin-gui'
 
   /**
-   * 提项目结构管理、项目文件管理，对外提供通用的管理能力
+   * 提应用结构管理、应用文件管理，对外提供通用的管理能力
    */
   export default {
     name: "gl-ide-plugin-sidebar-project",
@@ -30,24 +30,24 @@
       }
     },
     created() {
-      // 默认加载，我的最近一个项目
+      // 默认加载，我的最近一个应用
       this.$gl.bus.$on('gl-ide.designer.showProjectForm', this.showProjectForm)
+      this.$gl.bus.$on('gl-ide.designer.showTemplateProjectForm', this.showTemplateProjectForm)
       this.$gl.bus.$on('gl-ide.designer.showProjectList', this.showProjectList)
       this.$gl.bus.$on('gl-ide.designer.saveFile', this.saveFile)
     },
     mounted() {
     },
     beforeDestroy() {
-      // 默认加载，我的最近一个项目
+      // 默认加载，我的最近一个应用
       this.$gl.bus.$off('gl-ide.designer.showProjectForm', this.showProjectForm)
       this.$gl.bus.$off('gl-ide.designer.showProjectList', this.showProjectList)
     },
     methods: {
       showProjectForm() {
-        console.log('showProjectForm>bus')
-        //TODO 是否保存旧项目
+        //TODO 是否保存旧应用
         this.$gl.ui.openModal(this, {
-          title: '创建项目',
+          title: '创建应用',
           width: '1000px',
           height: '480px',
           body: {
@@ -80,9 +80,43 @@
         })
         console.log('this.project>', this.project)
       },
+      showTemplateProjectForm() {
+        this.$gl.ui.openModal(this, {
+          title: '选择创建模板应用',
+          width: '1200px',
+          height: '480px',
+          body: {
+            type: 'staticPage',
+            component: ProjectList,
+            opts: {},
+            query: {}
+          },
+          actions: [{
+            fn: 'close',
+            ctx: 'modal',
+            text: '取消'
+          }],
+          on: [{
+            fn: 'selectItem',
+            ctx: 'content',
+            then: {
+              fn: 'onTemplateProjectSelected',
+              ctx: 'opener',
+              then: {
+                fn: 'close',
+                ctx: 'modal'
+              },
+              dataMapping: {
+                id: '$ctx.item.id',
+                name: '$ctx.item.name'
+              }
+            }
+          }]
+        })
+      },
       showProjectList() {
         this.$gl.ui.openModal(this, {
-          title: '选择项目',
+          title: '选择打开应用',
           width: '800px',
           height: '480px',
           body: {
@@ -118,6 +152,10 @@
         console.log('gl-ide-plugin-project > Sidebar.vue > project:', project)
         this.projectId = project.id
         this.project = project
+      },
+      onTemplateProjectSelected(params, project) {
+        // 复制项目
+        this.$message.info('正在努力实现中...')
       },
       saveProject: function () {
         let that = this

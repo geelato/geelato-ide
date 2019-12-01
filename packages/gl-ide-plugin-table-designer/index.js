@@ -1,17 +1,16 @@
 // 导入组件，组件必须声明 name
-import GLIdePluginFormDesigner from './src/Index'
+import GLIdePluginTableDesigner from './src/Index'
 import events from './src/events'
 
 const plugin = {
-  name: 'GlIdePluginFormDesigner',
-  description: '表单设计器',
+  name: 'GLIdePluginTableDesigner',
+  description: '列表设计器',
 }
 // 默认导出组件
 export default {
   name: plugin.name,
   install: function (Vue) {
-    console.log('>>>', GLIdePluginFormDesigner.name, GLIdePluginFormDesigner)
-    Vue.component(GLIdePluginFormDesigner.name, GLIdePluginFormDesigner)
+    Vue.component(GLIdePluginTableDesigner.name, GLIdePluginTableDesigner)
   },
   config: plugin,
   events: events

@@ -5,27 +5,27 @@
     <a-dropdown size="small">
       <a-menu slot="overlay">
         <a-menu-item size="small" key="1" style="font-size: 12px" @click="showProjectForm">
-          <a-icon type="user"/>
-          新建项目
+          <a-icon type="border" />
+          从空白创建应用
+        </a-menu-item>
+        <a-menu-item size="small" key="3" style="font-size: 12px" @click="showTemplateProjectForm">
+          <a-icon type="appstore"/>
+          从模板库创建应用
         </a-menu-item>
         <a-menu-item size="small" key="2" style="font-size: 12px" @click="showProjectList">
-          <a-icon type="user"/>
-          打开项目
-        </a-menu-item>
-        <a-menu-item size="small" key="3" style="font-size: 12px">
-          <a-icon type="user"/>
-          关闭项目
+          <a-icon type="appstore"/>
+          打开已创建应用
         </a-menu-item>
       </a-menu>
       <a-button size="small" :style="{background: theme.background }">
-        项目
+        应用
         <!--<a-icon type="down"/>-->
       </a-button>
     </a-dropdown>
     <a-dropdown size="small">
       <a-menu slot="overlay">
         <a-menu-item size="small" key="1" style="font-size: 12px" @click="comingSoon('工具管理')">
-          <a-icon type="user"/>
+          <a-icon type="deployment-unit" />
           部署
         </a-menu-item>
       </a-menu>
@@ -86,6 +86,9 @@
 
       showProjectForm() {
         this.$gl.bus.$emit('gl-ide.designer.showProjectForm')
+      },
+      showTemplateProjectForm() {
+        this.$gl.bus.$emit('gl-ide.designer.showTemplateProjectForm')
       },
       showProjectList() {
         this.$gl.bus.$emit('gl-ide.designer.showProjectList')

@@ -10,7 +10,6 @@ const plugin = {
 export default {
   name: plugin.name,
   install: function (Vue) {
-    console.log('>>>', GLIdePluginFormDesigner.name, GLIdePluginFormDesigner)
     Vue.component(GLIdePluginFormDesigner.name, GLIdePluginFormDesigner)
   },
   config: plugin,

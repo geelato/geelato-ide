@@ -5,7 +5,7 @@ import events from './src/events'
 const plugin = {
   name: 'gl-ide-plugin-project',
   sidebar: {
-    title: '项目',
+    title: '应用',
     component: Sidebar
   }
 }
