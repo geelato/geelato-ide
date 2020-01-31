@@ -52,15 +52,18 @@ export default {
       cols: [
         {span: 4, label: true, field: 'type'}, {span: 20, field: 'type'}
       ]
-    }, {
-      cols: [{
-        span: 24, rows: [{cols: [{span: 4, label: true, field: 'content'}, {span: 20, field: 'content'}]}]
-      }]
-    }, {
-      cols: [{
-        span: 24, rows: [{cols: [{span: 4, label: true, field: 'description'}, {span: 20, field: 'description'}]}]
-      }]
-    }],
+    }
+      , {cols: [{span: 4, label: true, field: 'content'}, {span: 20, field: 'content'}]}
+      // , {
+      //   cols: [{
+      //     span: 24, rows: [{cols: [{span: 4, label: true, field: 'content'}, {span: 20, field: 'content'}]}]
+      //   }]
+      // }, {
+      //   cols: [{
+      //     span: 24, rows: [{cols: [{span: 4, label: true, field: 'description'}, {span: 20, field: 'description'}]}]
+      //   }]
+      // }
+    ],
     hidden: {}
   },
   ds: {},

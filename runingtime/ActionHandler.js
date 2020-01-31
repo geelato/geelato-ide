@@ -14,14 +14,15 @@ export default class ActionHandler {
    * @param action
    */
   doAction(action) {
-    let that = this
-    for (let index in action.do) {
-      let doItem = action.do[index]
-      let handlerName = doItem.handler + 'Handler'
+    const that = this
+    for (const index in action.do) {
+      const doItem = action.do[index]
+      const handlerName = doItem.handler + 'Handler'
       if (!this.handlers[handlerName]) {
-        let fn = () => import('./handler/' + handlerName + '.js')
+        const fn = () => import('./handler/' + handlerName + '.js')
         fn().then((result) => {
-          that.handlers[handlerName] = new result.default(that.$root)
+          const Handler = result.default
+          that.handlers[handlerName] = new Handler(that.$root)
           try {
             this.handlers[handlerName].doAction(doItem)
           } catch (e) {

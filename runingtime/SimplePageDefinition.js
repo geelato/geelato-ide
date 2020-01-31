@@ -12,8 +12,8 @@ class SimplePageDefinition {
   }
 
   reset(options) {
-    let params = options || {}
-    let defaultContent = {
+    const params = options || {}
+    const defaultContent = {
       // code: {
       //   mvel: '',
       //   sql: ''
@@ -83,7 +83,7 @@ class SimplePageDefinition {
    */
   parseContent(content) {
     if (typeof content === 'string') {
-      let c = JSON.parse(content)
+      const c = JSON.parse(content)
       return {
         component: c.component,
         opts: c.opts,

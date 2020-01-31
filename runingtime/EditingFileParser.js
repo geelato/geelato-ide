@@ -1,4 +1,5 @@
-import ActionHandler from "./ActionHandler";
+/* eslint-disable no-useless-constructor */
+import ActionHandler from './ActionHandler'
 
 /**
  * 解析pageFile配置信息，构建对象树、绑定事件
@@ -15,8 +16,8 @@ export default class EditingFileParser {
   }
 
   convertSourceToRunningTime(currentVue, editingFile) {
-    let rows = editingFile.sourceContent.opts.layout.rows
-    let treeNodes = editingFile.objectTree
+    const rows = editingFile.sourceContent.opts.layout.rows
+    const treeNodes = editingFile.objectTree
     generateTreeNodeData()
 
     /**
@@ -25,7 +26,7 @@ export default class EditingFileParser {
     function generateTreeNodeData() {
       if (treeNodes !== undefined && treeNodes.length > 0) {
         // 已创建，不重复创建
-        return;
+        return
       }
       rows.filter((row) => !!row.cols).forEach((row) => {
         row.cols.filter((col) => !!col.items).forEach((col) => {
@@ -52,7 +53,7 @@ export default class EditingFileParser {
      */
     function generateObjectTreeNode(item) {
 
-      let that = this
+      const that = this
       // 如果已存在treeNodes中，则不添加
       if (treeNodes.filter((node) => node.key === item.id).length > 0) {
         console.warn('gl-ide > EditingFileParser > generateObjectTreeNode() > 已存在treeNodes中，不添加item:', item)
@@ -60,19 +61,19 @@ export default class EditingFileParser {
       }
       // 加载每张卡片组件配置cardComponent
       //  {id: item.id, component: this.$refs[item.id][0], type: item.type, meta: item.meta}
-      let cardComponent = that.componentRefs[item.id]
+      const cardComponent = that.componentRefs[item.id]
 
       // console.log('gl-ide > EditingFileParser > generateObjectTreeNode() > cardComponent:', cardComponent)
-      let groups = []
+      const groups = []
       if (cardComponent && cardComponent.meta && cardComponent.meta.objectTree) {
         cardComponent.meta.objectTree.forEach((treeNodeObject) => {
           // treeNodeObject: {title:xx,path:xx.yy.zz}
-          let childrenNodes = []
-          let childrenObjects = eval('item.bind.opts.' + treeNodeObject.path)
+          const childrenNodes = []
+          const childrenObjects = eval('item.bind.opts.' + treeNodeObject.path)
           console.log('gl-ide > EditingFileParser > generateTreeData() > childrenObjects:', cardComponent.title, childrenObjects)
-          if (childrenObjects && typeof childrenObjects === "object") {
-            for (let key in childrenObjects) {
-              let childObj = childrenObjects[key]
+          if (childrenObjects && typeof childrenObjects === 'object') {
+            for (const key in childrenObjects) {
+              const childObj = childrenObjects[key]
               if (childObj.control) {
                 // 未设置control值的，可能为form的隐藏属性，这里需过滤掉
                 // console.log('childObj>', childObj)
@@ -81,7 +82,7 @@ export default class EditingFileParser {
                   // 组件id+组件内的控件id
                   key: item.id + '_$_' + childObj.gid, // that.$gl.utils.uuid(8),
                   slots: {
-                    icon: 'link',
+                    icon: 'link'
                   }
                 })
               }
@@ -93,7 +94,7 @@ export default class EditingFileParser {
             key: that.$gl.utils.uuid(8),
             disabled: true,
             slots: {
-              icon: 'folder',
+              icon: 'folder'
             },
             children: childrenNodes
           })
@@ -104,7 +105,7 @@ export default class EditingFileParser {
         title: item.title,
         key: item.id,
         slots: {
-          icon: item.icon,
+          icon: item.icon
         },
         children: groups
       })
@@ -114,38 +115,38 @@ export default class EditingFileParser {
      * 移除objectTree相应的节点
      * @param item 组件配置信息item
      */
-    function removeObjectTreeNode(item) {
-      treeNodes.forEach((node, index) => {
-        if (node.key === item.id) {
-          treeNodes.splice(index, 1)
-        }
-      })
-    }
+    // function removeObjectTreeNode(item) {
+    //   treeNodes.forEach((node, index) => {
+    //     if (node.key === item.id) {
+    //       treeNodes.splice(index, 1)
+    //     }
+    //   })
+    // }
 
     /**
      * 初始化组件树中的组件引用
      */
-    function initComponentRefs(rowItems) {
-      for (let rowIndex in rowItems) {
-        let row = rowItems[rowIndex]
-        for (let colIndex in row.cols) {
-          for (let colItemIndex in row.cols[colIndex].items) {
-            generateComponentRef(row.cols[colIndex].items[colItemIndex])
-          }
-        }
-      }
-    }
+    // function initComponentRefs(rowItems) {
+    //   for (const rowIndex in rowItems) {
+    //     const row = rowItems[rowIndex]
+    //     for (const colIndex in row.cols) {
+    //       for (const colItemIndex in row.cols[colIndex].items) {
+    //         generateComponentRef(row.cols[colIndex].items[colItemIndex])
+    //       }
+    //     }
+    //   }
+    // }
 
-    function generateComponentRef(item) {
-      console.log('gl-ide > EditingFileParser > generateComponentRef() > item:', item)
-      console.log('gl-ide > EditingFileParser > generateComponentRef() > this.$refs[item.id]:', this.$refs[item.id])
-      editingFile.sourceContent.opts._componentRefs[item.id] = {
-        id: item.id,
-        component: currentVue.$refs[item.id][0],
-        type: item.type,
-        meta: item.meta
-      }
-    }
+    // function generateComponentRef(item) {
+    //   console.log('gl-ide > EditingFileParser > generateComponentRef() > item:', item)
+    //   console.log('gl-ide > EditingFileParser > generateComponentRef() > this.$refs[item.id]:', this.$refs[item.id])
+    //   editingFile.sourceContent.opts._componentRefs[item.id] = {
+    //     id: item.id,
+    //     component: currentVue.$refs[item.id][0],
+    //     type: item.type,
+    //     meta: item.meta
+    //   }
+    // }
   }
 
   /**
@@ -167,9 +168,9 @@ export default class EditingFileParser {
    */
   bindEvent(controlBindEvents, control, actions) {
     console.log('bindEvent() > controlBindEvents, control, actions>', controlBindEvents, control, actions)
-    for (let actionIndex in actions) {
-      let action = actions[actionIndex]
-      let eventKey = control.gid + '_$_' + action.on
+    for (const actionIndex in actions) {
+      const action = actions[actionIndex]
+      const eventKey = control.gid + '_$_' + action.on
       controlBindEvents[eventKey] = this.actionHandler(action)
       control.component.$on(action.on, controlBindEvents[eventKey])
       console.log('bindEvent() > this.controlBindEvents>', controlBindEvents, eventKey)
@@ -181,9 +182,9 @@ export default class EditingFileParser {
    * @param actions
    */
   clearEvent(controlBindEvents, control, actions) {
-    for (let actionIndex in actions) {
-      let action = actions[actionIndex]
-      let eventKey = control.gid + '_$_' + action.on
+    for (const actionIndex in actions) {
+      const action = actions[actionIndex]
+      const eventKey = control.gid + '_$_' + action.on
       if (controlBindEvents[eventKey] === undefined) {
         continue
       }
@@ -193,8 +194,8 @@ export default class EditingFileParser {
   }
 
   actionHandler(action) {
-    let that = this
-    return function () {
+    const that = this
+    return function() {
       that.actionHandlerInstance.doAction(action)
     }
   }
@@ -202,7 +203,7 @@ export default class EditingFileParser {
   convertSourceToSave(editingFile) {
     let sourceContent = {
       component: {},
-      opts: {layout: [], params: {}},
+      opts: { layout: [], params: {} },
       events: {}
     }
     // 对于非新建的页面
@@ -213,7 +214,7 @@ export default class EditingFileParser {
           layout: editingFile.sourceContent.opts.layout,
           params: editingFile.sourceContent.opts.params
         },
-        events: editingFile.sourceContent.events,
+        events: editingFile.sourceContent.events
       }
     }
 

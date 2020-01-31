@@ -50,7 +50,7 @@
       let that = this
       // 加载发现没有应用时，检查是否已创建有应用，若没有则弹出创建应用页面，若快已有，则弹出选择应用页面
       if (!this.project.id) {
-        that.$gl.api.query('platform_dev_project', 'id,name', {}).then(function (res) {
+        that.$gl.api.query('platform_app', 'id,name', {}).then(function (res) {
           if (res.data.length === 0) {
             that.$gl.bus.$emit('gl-ide.designer.showProjectForm')
           } else {
@@ -284,7 +284,7 @@
         //   },
         //   events: that.ideStore.editingFile.sourceContent.events,
         // }
-        that.$gl.api.save('platform_dev_page', editingFile
+        that.$gl.api.save('platform_app_page', editingFile
           //   {
           //   id: that.ideStore.editingFile.id,
           //   extendId: that.ideStore.editingFile.extendId,
@@ -311,7 +311,7 @@
        */
       openPage(event, item) {
         let that = this
-        that.$gl.api.query('platform_dev_page', 'id,type,code,description,sourceContent', {extendId: item.node.id}).then(function (res) {
+        that.$gl.api.query('platform_app_page', 'id,type,code,description,sourceContent', {extendId: item.node.id}).then(function (res) {
           that.$ide.openFile(res.data[0])
         }).catch(function (e) {
           console.error(e)
@@ -326,7 +326,7 @@
       removePage(nodeId) {
         let that = this
         // TODO 两张表的删除，合在一个事务中
-        that.$gl.api.delete('platform_dev_page', {extendId: nodeId})
+        that.$gl.api.delete('platform_app_page', {extendId: nodeId})
         that.$gl.api.delete('platform_tree_node', {id: nodeId})
         this.$ide.openDefaultFile()
       },
@@ -344,7 +344,7 @@
         if (node.parent === '#') {
           // 如果是根节点，则更改应用名称
           let project = {id: node.id, name: node.text}
-          that.$gl.api.save('platform_dev_project', project).then(function (res) {
+          that.$gl.api.save('platform_app', project).then(function (res) {
             console.log('更新应用名称为' + node.text + ',更新返回：', res)
           })
         } else {

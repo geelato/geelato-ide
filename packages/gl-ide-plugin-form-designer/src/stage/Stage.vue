@@ -127,8 +127,8 @@
 </template>
 
 <script>
-  import mixin from './mixin'
-  import styleTemplate from './style.js'
+  import mixin from '../mixin'
+  import styleTemplate from '../style.js'
 
   export default {
     name: "Stage",

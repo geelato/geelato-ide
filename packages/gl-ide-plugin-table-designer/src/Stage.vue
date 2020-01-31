@@ -6,7 +6,6 @@
 
 <script>
   import mixin from '../../mixin-x-designer'
-  import styleTemplate from './style.js'
 
   export default {
     name: "GlIdePluginTableDesignerStage",

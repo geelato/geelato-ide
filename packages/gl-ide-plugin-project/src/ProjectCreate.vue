@@ -8,7 +8,7 @@
   let formConfig = {
     type: 'object',
     // 表单可绑定多实体，这是默认第一实体
-    defaultEntity: 'platform_dev_project',
+    defaultEntity: 'platform_app',
     // update|create|read
     state: 'save',
     properties: {

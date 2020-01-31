@@ -34,7 +34,7 @@
     methods: {
       refresh() {
         let that = this
-        that.$gl.api.query('platform_dev_page', 'id,type,code,description,sourceContent', {id: this.$route.params.pageId}).then(function (res) {
+        that.$gl.api.query('platform_app_page', 'id,type,code,description,sourceContent', {id: this.$route.params.pageId}).then(function (res) {
           that.config = JSON.parse(res.data[0].sourceContent)
           that.config.componentRefs = that.config.componentRefs || {}
           that.config._bindEvents = {}

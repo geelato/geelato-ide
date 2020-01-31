@@ -1,6 +1,6 @@
 <template>
   <div class="gl-ide-preview">
-    <a-row v-for="(row,rowIndex) in rowItems" :gutter="row.gutter||gutter" :key="rowIndex" class="gl-dnd-row-handle">
+    <a-row v-for="(row,rowIndex) in rowItems" :gutter="row.gutter||gutter" :key="rowIndex" class="gl-row">
       <a-col v-for="(col,colIndex) in row.cols" :span="col.span" :offset="col.offset" :key="colIndex" style="">
         <template v-if="col.card">
           <a-card :title="getCardConfig(col.card).title" style="margin-top: 8px">
@@ -13,10 +13,10 @@
         </template>
         <template v-else-if="col.rows">
           <gl-page-item :rows="col.rows" :componentRefs="componentRefs" :bindEvents="bindEvents"
-                                      :gutter="gutter" :treeNodes="treeNodes"></gl-page-item>
+                        :gutter="gutter" :treeNodes="treeNodes"></gl-page-item>
         </template>
         <template v-else>
-          <div v-for="(colItem,colItemIndex) in col.items" :key="colItem.id" class="gl-dnd-col-handle">
+          <div v-for="(colItem) in col.items" :key="colItem.id" class="gl-col">
             <component :ref="colItem.id" v-show="colItem.show" :is="$globalVue.component(colItem.component)"
                        v-bind="colItem.bind"></component>
           </div>
@@ -29,10 +29,10 @@
 <script>
   import Vue from 'vue'
   // import events from '../events'
-  import EditingFileParser from "../../EditingFileParser";
+  import EditingFileParser from '../../EditingFileParser'
 
   export default {
-    name: "GlPageItem",
+    name: 'GlPageItem',
     props: {
       componentRefs: {
         type: Object,
@@ -70,7 +70,7 @@
         rowItems: this.rows,
         colItems: [],
         // {id:component}
-        colCards: {},
+        colCards: {}
       }
     },
     computed: {},
@@ -85,10 +85,10 @@
        */
       generateTreeNodeData() {
         console.log('gl-ide > gl-ide-plugin-item > generateTreeData() > treeNodes:', this.treeNodes)
-        let that = this
+        const that = this
         if (that.treeNodes !== undefined && that.treeNodes.length > 0) {
           // 已创建，不重复创建
-          return;
+          return
         }
         that.rows.filter((row) => !!row.cols).forEach((row) => {
           row.cols.filter((col) => !!col.items).forEach((col) => {
@@ -112,10 +112,10 @@
        * 初始化组件树中的组件引用
        */
       initComponentRefs() {
-        for (let rowIndex in this.rowItems) {
-          let row = this.rowItems[rowIndex]
-          for (let colIndex in row.cols) {
-            for (let colItemIndex in row.cols[colIndex].items) {
+        for (const rowIndex in this.rowItems) {
+          const row = this.rowItems[rowIndex]
+          for (const colIndex in row.cols) {
+            for (const colItemIndex in row.cols[colIndex].items) {
               this.generateComponentRef(row.cols[colIndex].items[colItemIndex])
             }
           }
@@ -125,7 +125,12 @@
         console.log('gl-ide > gl-ide-plugin-item > generateComponentRef() > item:', item)
         console.log('gl-ide > gl-ide-plugin-item > generateComponentRef() > this.$refs:', this, this.$refs)
         console.log('gl-ide > gl-ide-plugin-item > generateComponentRef() > this.$refs[item.id]:', this.$refs[item.id])
-        this.componentRefs[item.id] = {id: item.id, component: this.$refs[item.id][0], type: item.type, meta: item.meta}
+        this.componentRefs[item.id] = {
+          id: item.id,
+          component: this.$refs[item.id][0],
+          type: item.type,
+          meta: item.meta
+        }
       },
       /**
        * 创建该组件(treeNodes)下的树节点
@@ -133,7 +138,7 @@
        */
       generateObjectTreeNodeAndBindEvent(item) {
 
-        let that = this
+        const that = this
         // 如果已存在treeNodes中，则不添加
         if (that.treeNodes.filter((node) => node.key === item.id).length > 0) {
           console.warn('gl-ide > gl-ide-plugin-item > generateObjectTreeNodeAndBindEvent() > 已存在treeNodes中，不添加item:', item)
@@ -141,20 +146,20 @@
         }
         // 加载每张卡片组件配置cardComponent
         //  {id: item.id, component: this.$refs[item.id][0], type: item.type, meta: item.meta}
-        let cardComponent = that.componentRefs[item.id]
+        const cardComponent = that.componentRefs[item.id]
         console.log('gl-ide > gl-ide-plugin-item > generateObjectTreeNodeAndBindEvent() > item.id,cardComponent:', item.id, cardComponent, that.componentRefs)
 
         // console.log('gl-ide > gl-ide-plugin-item > generateObjectTreeNodeAndBindEvent() > cardComponent:', cardComponent)
-        let groups = []
+        const groups = []
         if (cardComponent && cardComponent.meta && cardComponent.meta.objectTree) {
           cardComponent.meta.objectTree.forEach((treeNodeObject) => {
             // treeNodeObject: {title:xx,path:xx.yy.zz}
-            let childrenNodes = []
-            let childrenObjects = eval('item.bind.opts.' + treeNodeObject.path)
+            const childrenNodes = []
+            const childrenObjects = eval('item.bind.opts.' + treeNodeObject.path)
             console.log('gl-ide > gl-ide-plugin-layout > generateTreeData() > childrenObjects:', cardComponent.title, childrenObjects)
-            if (childrenObjects && typeof childrenObjects === "object") {
-              for (let key in childrenObjects) {
-                let childObj = childrenObjects[key]
+            if (childrenObjects && typeof childrenObjects === 'object') {
+              for (const key in childrenObjects) {
+                const childObj = childrenObjects[key]
                 if (childObj.control) {
                   // 未设置control值的，可能为form的隐藏属性，这里需过滤掉
                   // console.log('childObj>', childObj)
@@ -163,13 +168,13 @@
                     // 组件id+组件内的控件id
                     key: item.id + '_$_' + childObj.gid, // that.$gl.utils.uuid(8),
                     slots: {
-                      icon: 'link',
+                      icon: 'link'
                     }
                   })
                   // 基于配置的事件初始化绑定
-                  let componentItem = that.componentRefs[item.id]
-                  let controlComponent = componentItem.component.$_getRefByGid(childObj.gid)
-                  let control = {
+                  const componentItem = that.componentRefs[item.id]
+                  const controlComponent = componentItem.component.$_getRefByGid(childObj.gid)
+                  const control = {
                     gid: childObj.gid,
                     title: childObj.title,
                     component: controlComponent
@@ -185,7 +190,7 @@
               key: that.$gl.utils.uuid(8),
               disabled: true,
               slots: {
-                icon: 'folder',
+                icon: 'folder'
               },
               children: childrenNodes
             })
@@ -197,7 +202,7 @@
           title: item.title,
           key: item.id,
           slots: {
-            icon: item.icon,
+            icon: item.icon
           },
           children: groups
         })
@@ -206,17 +211,17 @@
         return this.componentRefs[cardId]
       },
       getCardComponent(cardId) {
-        let card = this.getCardConfig(cardId)
+        const card = this.getCardConfig(cardId)
         return Vue.component(card.type)
       },
-      onEnd: function (e) {
+      onEnd: function(e) {
         console.log('gl-ide-plugin-layout > stage > onEnd: ', e)
       },
-      onRowAdd: function (e) {
+      onRowAdd: function(e) {
         console.log('gl-ide-plugin-layout > stage > onRowAdd: ', e)
       },
       removeRow(rowIndex) {
-        let that = this
+        const that = this
         this.$confirm({
           title: '是否删除该行?',
           cancelText: '是',
@@ -226,8 +231,8 @@
           },
           onCancel() {
             that.rowItems.splice(rowIndex, 1)
-          },
-        });
+          }
+        })
       },
       onRowChange(e) {
         console.log('gl-ide-plugin-layout > stage > onRowChange: ', e)
@@ -235,7 +240,7 @@
       onClone(e) {
         console.log('gl-ide-plugin-layout > stage > onClone: ', e)
       },
-      onAddCol: function (e) {
+      onAddCol: function(e) {
         console.log('gl-ide-plugin-layout > stage > onAddCol: ', e, this.componentRefs)
       },
       onColChange(e) {
@@ -246,9 +251,9 @@
       },
       onCardOpen(col, item, index) {
         if (typeof item.onOpen === 'function') {
-          item.onOpen({item: item, col: col, index: index})
+          item.onOpen({ item: item, col: col, index: index })
         }
-        this.$gl.bus.$emit(events.card_open, {col: col, item: item, index: index})
+        this.$gl.bus.$emit(this.events.card_open, { col: col, item: item, index: index })
         console.log('gl-ide-plugin-layout > stage > onCardOpen: ', col, item, index)
       },
       onColDelete(col, item, index) {
@@ -261,9 +266,9 @@
           onOk() {
           },
           onCancel() {
-            col.items.splice(index, 1);
-          },
-        });
+            col.items.splice(index, 1)
+          }
+        })
       }
     }
   }
@@ -271,7 +276,7 @@
 
 <style>
   .gl-ide-layout-stage .gl-dnd-row-handle {
-    border: 1px solid #f0f0f0;
+    border: 0px solid #f0f0f0;
     margin-bottom: 0.1em;
     cursor: move;
   }

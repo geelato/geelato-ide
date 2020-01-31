@@ -80,7 +80,6 @@
     watch: {
       'ideStore.editingFile.id': {
         handler(val, oval) {
-          let that = this
           this.$set(this.formQuery, 'code', this.ideStore.editingFile.code)
           this.$set(this.formQuery, 'description', this.ideStore.editingFile.description)
           this.$set(this.formQuery, 'component', this.ideStore.editingFile.sourceContent.component)

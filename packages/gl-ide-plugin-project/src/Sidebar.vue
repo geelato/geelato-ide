@@ -159,7 +159,7 @@
       },
       saveProject: function () {
         let that = this
-        that.$gl.api.save('platform_dev_project', that.project).then(function (res) {
+        that.$gl.api.save('platform_app', that.project).then(function (res) {
           that.project.id = res.data
           that.projectId = res.data
         })

@@ -9,7 +9,7 @@
   // import x from ''
   let config = {
     entityDataReader: {
-      entity: 'platform_dev_project',
+      entity: 'platform_app',
       fields: 'id,name,updateAt,description',
       withMeta: false,
       // key为组件内用到的字段名，右边为实体查询结果返回的字段
