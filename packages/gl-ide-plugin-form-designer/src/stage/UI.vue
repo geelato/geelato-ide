@@ -35,7 +35,7 @@
       this.rows = this.convertToSrcLayoutRows(this.opts.layout.rows)
       console.log('geelato-ide >  GlIdePluginFormDesignerStageUI > mounted()', this.opts)
     },
-    mounted(){
+    mounted() {
     },
     methods: {
       /**
@@ -58,9 +58,9 @@
             newRow.cols.push({
               span: labelCol.span + controlCol.span,
               items: [{
-                fields:[
+                fields: [
                   {
-                    label: labelCol.label,
+                    title: labelCol.label,
                     field: controlCol.field
                   }
                 ],

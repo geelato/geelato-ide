@@ -21,7 +21,8 @@
       },
       params: {
         enableStatus: '1'
-      }
+      },
+      orderBy: {entityName: 'desc'}
     }
   }
   export default {

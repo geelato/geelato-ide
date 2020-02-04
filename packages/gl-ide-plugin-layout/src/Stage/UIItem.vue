@@ -111,7 +111,6 @@
   import EditingFileParser from '../../../../runingtime/EditingFileParser'
   import Vue from 'vue'
 
-
   export default {
     name: "GlIdePluginLayoutStageUIItem",
     props: {
@@ -329,6 +328,7 @@
 
       onCloseModal(e) {
         this.modalVisible = false
+        this.$gl.bus.$emit('gl_ide_plugin_layout__modal_close')
         this.onCardReload(this.currentOpenedCard)
       },
       onCardOpen(col, item, index) {

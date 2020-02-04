@@ -266,7 +266,7 @@
                   <a-select v-model="property.field" :allowClear="true" style="min-width: 99%">
                     <a-select-option v-for="colMeta in currentEntityColumns" :key="colMeta.fieldName"
                                      :title="colMeta.title">
-                      {{colMeta.fieldName}}
+                      <span style="background-color: red">{{colMeta.fieldName}}&nbsp;({{colMeta.title}})</span>
                     </a-select-option>
                   </a-select>
                 </td>
@@ -418,21 +418,21 @@
               <tr class="gl-table-row" :key="rowActionIndex">
                 <td class="gl-table-cell"><input v-model="rowAction.text" style="width: 99%"/></td>
                 <!--<td class="gl-table-cell">-->
-                  <!--<a-select v-model="rowAction.type" :allowClear="true"-->
-                            <!--style="min-width: 99%">-->
-                    <!--<a-select-option v-for="btnType in btnTypes" :key="btnType.value">-->
-                      <!--{{btnType.text}}-->
-                    <!--</a-select-option>-->
-                  <!--</a-select>-->
+                <!--<a-select v-model="rowAction.type" :allowClear="true"-->
+                <!--style="min-width: 99%">-->
+                <!--<a-select-option v-for="btnType in btnTypes" :key="btnType.value">-->
+                <!--{{btnType.text}}-->
+                <!--</a-select-option>-->
+                <!--</a-select>-->
                 <!--</td>-->
                 <td class="gl-table-cell">
                   <!--<a-button class="gl-mini-btn" v-if="currentRowActionIndex!==rowActionIndex"-->
-                            <!--@click="currentRowActionIndex = rowActionIndex" title="显示更多设置">-->
-                    <!--<a-icon type="eye"/>-->
+                  <!--@click="currentRowActionIndex = rowActionIndex" title="显示更多设置">-->
+                  <!--<a-icon type="eye"/>-->
                   <!--</a-button>-->
                   <!--<a-button class="gl-mini-btn" v-if="currentRowActionIndex===rowActionIndex"-->
-                            <!--@click="currentRowActionIndex = -1" title="隐藏更多设置">-->
-                    <!--<a-icon type="eye-invisible"/>-->
+                  <!--@click="currentRowActionIndex = -1" title="隐藏更多设置">-->
+                  <!--<a-icon type="eye-invisible"/>-->
                   <!--</a-button>-->
                   <a-button class="gl-mini-btn" v-if="rowActionIndex!==0"
                             @click="$gl.utils.moveup(config.table.rowAction.actions,rowActionIndex)">
@@ -469,7 +469,7 @@
 <script>
   import mixin from '../../mixin-x-designer'
   import ideConfig from '../../gl-ide/src/data.js'
-  import SelectEntityList from './SelectEntityList'
+  import SelectEntityList from '../../gl-ide/src/select/SelectEntityList'
 
   export default {
     name: "Settings",

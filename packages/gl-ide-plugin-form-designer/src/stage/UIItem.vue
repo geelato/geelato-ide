@@ -2,12 +2,12 @@
   <div>
     <gl-draggable
         :list="rowItems"
-        handle=".gl-dnd-row-handle"
+        handle=".gl-dnd-row-handlex"
         group='layoutItems'
         :sort="true"
         @add="onRowAdd"
         @end="onEnd"
-        @clone="onClone"
+        @clone="onRowClone"
         @change="onRowChange"
     >
       <a-row v-for="(row,rowIndex) in rowItems" :gutter="row.gutter||gutter" :key="rowIndex" class="gl-dnd-row-handle">
@@ -15,31 +15,35 @@
           <a-row v-for="(item,itemIndex) in col.items" :key="itemIndex"
                  class="col">
             <a-col :span="item.fieldSpan.label" class="label">
-              <gl-label v-if="item.fields[0]&&item.fields[0].field" :label="item.fields[0].label"
+              <gl-label v-if="item.fields[0]&&item.fields[0].field" :label="getProperty(item.fields[0].field).title"
                         :property="getProperty(item.fields[0].field)"></gl-label>
             </a-col>
             <a-col :span="item.fieldSpan.control" class="control">
               <gl-draggable
                   :list="item.fields"
-                  handle=".gl-dnd-col-handle"
+                  handle=".gl-dnd-control-handle"
                   group='field'
                   :sort="false"
-                  @add="onAddCol($event,col)"
-                  @change="onColChange"
-                  @choose="onColChoose"
+                  @add="onAddControl($event,item)"
+                  @end="onEndControl($event,item)"
+                  @change="onControlChange($event,item)"
+                  @choose="onControlChoose($event,item)"
                   class="gl-dnd-col-wrapper"
               >
-                <gl-control v-if="fieldItem.field" class="gl-dnd-col-handle " v-for="fieldItem in item.fields"
+                <gl-control v-if="fieldItem.field" class="gl-dnd-control-handle " v-for="fieldItem in item.fields"
                             :ref="getProperty(fieldItem.field).gid" :form="form"
                             :property="getProperty(fieldItem.field)"></gl-control>
-                <!--@propertyUpdate="onPropertyUpdate" @loadRefData="onLoadRefData"-->
+                <!--<div v-if="fieldItem.field" class="gl-dnd-control-handle" v-for="fieldItem in item.fields">-->
+                <!--<a-icon :type="getControlType(getProperty(fieldItem.field).control).icon"/>-->
+                <!--{{getControlType(getProperty(fieldItem.field).control).title}}-->
+                <!--</div>-->
               </gl-draggable>
             </a-col>
           </a-row>
-
         </a-col>
-        <div class="gl-dnd-row-toolbar" @click="removeRow(rowIndex)" title="删除行">
-          <a-icon type="close-circle" theme="twoTone" twoToneColor="#f5222d"/>
+        <div class="gl-dnd-row-toolbar">
+          <!--<a-icon type="close-circle" theme="twoTone" twoToneColor="#f5222d" class="gl-dnd-row-handlex" title="移动行"/>-->
+          <a-icon type="close-circle" theme="twoTone" twoToneColor="#f5222d" @click="removeRow(rowIndex)" title="删除行"/>&nbsp;&nbsp;
         </div>
       </a-row>
       <div v-if="!rowItems||rowItems.length===0" style="text-align: center;padding-top: 1em">
@@ -70,7 +74,7 @@
   /* eslint-disable no-unused-vars */
   import EditingFileParser from '../../../../runingtime/EditingFileParser'
   import Vue from 'vue'
-
+  import controlTypes from '../data/controlTypes'
 
   export default {
     name: "GlIdePluginLayoutStageUIItem",
@@ -127,19 +131,14 @@
         modalVisible: false,
         rowItems: this.rows,
         colItems: [],
-        // {id:component}
         colCards: {},
-        currentCardId: ''
+        currentCardId: '',
+        controlTypes: controlTypes
       }
     },
-    watch: {
-      'rowItems.length'(val, oval) {
-        // console.log(val, oval)
-        // console.log('this.props>>>>>>>>>>>>', this.componentRefs)
-        // console.log('this.props>>>>>>>>>>>>', this.rows)
-        // console.log('this.props>>>>>>>>>>>>', this.treeNodes)
-        // console.log('this.props>>>>>>>>>>>>', this.gutter)
-      }
+    watch: {},
+    created() {
+      this.$gl.bus.$on('gl_ide_plugin_layout__modal_close', this.onClose)
     },
     mounted() {
       // console.log('this.props>>>>>>>>>>>>', this.componentRefs)
@@ -151,8 +150,8 @@
     methods: {
       reset() {
         this.editingFileParser = new EditingFileParser().init(this.$root)
-        this.initComponentRefs()
-        this.generateTreeNodeData()
+        // this.initComponentRefs()
+        // this.generateTreeNodeData()
       },
       /**
        * 初始化创建树节点
@@ -318,7 +317,7 @@
         return Vue.component(card.type)
       },
       onEnd: function (args) {
-        console.log('gl-ide-plugin-layout > stage > onEnd: ', args)
+        console.log('gl-ide-plugin-layout > stage > onEnd: ', args, this.properties)
       },
       onRowAdd: function (args) {
         console.log('gl-ide-plugin-layout > stage > onRowAdd: ', args, this.rowItems)
@@ -333,6 +332,7 @@
           onOk() {
           },
           onCancel() {
+            // that.removePropertiesInRow(rowIndex)
             that.rowItems.splice(rowIndex, 1)
           },
         });
@@ -340,24 +340,52 @@
       onRowChange(e) {
         console.log('gl-ide-plugin-layout > stage > onRowChange: ', e)
       },
-      onClone(e) {
-        console.log('gl-ide-plugin-layout > stage > onClone: ', e)
+      onRowClone(e) {
+        console.log('gl-ide-plugin-layout > stage > onRowClone: ', e)
       },
-      onAddCol: function (e, col) {
-        // console.log('gl-ide-plugin-layout > stage > onAddCol() > event.newIndex: ', e.newIndex)
-        // console.log('gl-ide-plugin-layout > stage > onAddCol() > items: ', col.items.length)
+      onAddControl: function (e, fieldItems) {
+
+        console.log('gl-ide-plugin-form-designer > stage > onAddControl() > e: ', e)
+        console.log('gl-ide-plugin-form-designer > stage > onAddControl() > fieldItems: ', fieldItems)
+        let item = this.getCurrentControlItem(e, fieldItems)
+        // 获取已引用的实体
+        let bindEntityNames = {}
+        for (let key in this.properties) {
+          const property = this.properties[key]
+          if (property.entity) {
+            bindEntityNames[property.entity] = property.entity
+          }
+        }
+
+        this.$gl.bus.$emit('gl-ide-plugin-form-designer.stage.fieldSelect', this.getProperty(item.field), bindEntityNames)
+        console.log('gl-ide-plugin-form-designer > stage > onAddControl() > item: ', item)
         // let item = col.items[col.items.length === e.newIndex && e.newIndex > 0 ? e.newIndex - 1 : e.newIndex]
         // this.generateComponentRef(item)
         // this.generateObjectTreeNodeAndBindEvent(item)
-        // console.log('gl-ide-plugin-layout > stage > onAddCol() > this.refs: ', this.$refs)
-        // console.log('gl-ide-plugin-layout > stage > onAddCol() > this.componentRefs: ', this.componentRefs)
+        // console.log('gl-ide-plugin-layout > stage > onAddControl() > this.refs: ', this.$refs)
+        // console.log('gl-ide-plugin-layout > stage > onAddControl() > this.componentRefs: ', this.componentRefs)
+      },
+      onEndControl: function (e, fieldItems) {
+        console.log('gl-ide-plugin-form-designer > stage > onEndControl() > e: ', e)
+        console.log('gl-ide-plugin-form-designer > stage > onEndControl() > fieldItems: ', fieldItems)
+        let item = this.getCurrentControlItem(e, fieldItems)
+        console.log('gl-ide-plugin-form-designer > stage > onEndControl() > item: ', item)
+
+        // let item = col.items[col.items.length === e.newIndex && e.newIndex > 0 ? e.newIndex - 1 : e.newIndex]
+        // this.generateComponentRef(item)
+        // this.generateObjectTreeNodeAndBindEvent(item)
+        // console.log('gl-ide-plugin-layout > stage > onAddControl() > this.refs: ', this.$refs)
+        // console.log('gl-ide-plugin-layout > stage > onAddControl() > this.componentRefs: ', this.componentRefs)
       },
 
-      onColChange(e) {
-        console.log('gl-ide-plugin-layout > stage > onColChange: ', e)
+      onControlChange(e, fieldItems) {
+        console.log('gl-ide-plugin-form-designer > stage > onControlChange() > e: ', e)
+        console.log('gl-ide-plugin-form-designer > stage > onControlChange() > fieldItems: ', fieldItems)
       },
-      onColChoose(e) {
-        console.log('gl-ide-plugin-layout > stage > onColChoose: ', e)
+      onControlChoose(e, fieldItems) {
+        console.log('gl-ide-plugin-layout > stage > onControlChoose: ', e)
+        let item = this.getCurrentControlItem(e, fieldItems)
+        this.$gl.bus.$emit('gl-ide-plugin-form-designer.stage.fieldSelect', this.getProperty(item.field))
       },
       onColDelete(col, item, index) {
         console.log('gl-ide-plugin-layout > stage > onColDelete: ', col, item, index)
@@ -383,100 +411,61 @@
           item.show = !item.show
         })
       },
-      getProperty(name) {
-        if (!name || !this.properties[name]) {
-          return {control: 'null', title: ' ', gid: this.$gl.utils.uuid(8)}
+      getCurrentControlItem(e, fieldItems) {
+        // console.log('getCurrentControlItem>', e, fieldItems)
+        if (e.newIndex === undefined || e.newIndex === null) {
+          // 无新增
+          return fieldItems.fields[e.oldIndex]
         }
-        return this.properties[name]
+        return fieldItems.fields[fieldItems.fields.length === e.newIndex && e.newIndex > 0 ? e.newIndex - 1 : e.newIndex]
       },
+      /**
+       * 获取表单属性，若无属性，则直接创建
+       * @param filedItem {field, control, title}
+       * @return {*}
+       */
+      getProperty(field) {
+        return this.properties[field]
+      },
+      getControlType(control) {
+        return this.controlTypes.find(function (item) {
+          return item.control === control
+        })
+
+      },
+      onClose() {
+        console.log('close>>>>>>>>>>>>>>>>')
+        // removePropertiesInRow(rowIndex) {
+        //   const that = this
+        //   const row = that.rowItems[rowIndex]
+        //   row.cols.forEach(function (col) {
+        //     console.log('col>', JSON.stringify(col))
+        //     delete that.properties[col.field]
+        //   })
+        // },
+        const that = this
+        that.rowItems.forEach(function (rowItem) {
+          console.log('that.rows', that.rows)
+        })
+      }
     }
   }
 </script>
 
-<style>
-  .gl-ide-layout-stage .gl-dnd-row-handle {
-    border: 1px solid #f0f0f0;
-    margin-bottom: 0.1em;
-    cursor: move;
-  }
-
-  .gl-ide-layout-stage .gl-dnd-row-handle.sortable-chosen {
-    background-color: rgb(107, 209, 255);
-  }
-
-  .gl-dnd-col-wrapper {
-    min-height: 2em;
-  }
-
-  .gl-dnd-row-toolbar {
-    position: absolute;
-    right: -0.5em;
-    display: none;
-  }
-
-  .gl-dnd-row-toolbar i {
-    font-size: 1.5em;
-    line-height: 1.5em;
-    cursor: pointer;
-  }
-
-  .gl-dnd-row-handle:hover .gl-dnd-row-toolbar {
-    display: inline-block;
-  }
-
-  .gl-dnd-col-toolbar {
-    padding: 0 1em;
-    line-height: 2em;
-    height: 2em;
-    background-color: #e5e5e5
-  }
-
-  .gl-dnd-col-toolbar button {
-    background-color: #e5e5e5;
-    border-color: #e5e5e5
-  }
-
-  /*.gl-ide-layout-stage .gl-dnd-row-handle > div {*/
-  /*!*padding: 0 1px !important;*!*/
+<style scoped>
+  /*.gl-dnd-control-handle {*/
+  /*padding: 0 1em;*/
+  /*margin: 0.25em;*/
+  /*width: 99%;*/
+  /*line-height: 2em;*/
+  /*border: #d3d3d3 solid 1px;*/
   /*}*/
 
-  /*.gl-ide-layout-stage .gl-dnd-row-handle:hover > div > div {*/
-  /*!*background-color: rgba(255, 202, 17, 0.7);*!*/
+  /*.gl-dnd-control-handle i {*/
+  /*margin: 0 0.5em;*/
   /*}*/
 
-  .gl-ide-layout-stage .gl-dnd-row-handle:hover {
-    /*box-shadow: 0 0 1px #000 inset;*/
-    box-shadow: 0 0 4px #ffca11;
-  }
-
-  .gl-ide-layout-stage .gl-dnd-row-handle > div > div {
-    background-color: rgba(161, 222, 255, 0.35);
-    /*text-align: center;*/
-  }
-
-  .gl-ide-layout-stage .gl-dnd-row-handle > div > div:hover {
-    /*background-color: rgba(211, 211, 211, 0.3);*/
-    background-color: rgba(255, 202, 17, 0.35);
-    /*border: 1px dotted #a5a5a5;*/
-  }
-
-  .gl-table-designer .label {
-    background-color: #eeeeee;
-    text-align: right;
-    padding-right: 1em;
-    /*min-height: 2.4em;*/
-    vertical-align: middle;
-    line-height: 2em;
-  }
-
-  .gl-table-designer .control {
-    line-height: 2.4em;
-    background-color: rgb(217, 248, 255);
-  }
-
-  .gl-table-designer .col {
-    background-color: #eeeeee;
-  }
-
-
+  /*.gl-dnd-control-handle:hover {*/
+  /*border: #72daff solid 1px;*/
+  /*}*/
 </style>

@@ -11,13 +11,21 @@
         </div>
         <div style="padding: 8px">
           <gl-draggable
+              v-model="toolbar.controls"
+              handle=".gl-dnd-control-handle"
+              :group="{ name: 'field', pull: 'clone', put: false }"
+              ghost-class="ghost"
+              :sort="false"
               @start="drag=true"
               @end="drag=false"
-              :options="{group:{name:'field', pull:'clone', put:false },sort:false}">
-            <div class="item toolbar-item" v-for="control in toolbar.controls" :data-control="control.value">
-              <a-icon :type="control.icon"/>
+              @choose="onChoose"
+              :clone="cloneControl"
+          >
+            <div class="item toolbar-item gl-dnd-control-handle" v-for="controlItem in toolbar.controls"
+                 :data-control="controlItem.control">
+              <a-icon :type="controlItem.icon"/>
               <div class="content" readonly>
-                {{control.text}}
+                {{controlItem.title}}
               </div>
             </div>
           </gl-draggable>
@@ -55,10 +63,17 @@
 
 <script>
   import mixin from './mixin'
+  import controlTypes from './data/controlTypes'
 
   export default {
     name: "Sidebar",
     mixins: [mixin],
+    props: {
+      opts: {
+        type: Object,
+        required: true
+      }
+    },
     data() {
       return {
         items: [],
@@ -71,16 +86,7 @@
             [{'': [3, 5]}, {'': [3, 5]}, {'': [3, 5]}],
             [{'': [2, 4]}, {'': [2, 4]}, {'': [2, 4]}, {'': [2, 4]}]
           ],
-          controls: [
-            {value: 'input', text: '单行文本', icon: 'dash'},
-            {value: 'textarea', text: '多行文本', icon: 'bars'},
-            {value: 'checkbox', text: '单选', icon: 'minus-circle', opts: {type: 'radio'}},
-            {value: 'checkbox', text: '复选', icon: 'check-square', opts: {type: 'checkbox'}},
-            {value: 'date', text: '日期选择', icon: 'calendar', opts: {}},
-            {value: 'time', text: '时间选择', icon: 'clock-circle', opts: {}},
-            {value: 'dropdown', text: '下拉选择', icon: 'down-square', opts: {}},
-            {value: 'rating', text: '评分', icon: 'star', opts: {}}
-          ]
+          controls: controlTypes
         },
         chooseIndex: 0,
         gutter: 8,
@@ -136,6 +142,33 @@
       },
       clone() {
         return JSON.parse(JSON.stringify(this.rows[this.chooseIndex]))
+      },
+      cloneControl() {
+        let control = this.toolbar.controls[this.chooseIndex]
+
+        return JSON.parse(JSON.stringify(this.addProperty(control)))
+      },
+      /**
+       * 获取表单属性，若无属性，则直接创建
+       * @param filedItem {field, control, title}
+       * @return {*}
+       */
+      addProperty(fieldItem) {
+        let gid = this.$gl.utils.uuid(8)
+        fieldItem.field = gid
+        let newProperty = {
+          field: gid,
+          control: fieldItem.control,
+          title: fieldItem.title || ' ',
+          gid: gid,
+          // 临时增加，未与后端字段对应，持久化到服务端时，忽略该字段
+          isServerSaveIgnore: true
+        }
+        if (fieldItem.opts.data) {
+          newProperty.data = fieldItem.opts.data
+        }
+        this.$set(this.opts.properties, fieldItem.field, newProperty)
+        return this.opts.properties[fieldItem.field]
       }
     }
   }
