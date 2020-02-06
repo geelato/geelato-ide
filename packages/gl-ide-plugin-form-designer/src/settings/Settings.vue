@@ -37,7 +37,8 @@
         <!--<a-icon type="edit"/>-->
         字段
       </span>
-        <a-alert v-if="!fieldConfig.field" style="text-align: center" message="请先点击选择左边字段" type="info" class="gl-card-gutter"/>
+        <a-alert v-if="!fieldConfig.field" style="text-align: center" message="请先点击选择左边字段" type="info"
+                 class="gl-card-gutter"/>
         <div v-if="fieldConfig.field">
           <div class="gl-title">
             <a-icon type="setting"/>
@@ -80,7 +81,8 @@
               </td>
               <td class="gl-table-cell">
                 <div style="line-height: 2em;margin-left: 0.5em">实体：</div>
-                <a-input-search placeholder="选择并绑定实体" v-model="fieldConfig.entity" @search="openSelectEntityList">
+                <a-input-search placeholder="选择并绑定实体" v-model="fieldConfig.entity" @search="openSelectEntityList"
+                                readOnly>
                   <a-button type="primary" slot="enterButton">
                     <a-icon type="select"/>
                     选择
@@ -91,7 +93,7 @@
                 <a-select v-model="fieldConfig.field" :allowClear="true" style="min-width: 99%">
                   <a-select-option v-for="colMeta in currentEntityColumns" :key="colMeta.fieldName"
                                    :title="colMeta.title">
-                    {{colMeta.fieldName}}&nbsp;({{colMeta.title}})
+                    <span v-if="!colMeta.nullable" class="gl-required" style="font-weight: bold">*</span>{{colMeta.fieldName}}&nbsp;({{colMeta.title}})
                   </a-select-option>
                 </a-select>
               </td>
@@ -123,7 +125,7 @@
                 是否必填：
               </td>
               <td class="gl-table-cell">
-                <a-switch :defaultChecked="fieldConfig.rules.required"></a-switch>
+                <a-switch v-model="fieldConfig.rules.required"></a-switch>
               </td>
             </tr>
             <tr class="gl-table-row">
@@ -131,7 +133,7 @@
                 是否唯一：
               </td>
               <td class="gl-table-cell">
-                <a-switch :defaultChecked="fieldConfig.rules.unique"></a-switch>
+                <a-switch v-model="fieldConfig.rules.unique"></a-switch>
               </td>
             </tr>
           </table>
@@ -213,6 +215,7 @@
       this.$gl.bus.$on('gl-ide-plugin-form-designer.stage.fieldSelect', this.onFieldSelect)
     },
     destroyed() {
+
       this.$gl.bus.$off('gl-ide-plugin-form-designer.stage.fieldSelect', this.onFieldSelect)
     },
     methods: {
@@ -227,15 +230,19 @@
             value: bindEntityNames[key]
           })
         }
-        console.log(JSON.stringify(item), bindEntityNames, this.toSelectEntityNames)
+        // console.log(JSON.stringify(item), bindEntityNames, this.toSelectEntityNames)
         if (item.rules == undefined) {
           // item.rules = {}
-          this.$set(item, 'rules', {})
+          this.$set(item, 'rules', {required: undefined, unique: undefined})
+          // this.$set(item.rules, 'required', undefined)
+          // this.$set(item.rules, 'unique', undefined)
         }
         if (item.props == undefined) {
           // item.props = {}
-          this.$set(item, 'props', {})
+          this.$set(item, 'props', {placeholder: undefined})
+          // this.$set(item.props, 'placeholder', undefined)
         }
+        // data
         if (this.isContainDataItems(item) && (item.data === undefined || item.data.length === 0)) {
           // item.data = [{text: '选项一', value: 0}]
           this.$set(item, 'data', [{text: '选项一', value: 0}])
@@ -301,7 +308,7 @@
       },
       onEntitySelected(params, data) {
         this.fieldConfig.entity = data.name
-        this.loadEntityMeta({tableId: data.id})
+        this.loadEntityMeta({tableId: data.id, '@order': 'fieldName|+'})
       },
       loadEntityMetaByEntityName(entityName) {
         let that = this
@@ -310,12 +317,12 @@
           delStatus: 0,
           enableStatus: 1
         }).then(function (res) {
-          that.loadEntityMeta({tableId: res.data[0].id})
+          that.loadEntityMeta({tableId: res.data[0].id, '@order': 'fieldName|+'})
         })
       },
       loadEntityMeta(kvConditions) {
         let that = this
-        that.$gl.api.query('platform_dev_column', 'id,title,fieldName,name,description', kvConditions).then(function (res) {
+        that.$gl.api.query('platform_dev_column', 'id,nullable,title,fieldName,name,description', kvConditions).then(function (res) {
           that.currentEntityColumns = res.data
         })
       },

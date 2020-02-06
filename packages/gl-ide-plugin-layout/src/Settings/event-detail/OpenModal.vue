@@ -60,7 +60,7 @@
 <script>
   /* eslint-disable no-unused-vars */
 
-  import ideConfig from '../../../../gl-ide/src/data.js'
+  import ideConfig from '../../../../gl-ide/src/data/ideSelectItems.js'
 
   export default {
     props: {

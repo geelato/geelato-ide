@@ -97,7 +97,7 @@
                             style="min-width: 99%">
                     <a-select-option v-for="colMeta in currentEntityColumns" :key="colMeta.fieldName"
                                      :title="colMeta.title">
-                      {{colMeta.fieldName}}
+                      {{colMeta.fieldName}}&nbsp;({{colMeta.title}})
                     </a-select-option>
                   </a-select>
                 </td>
@@ -145,8 +145,8 @@
                       </td>
                       <td class="gl-table-cell">
                         <div>
-                          <input v-model="col.customRenderString" style="width: 99%"
-                                 @change="changeColumnCustomRender(col)" placeholder="鼠标移上来展示示例"/>
+                          <textarea v-model="col.customRenderString" style="width: 99%"
+                                 @change="changeColumnCustomRender(col)" placeholder="鼠标移上来展示示例" rows="4"/>
                         </div>
                         <div class="gl-ide-designer-tips">
                           填写示例1，展示固定的字段内容：<br>
@@ -266,7 +266,7 @@
                   <a-select v-model="property.field" :allowClear="true" style="min-width: 99%">
                     <a-select-option v-for="colMeta in currentEntityColumns" :key="colMeta.fieldName"
                                      :title="colMeta.title">
-                      <span style="background-color: red">{{colMeta.fieldName}}&nbsp;({{colMeta.title}})</span>
+                      {{colMeta.fieldName}}&nbsp;({{colMeta.title}})
                     </a-select-option>
                   </a-select>
                 </td>
@@ -468,7 +468,7 @@
 
 <script>
   import mixin from '../../mixin-x-designer'
-  import ideConfig from '../../gl-ide/src/data.js'
+  import ideConfig from '../../gl-ide/src/data/ideSelectItems.js'
   import SelectEntityList from '../../gl-ide/src/select/SelectEntityList'
 
   export default {

@@ -105,6 +105,9 @@
     methods: {
       reset() {
         let that = this;
+        if (!that.$refs.container) {
+          return
+        }
         that.$refs.container.innerHTML = '';
         console.log('that.content>', that.content, typeof that.content)
         that.codeCopyString = JSON.stringify(that.content, function (key, value) {

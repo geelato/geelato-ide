@@ -22,6 +22,14 @@
           required: true
         }
       },
+      icon: {
+        control: 'input',
+        title: '图标',
+        field: 'icon',
+        rules: {
+          required: false
+        }
+      },
       tree: {
         field: 'tree',
         value: ''
@@ -38,6 +46,11 @@
         // label为true时，展示的是property中title的内容，若需修改名称
         cols: [
           {span: 6, label: true, field: 'name'}, {span: 18, field: 'name'},
+        ]
+      }, {
+        // label为true时，展示的是property中title的内容，若需修改名称
+        cols: [
+          {span: 6, label: true, field: 'icon'}, {span: 18, field: 'icon'},
         ]
       }, {
         cols: [

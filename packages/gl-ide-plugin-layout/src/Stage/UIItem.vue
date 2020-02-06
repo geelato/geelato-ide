@@ -310,6 +310,9 @@
           children: groups
         })
       },
+      generateObjectTreeNodeOfOpenModalAndBindEvent() {
+
+      },
       /**
        * 移除objectTree相应的节点
        * @param item 组件配置信息item
@@ -426,45 +429,37 @@
     background-color: rgb(107, 209, 255);
   }
 
-  .gl-dnd-col-wrapper {
+  .gl-ide-layout-stage .gl-dnd-col-wrapper {
     min-height: 2em;
   }
 
-  .gl-dnd-row-toolbar {
+  .gl-ide-layout-stage .gl-dnd-row-toolbar {
     position: absolute;
     right: -0.5em;
     display: none;
   }
 
-  .gl-dnd-row-toolbar i {
+  .gl-ide-layout-stage .gl-dnd-row-toolbar i {
     font-size: 1.5em;
     line-height: 1.5em;
     cursor: pointer;
   }
 
-  .gl-dnd-row-handle:hover .gl-dnd-row-toolbar {
+  .gl-ide-layout-stage .gl-dnd-row-handle:hover .gl-dnd-row-toolbar {
     display: inline-block;
   }
 
-  .gl-dnd-col-toolbar {
+  .gl-ide-layout-stage .gl-dnd-col-toolbar {
     padding: 0 1em;
     line-height: 2em;
     height: 2em;
     background-color: #e5e5e5
   }
 
-  .gl-dnd-col-toolbar button {
+  .gl-ide-layout-stage .gl-dnd-col-toolbar button {
     background-color: #e5e5e5;
     border-color: #e5e5e5
   }
-
-  /*.gl-ide-layout-stage .gl-dnd-row-handle > div {*/
-  /*!*padding: 0 1px !important;*!*/
-  /*}*/
-
-  /*.gl-ide-layout-stage .gl-dnd-row-handle:hover > div > div {*/
-  /*!*background-color: rgba(255, 202, 17, 0.7);*!*/
-  /*}*/
 
   .gl-ide-layout-stage .gl-dnd-row-handle:hover {
     /*box-shadow: 0 0 1px #000 inset;*/

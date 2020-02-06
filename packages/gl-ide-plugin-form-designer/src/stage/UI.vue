@@ -1,5 +1,5 @@
 <template>
-  <div class="gl-ide-layout-stage gl-table-designer"
+  <div class="gl-table-designer"
        style="height: 760px;overflow-x: hidden;padding-left: 0.5em;padding-right: 1em">
     <u-i-item :rows="rows"
               :properties="opts.properties"
@@ -103,7 +103,7 @@
                   // 第一个有效，只取第一个field，
                   newRow.cols.push({
                     span: fieldSpan.label * x,
-                    label: fieldItem.title || true,
+                    label: true,
                     field: fieldItem.field
                   })
                   newRow.cols.push({
