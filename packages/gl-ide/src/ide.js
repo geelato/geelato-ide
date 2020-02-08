@@ -1,4 +1,4 @@
-import SimplePageDefinition from "../../../runingtime/SimplePageDefinition";
+import SimplePageDefinition from "../../../runtime/SimplePageDefinition";
 
 const plugins = []
 const files = []

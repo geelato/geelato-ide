@@ -18,7 +18,6 @@
         </template>
         <template v-else>
           <div v-for="(colItem) in col.items" :key="colItem.id" class="gl-col">
-            {{colItem.id}}
             <component :ref="colItem.id" v-show="colItem.show" :is="$globalVue.component(colItem.component)"
                        :gid="colItem.id" v-bind="colItem.bind" @doAction="$emit('doAction',$event)"></component>
           </div>

@@ -107,7 +107,7 @@
 
 <script>
   /* eslint-disable no-unused-vars */
-  import EditingFileParser from '../../../../runingtime/EditingFileParser'
+  import EditingFileParser from '../../../../runtime/EditingFileParser'
   import Vue from 'vue'
 
   export default {

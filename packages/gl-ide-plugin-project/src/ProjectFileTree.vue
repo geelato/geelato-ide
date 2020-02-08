@@ -5,8 +5,8 @@
 
 <script>
   /* eslint-disable no-unused-vars */
-  import SimplePageDefinition from '../../../runingtime/SimplePageDefinition'
-  import EditingFileParser from '../../../runingtime/EditingFileParser'
+  import SimplePageDefinition from '../../../runtime/SimplePageDefinition'
+  import EditingFileParser from '../../../runtime/EditingFileParser'
 
   export default {
     props: {

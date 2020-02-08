@@ -36,7 +36,7 @@
 
 <script>
   /* eslint-disable no-unused-vars */
-  import EditingFileParser from '../../../../runingtime/EditingFileParser'
+  import EditingFileParser from '../../../../runtime/EditingFileParser'
   import GlIdeSettingEvent from './GlIdeSettingEvent'
 
   let actionsTemplate = [{

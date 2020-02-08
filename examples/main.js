@@ -13,7 +13,7 @@ import './../packages/ide.css'
 
 import Ide from './components/Ide'
 import Preview from './components/Preview'
-import GlPage from '../runingtime/gl-page/index.js'
+import GlPage from '../runtime/gl-page/index.js'
 
 
 Vue.config.productionTip = false

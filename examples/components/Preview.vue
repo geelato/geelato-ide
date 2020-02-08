@@ -17,7 +17,6 @@
     },
     methods: {
       doAction(data) {
-        console.log('doAction................2', data)
         this.$emit('doAction', data)
       }
     }
