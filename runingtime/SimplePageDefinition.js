@@ -36,7 +36,7 @@ class SimplePageDefinition {
       // 运行时生成的组件引用，不保存
       _componentRefs: {},
       events: {},
-      // 运行时生成的组件引用，不保存
+      // 运行时生成的事件引用，不保存
       _bindEvents: {},
       // 当前页面的子页面，如弹层的页面[{type:modal,page:{}}]、如嵌入页面[{type:inner,page:{}}]
       _subPages: [],

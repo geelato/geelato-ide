@@ -33,18 +33,12 @@
 
     },
     methods: {
-      // onSelect(keys) {
-      //   this.$gl.bus.$emit('project_file_selected', keys)
-      // },
-      // onExpand() {
-      //   console.log('Trigger Expand');
-      // },
       customClone(item) {
         let result = {
           id: utils.uuid(16)
         }
         Object.assign(result, item)
-        return result
+        return JSON.parse(JSON.stringify(result))
       }
     }
   }

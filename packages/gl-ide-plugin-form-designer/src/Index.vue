@@ -11,7 +11,7 @@
         <stage :size="size" :height="height" :opts="cardBind" style="padding-right: 3.5em;padding-top: 1em"></stage>
       </a-col>
       <a-col :span="6">
-        <settings :size="size" :height="height"></settings>
+        <settings :size="size" :height="height" :opts="cardBind"></settings>
       </a-col>
     </a-row>
   </div>
@@ -116,7 +116,7 @@
     min-height: 2.4em;
     padding: 0.2em 0.4em 0.2em 0;
     background-color: #ececec;
-    border-radius:0 10px 10px 0
+    border-radius: 0 10px 10px 0
   }
 
   .gl-ide-plugin-form-designer .gl-dnd-form-row-toolbar i {
@@ -184,4 +184,16 @@
     line-height: 2em;
     cursor: move;
   }
+
+  /*.gl-ide-plugin-form-designer .form-control-mask {*/
+  /*position: absolute;*/
+  /*top: 0px;*/
+  /*left: 0px;*/
+  /*right: 0px;*/
+  /*bottom: 0px;*/
+  /*line-height: 2em;*/
+  /*z-index: 999;*/
+  /*!*background: transparent;*!*/
+  /*background-color: rgba(211, 0, 10, 0.1);*/
+  /*}*/
 </style>

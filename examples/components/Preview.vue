@@ -1,5 +1,5 @@
 <template>
-  <gl-page :page-id="pageId"></gl-page>
+  <gl-page :page-id="pageId" @doAction="doAction"></gl-page>
 </template>
 
 <script>
@@ -15,7 +15,12 @@
     },
     mounted() {
     },
-    methods: {}
+    methods: {
+      doAction(data) {
+        console.log('doAction................2', data)
+        this.$emit('doAction', data)
+      }
+    }
   }
 </script>
 

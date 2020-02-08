@@ -25,14 +25,7 @@ export default {
       data: [{text: '默认', value: '0'}, {text: '类型一', value: '1'}, {text: '类型二', value: '2'}
       ],
       props: {
-        defaultValue: '0'
-      }
-    },
-    content: {
-      control: 'textarea',
-      title: '内容',
-      rules: {
-        required: true
+        // defaultValue: '0'
       }
     },
     description: {
@@ -53,7 +46,7 @@ export default {
         {span: 4, label: true, field: 'type'}, {span: 20, field: 'type'}
       ]
     }
-      , {cols: [{span: 4, label: true, field: 'content'}, {span: 20, field: 'content'}]}
+      , {cols: [{span: 4, label: true, field: 'content'}, {span: 20, field: 'description'}]}
       // , {
       //   cols: [{
       //     span: 24, rows: [{cols: [{span: 4, label: true, field: 'content'}, {span: 20, field: 'content'}]}]

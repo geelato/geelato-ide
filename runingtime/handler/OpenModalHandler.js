@@ -4,9 +4,9 @@ export default class OpenModalHandler {
     this.$root = $root
   }
 
-  doAction(config) {
+  doAction(config, ctx) {
     console.log('gl-ide > OpenModalHandler.js > config:', config)
-    this.$root.$gl.ui.openModal(this, {
+    this.$root.$gl.ui.openModal(ctx, {
       title: config.params.title,
       width: config.params.width || '1000px',
       height: config.params.height || '480px',
@@ -18,8 +18,8 @@ export default class OpenModalHandler {
         }
       },
       actions: config.params.actions,
-      actionAlign: 'center'
+      actionAlign: 'center',
+      on: [{fn: 'save', ctx: 'content', then: {fn: 'close', ctx: 'this', then: {fn: 'refresh', ctx: 'opener'}}}],
     })
   }
-
 }

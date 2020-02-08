@@ -19,7 +19,6 @@
               <!--:query="getCardConfig(col.card).query">-->
               <!--正在加载...-->
               <!--</component>-->
-              aaaa
               <component :ref="col.card" :is="getCardComponent(col.card)"
                          v-bind="getCardConfig(col.card).bind">
                 正在加载...
@@ -224,6 +223,17 @@
         }
       },
       generateComponentRef(item) {
+        // item 示例：
+        // {component: "GlTable"
+        //   img: ""
+        //   bind: Object
+        //   meta: Object
+        //   icon: "table"
+        //   show: true
+        //   description: ""
+        //   id: "XSOb2tMmwgk6KfFR"
+        //   title: "列表"
+        // }
         console.log('gl-ide > gl-ide-plugin-item > generateComponentRef() > item:', item)
         console.log('gl-ide > gl-ide-plugin-item > generateComponentRef() > this.$refs:', this.$refs)
         console.log('gl-ide > gl-ide-plugin-item > generateComponentRef() > this.$refs[item.id]:', this.$refs[item.id])
@@ -310,9 +320,7 @@
           children: groups
         })
       },
-      generateObjectTreeNodeOfOpenModalAndBindEvent() {
 
-      },
       /**
        * 移除objectTree相应的节点
        * @param item 组件配置信息item

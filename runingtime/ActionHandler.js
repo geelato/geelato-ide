@@ -10,10 +10,11 @@ export default class ActionHandler {
   }
 
   /**
-   * 动态加载./handler/下的XXXHandler,并搪行
+   * 动态加载./handler/下的XXXHandler,并执行
    * @param action
+   * @param ctx 触发事件的上下文
    */
-  doAction(action) {
+  doAction(action, ctx) {
     const that = this
     for (const index in action.do) {
       const doItem = action.do[index]
@@ -24,14 +25,14 @@ export default class ActionHandler {
           const Handler = result.default
           that.handlers[handlerName] = new Handler(that.$root)
           try {
-            this.handlers[handlerName].doAction(doItem)
+            this.handlers[handlerName].doAction(doItem, ctx)
           } catch (e) {
             console.error(e, 'action:', action)
           }
         })
       } else {
         try {
-          this.handlers[handlerName].doAction(doItem)
+          this.handlers[handlerName].doAction(doItem, ctx)
         } catch (e) {
           console.error(e, 'action:', action)
         }

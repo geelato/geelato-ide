@@ -161,11 +161,10 @@
           control: fieldItem.control,
           title: fieldItem.title || ' ',
           gid: gid,
-          // 临时增加，未与后端字段对应，持久化到服务端时，忽略该字段
-          isServerSaveIgnore: true
+          isServerSaveIgnore: false
         }
         if (fieldItem.opts.data) {
-          newProperty.data = fieldItem.opts.data
+          newProperty.data = JSON.parse(JSON.stringify(fieldItem.opts.data))
         }
         this.$set(this.opts.properties, fieldItem.field, newProperty)
         return this.opts.properties[fieldItem.field]

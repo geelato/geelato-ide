@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div class="gl-form-header"></div>
     <gl-draggable
         :list="rowItems"
         handle=".gl-dnd-form-row-handle"
@@ -22,9 +23,11 @@
             </a-col>
             <a-col :span="item.fieldSpan.control" class="control">
               <div class="gl-dnd-form-col-toolbar">
+                <!--<a-icon type="swap" style="color: #f5222d" title="移动字段" class="gl-dnd-control-handle"/>-->
                 <a-icon type="delete" theme="twoTone" twoToneColor="#f5222d"
                         @click="removeControl(item,rowIndex,colIndex,itemIndex)" title="删除字段"/>
               </div>
+              <!--<div class="form-control-mask gl-dnd-control-handle">&nbsp;</div>-->
               <gl-draggable
                   :list="item.fields"
                   handle=".gl-dnd-control-handle"
@@ -59,12 +62,22 @@
         从左边【布局】栏目中拖动布局行列到该区域，再从【组件】栏目拖动组件到布局行列中。
       </div>
     </gl-draggable>
+    <div class="gl-form-toolbar" v-show="toolbar.show||toolbar.show===undefined" style="text-align: center">
+      <template v-for="(action,index) in toolbar.actions" v-if="action.gid=action.gid||$gl.utils.uuid(8)">
+        <a-button :ref="action.gid" :type="action.type||'primary'" :icon="action.icon"
+                  :key="index" v-if="action.show===undefined||action.show===''||rungs(action.show)">
+          {{action.text||action.title}}
+        </a-button>&nbsp;
+      </template>
+    </div>
   </div>
 </template>
 
 <script>
   /* eslint-disable no-unused-vars */
   import controlTypes from '../data/controlTypes'
+
+  let GEELATO_SCRIPT_PREFIX = 'gs:'
 
   export default {
     name: "GlIdePluginLayoutStageUIItem",
@@ -85,6 +98,27 @@
         type: Object,
         default() {
           return {}
+        }
+      },
+      toolbar: {
+        type: Object,
+        default() {
+          return {
+            show: true,
+            actions: [{
+              gid: this.$gl.utils.uuid(8),
+              text: '保存',
+              type: 'primary',
+              show: '',
+              icon: ''
+            }, {
+              gid: this.$gl.utils.uuid(8),
+              text: '取消',
+              type: 'danger',
+              show: '',
+              icon: ''
+            }]
+          }
         }
       },
       gutter: {
@@ -142,7 +176,13 @@
 
         console.log('gl-ide-plugin-form-designer > stage > onAddControl() > e: ', e, 'fieldItems:', fieldItems)
         let item = this.getCurrentControlItem(e, fieldItems)
-        // 获取已引用的实体
+
+        this.$gl.bus.$emit('gl-ide-plugin-form-designer.stage.fieldSelect', this.getProperty(item.field), this.getBindEntityNames())
+        console.log('gl-ide-plugin-form-designer > stage > onAddControl() > item: ', item)
+      },
+
+      // 获取已引用的实体
+      getBindEntityNames() {
         let bindEntityNames = {}
         for (let key in this.properties) {
           const property = this.properties[key]
@@ -150,9 +190,7 @@
             bindEntityNames[property.entity] = property.entity
           }
         }
-
-        this.$gl.bus.$emit('gl-ide-plugin-form-designer.stage.fieldSelect', this.getProperty(item.field), bindEntityNames)
-        console.log('gl-ide-plugin-form-designer > stage > onAddControl() > item: ', item)
+        return bindEntityNames
       },
 
       onRowEndControl: function (e, fieldItems) {
@@ -174,7 +212,7 @@
       onControlChoose(e, fieldItems) {
         console.log('gl-ide-plugin-layout > stage > onControlChoose: ', e)
         let item = this.getCurrentControlItem(e, fieldItems)
-        this.$gl.bus.$emit('gl-ide-plugin-form-designer.stage.fieldSelect', this.getProperty(item.field))
+        this.$gl.bus.$emit('gl-ide-plugin-form-designer.stage.fieldSelect', this.getProperty(item.field), this.getBindEntityNames())
       },
       removeControl(item) {
         let that = this
@@ -245,7 +283,19 @@
         // that.rowItems.forEach(function (rowItem) {
         //   console.log('that.rows', that.rows)
         // })
-      }
+      },
+      /**
+       * gs(geelato script)执行表达式，若非gs表达式则直接返回
+       * @param str e.g. "gs:$ctx.table.selectedRowKeys.length > 0"
+       */
+      rungs(str) {
+        let $ctx = this
+        if (typeof str === 'string' && str.indexOf(GEELATO_SCRIPT_PREFIX) === 0) {
+          return this.$gl.utils.eval(str.substring(3), $ctx)
+        } else {
+          return str
+        }
+      },
     }
   }
 </script>

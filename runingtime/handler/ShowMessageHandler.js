@@ -4,7 +4,7 @@ export default class ShowMessageHandler {
     this.$root = $root
   }
 
-  doAction(action) {
+  doAction(action, ctx) {
     this.$root.$message[action.params.method](action.params.content, action.params.duration)
   }
 

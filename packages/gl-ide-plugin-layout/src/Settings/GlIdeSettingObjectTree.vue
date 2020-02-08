@@ -107,7 +107,66 @@
         this.modalVisible = false
         // bind actions
         this.editingFileParser.bindEvent(this.ideStore.editingFile.sourceContent._bindEvents, this.currentControl, this.currentActions)
+        this.generateObjectTreeNodeOfOpenModalAndBindEvent()
+        console.log('gl-ide > gl-ide-plugin-layout > onCloseModal() > editingFile: ', this.ideStore.editingFile)
         console.log('gl-ide > gl-ide-plugin-layout > onCloseModal() > bind currentActions: ', this.currentActions)
+      },
+      /**
+       * 关闭时，解析配置的事件，找出引用的页面
+       */
+      generateObjectTreeNodeOfOpenModalAndBindEvent() {
+        const that = this
+        let events = this.ideStore.editingFile.sourceContent.events
+        if (events) {
+          for (let key in events) {
+            // key如JxwPyhpL
+            let actions = events[key]
+            actions.forEach((action) => {
+              action.do.filter((doItem) => doItem.handler === 'OpenModal').forEach((doItem) => {
+                let groups = []
+                // params: Object，示例
+                // gid: "WONuaXfF"
+                // actionAlign: "center"
+                // width: "1200px"
+                // title: "新建用户"
+                // pageId: "1899791614608965867"
+                // pageName: ""
+                // height: "480px"
+                // actions: Array(1)
+                let node = {
+                  title: '打开页面-' + doItem.params.title,
+                  key: doItem.params.gid,
+                  slots: {
+                    icon: 'table',
+                  }, children: groups
+                }
+                // action：Object，示例
+                // gid: "aOEek7z0"
+                // icon: "plus"
+                // text: "保存"
+                // type: "primary"
+                doItem.params.actions.forEach((subPageAction) => {
+                  groups.push({
+                    title: subPageAction.text,
+                    key: subPageAction.gid,
+                    slots: {
+                      icon: 'link',
+                    }
+                  })
+                })
+                that.ideStore.editingFile.objectTree.push(node)
+              })
+            })
+          }
+        }
+
+        // that.ideStore.editingFile.objectTree.push({
+        //   title: '引用页面',
+        //   key: 'dd',
+        //   slots: {
+        //     icon: 'table',
+        //   }
+        // })
       },
       onSelect(selectedKeys, e) {
         let that = this

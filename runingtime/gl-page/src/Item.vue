@@ -6,19 +6,21 @@
           <a-card :title="getCardConfig(col.card).title" style="margin-top: 8px">
             <component :ref="col.card" :is="getCardComponent(col.card)"
                        :opts="getCardConfig(col.card).opts"
-                       :query="getCardConfig(col.card).query">
+                       :query="getCardConfig(col.card).query"
+            >
               正在加载...
             </component>
           </a-card>
         </template>
         <template v-else-if="col.rows">
           <gl-page-item :rows="col.rows" :componentRefs="componentRefs" :bindEvents="bindEvents"
-                        :gutter="gutter" :treeNodes="treeNodes"></gl-page-item>
+                        :gutter="gutter" :treeNodes="treeNodes" @doAction="$emit('doAction',$event)"></gl-page-item>
         </template>
         <template v-else>
           <div v-for="(colItem) in col.items" :key="colItem.id" class="gl-col">
+            {{colItem.id}}
             <component :ref="colItem.id" v-show="colItem.show" :is="$globalVue.component(colItem.component)"
-                       v-bind="colItem.bind"></component>
+                       :gid="colItem.id" v-bind="colItem.bind" @doAction="$emit('doAction',$event)"></component>
           </div>
         </template>
       </a-col>
@@ -180,7 +182,7 @@
                     component: controlComponent
                   }
                   if (controlComponent && that.events[childObj.gid]) {
-                    that.editingFileParser.bindEvent(that.bindEvents, control, that.events[childObj.gid])
+                    that.editingFileParser.bindEvent(that.bindEvents, control, that.events[childObj.gid], componentItem.component)
                   }
                 }
               }
@@ -212,12 +214,13 @@
       },
       getCardComponent(cardId) {
         const card = this.getCardConfig(cardId)
+        console.log('...................', cardId, card, Vue.component(card.type))
         return Vue.component(card.type)
       },
-      onEnd: function(e) {
+      onEnd: function (e) {
         console.log('gl-ide-plugin-layout > stage > onEnd: ', e)
       },
-      onRowAdd: function(e) {
+      onRowAdd: function (e) {
         console.log('gl-ide-plugin-layout > stage > onRowAdd: ', e)
       },
       removeRow(rowIndex) {
@@ -240,7 +243,7 @@
       onClone(e) {
         console.log('gl-ide-plugin-layout > stage > onClone: ', e)
       },
-      onAddCol: function(e) {
+      onAddCol: function (e) {
         console.log('gl-ide-plugin-layout > stage > onAddCol: ', e, this.componentRefs)
       },
       onColChange(e) {
@@ -251,9 +254,9 @@
       },
       onCardOpen(col, item, index) {
         if (typeof item.onOpen === 'function') {
-          item.onOpen({ item: item, col: col, index: index })
+          item.onOpen({item: item, col: col, index: index})
         }
-        this.$gl.bus.$emit(this.events.card_open, { col: col, item: item, index: index })
+        this.$gl.bus.$emit(this.events.card_open, {col: col, item: item, index: index})
         console.log('gl-ide-plugin-layout > stage > onCardOpen: ', col, item, index)
       },
       onColDelete(col, item, index) {

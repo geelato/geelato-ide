@@ -1,6 +1,7 @@
 <template>
   <div class="gl-ide-plugin-x-designer-settings">
-    <a-tabs defaultActiveKey="2" :size="size" :style="{'min-height':`${height}px`,'max-height':`${height}px`}">
+    <a-tabs :activeKey="activeTabKey" @change="(key)=>{activeTabKey=key}" :size="size"
+            :style="{'min-height':`${height}px`,'max-height':`${height}px`}">
       <a-tab-pane key="1">
       <span slot="tab">
         <!--<a-icon type="info-circle"/>-->
@@ -24,11 +25,21 @@
               </td>
             </tr>
           </table>
-          <div class="gl-title">
-            <a-icon type="setting"/>
-            数据
-          </div>
           <table class="gl-table">
+            <tr class="gl-table-row">
+              <td class="gl-table-cell gl-table-cell-sub-label">
+                默认实体：
+              </td>
+              <td class="gl-table-cell">
+                <a-select v-model="opts.defaultEntity" :allowClear="true" style="min-width: 99%">
+                  <a-select-option v-for="entityItem in toSelectEntityNames" :key="entityItem.value"
+                                   :value="entityItem.value"
+                                   :title="entityItem.text">
+                    {{entityItem.value}}
+                  </a-select-option>
+                </a-select>
+              </td>
+            </tr>
           </table>
         </div>
       </a-tab-pane>
@@ -80,19 +91,36 @@
                 绑定数据库字段：
               </td>
               <td class="gl-table-cell">
-                <div style="line-height: 2em;margin-left: 0.5em">实体：</div>
-                <a-input-search placeholder="选择并绑定实体" v-model="fieldConfig.entity" @search="openSelectEntityList"
-                                readOnly>
-                  <a-button type="primary" slot="enterButton">
-                    <a-icon type="select"/>
-                    选择
-                  </a-button>
-                </a-input-search>
-                <div style="line-height: 2em;margin-left: 0.5em">字段：</div>
+                <div style="line-height: 2em;margin-left: 0.5em">先选择实体：</div>
+                <!--<a-input-search placeholder="选择并绑定实体" v-model="fieldConfig.entity" @search="openSelectEntityList"-->
+                <!--readOnly>-->
+                <!--<a-button type="primary" slot="enterButton">-->
+                <!--<a-icon type="select"/>-->
+                <!--选择-->
+                <!--</a-button>-->
+                <!--</a-input-search>-->
+                <a-select v-model="fieldConfig.entity" :allowClear="true" style="min-width: 99%" v-if="refreshFlag"
+                          @change="onChangeSelectEntity">
+                  <div slot="dropdownRender" slot-scope="menu">
+                    <gl-v-nodes :vnodes="menu"/>
+                    <a-divider style="margin: 4px 0;"/>
+                    <div style="padding: 8px; cursor: pointer;" @click="openSelectEntityList">
+                      <a-icon type="plus"/>
+                      添加
+                    </div>
+                  </div>
+                  <a-select-option v-for="entityItem in toSelectEntityNames" :key="entityItem.value"
+                                   :value="entityItem.value"
+                                   :title="entityItem.text">
+                    {{entityItem.value}}
+                  </a-select-option>
+                </a-select>
+                <div style="line-height: 2em;margin-left: 0.5em">再绑定字段：</div>
                 <!--:style="{color:!containField()?'':'red'}"-->
-                <a-select v-model="fieldConfig.field" :allowClear="true" style="min-width: 99%">
-                  <a-select-option v-for="colMeta in currentEntityColumns" :key="colMeta.fieldName"
-                                   :title="colMeta.title">
+                <a-select v-model="fieldConfig.field" :allowClear="true" style="min-width: 99%" v-if="refreshFlag"
+                          @change="forceFresh">
+                  <a-select-option v-for="(colMeta,colMetaIndex) in currentEntityColumns" :key="colMetaIndex"
+                                   :value="colMeta.fieldName" :title="colMeta.title">
                     <span v-if="!colMeta.nullable" class="gl-required" style="font-weight: bold">*</span>{{colMeta.fieldName}}&nbsp;({{colMeta.title}})
                   </a-select-option>
                 </a-select>
@@ -103,7 +131,7 @@
                 保存时是否排除该字段：
               </td>
               <td class="gl-table-cell">
-                <a-switch :defaultChecked="fieldConfig.isServerSaveIgnore"></a-switch>
+                <a-switch v-model="fieldConfig.isServerSaveIgnore"></a-switch>
               </td>
             </tr>
             <tr class="gl-table-row" v-if="freshFlag&&isContainDataItems(fieldConfig)">
@@ -164,16 +192,16 @@
       <a-tab-pane key="3">
       <span slot="tab">
         <!--<a-icon type="border"/>-->
-        单元格
+        操作栏
       </span>
-        Tab 2
-      </a-tab-pane>
-      <a-tab-pane key="4">
-      <span slot="tab">
-        <!--<a-icon type="android"/>-->
-        标题
-      </span>
-        Tab 2
+        <div>
+          <div class="gl-title">
+            <a-icon type="setting"/>
+            操作按钮
+          </div>
+          <table class="gl-table">
+          </table>
+        </div>
       </a-tab-pane>
     </a-tabs>
   </div>
@@ -188,10 +216,23 @@
 
   export default {
     name: "Settings",
-    components: {SelectSettings},
+    components: {
+      SelectSettings, GlVNodes: {
+        functional: true,
+        render: (h, ctx) => ctx.props.vnodes,
+      }
+    },
     mixins: [mixin],
+    props: {
+      opts: {
+        type: Object,
+        required: true
+      }
+    },
     data() {
       return {
+        defaultEntity: '',
+        activeTabKey: '2',
         fieldConfig: {
           title: '',
           control: '',
@@ -207,7 +248,15 @@
         currentEntityColumns: [],
         toSelectEntityNames: [],
         // 用于设计
-        controlTypes: controlTypes
+        controlTypes: controlTypes,
+        refreshFlag: true,
+        cacheEntityMeta: {}
+      }
+    },
+    watch: {
+      'opts.defaultEntity': function (val) {
+        // 同步更改默认的id字段的实体
+        this.$set(this.opts.properties.id, 'entity', val)
       }
     },
     created() {
@@ -219,28 +268,47 @@
       this.$gl.bus.$off('gl-ide-plugin-form-designer.stage.fieldSelect', this.onFieldSelect)
     },
     methods: {
+      forceFresh() {
+        this.refreshFlag = false
+        this.$nextTick(function () {
+          this.refreshFlag = true
+        })
+      },
+      addToSelectEntityNames({text, value}) {
+        let containsItems = this.toSelectEntityNames.filter((item) => {
+          return item.value === value
+        })
+        if (containsItems.length === 0) {
+          this.toSelectEntityNames.push({
+            text: text,
+            value: value
+          })
+        }
+      },
       /**
        * 初始化字段默认信息
        * @param item 字段
+       * @param bindEntityNames 当前已绑定的实体，格式：{}
        */
       onFieldSelect(item, bindEntityNames) {
+        // this.activeTabKey = '2'
         for (let key in bindEntityNames) {
-          this.toSelectEntityNames.push({
-            text: key,
-            value: bindEntityNames[key]
-          })
+          this.addToSelectEntityNames({key: key, value: bindEntityNames[key]})
         }
-        // console.log(JSON.stringify(item), bindEntityNames, this.toSelectEntityNames)
-        if (item.rules == undefined) {
+        console.log(JSON.stringify(item), bindEntityNames, 'toSelectEntityNames: ', this.toSelectEntityNames)
+        if (item.rules === undefined) {
           // item.rules = {}
           this.$set(item, 'rules', {required: undefined, unique: undefined})
           // this.$set(item.rules, 'required', undefined)
           // this.$set(item.rules, 'unique', undefined)
         }
-        if (item.props == undefined) {
+        if (item.props === undefined) {
           // item.props = {}
           this.$set(item, 'props', {placeholder: undefined})
           // this.$set(item.props, 'placeholder', undefined)
+        }
+        if (item.isServerSaveIgnore === undefined) {
+          item.isServerSaveIgnore = false
         }
         // data
         if (this.isContainDataItems(item) && (item.data === undefined || item.data.length === 0)) {
@@ -253,12 +321,13 @@
         // 对于无实体的，从当前表单已配置的实体中，默认选择第一项
         if (!item.entity && this.toSelectEntityNames.length > 0) {
           // this.$set(item, 'entity', this.toSelectEntityNames[0].key)
-          item.entity = this.toSelectEntityNames[0].value
+          this.$set(item, 'entity', this.toSelectEntityNames[0].value)
+          // item.entity = this.toSelectEntityNames[0].value
         }
         this.fieldConfig = item
 
         // 通过实体加载字段下拉项数据
-        this.loadEntityMetaByEntityName(this.fieldConfig.entity)
+        this.loadFieldMetaByEntityName(this.fieldConfig.entity)
         this.freshFlag = false
         this.$nextTick(function () {
           this.freshFlag = true
@@ -306,21 +375,26 @@
           }]
         })
       },
+      onChangeSelectEntity(data) {
+        this.loadFieldMetaByEntityName(data);
+        this.forceFresh()
+      },
       onEntitySelected(params, data) {
         this.fieldConfig.entity = data.name
-        this.loadEntityMeta({tableId: data.id, '@order': 'fieldName|+'})
+        this.addToSelectEntityNames({text: data.title, value: data.name})
+        this.loadFieldMeta({tableId: data.id, '@order': 'fieldName|+'})
       },
-      loadEntityMetaByEntityName(entityName) {
+      loadFieldMetaByEntityName(entityName) {
         let that = this
         that.$gl.api.query('platform_dev_table', 'id,title,description', {
           entityName: entityName,
           delStatus: 0,
           enableStatus: 1
         }).then(function (res) {
-          that.loadEntityMeta({tableId: res.data[0].id, '@order': 'fieldName|+'})
+          that.loadFieldMeta({tableId: res.data[0].id, '@order': 'fieldName|+'})
         })
       },
-      loadEntityMeta(kvConditions) {
+      loadFieldMeta(kvConditions) {
         let that = this
         that.$gl.api.query('platform_dev_column', 'id,nullable,title,fieldName,name,description', kvConditions).then(function (res) {
           that.currentEntityColumns = res.data
@@ -331,6 +405,10 @@
           return item.fieldName === this.fieldConfig.field
         })
         return found ? true : false
+      },
+      changeTab(key) {
+        console.log('key>', key)
+        this.activeTabKey = key
       }
     }
 
