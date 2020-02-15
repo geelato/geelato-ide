@@ -6,7 +6,7 @@ import 'ant-design-vue/dist/antd.less'
 import 'geelato-ui-ant/lib/geelato-ui-ant.css'
 
 import ApiSettings from './ApiSettings'
-import apiHelper from "./apiHelper";
+// import apiHelper from "./apiHelper";
 import geelatoAui from "geelato-ui-ant";
 import geelatoIde from './../packages/index'
 import './../packages/ide.css'

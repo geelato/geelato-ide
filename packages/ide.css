@@ -104,6 +104,30 @@
     color: #000000;
 }
 
+/* icon */
+/* iconfont 本质上还是使用的字体，所以多色图标还是不支持的，需要在这里设置*/
+
+.iconfont.icon-file {
+    color: #515151;
+}
+
+.iconfont.icon-file-primary {
+    color: #2185d0;
+}
+
+i[rel="iconfont icon-file"] {
+    color: #515151 !important;
+}
+
+i[rel="iconfont icon-file-primary"] {
+    color: #2185d0 !important;
+}
+
+/*.icon-file-primary:after {*/
+    /*content: "√";*/
+/*}*/
+
+
 /**************************************
  * ide preview
  *************************************/

@@ -35,9 +35,11 @@
           id: project.id,
           text: project.name || '新应用',
           parent: '#',
-          type: 'root'
+          type: 'root',
+          icon: '',
+          flag: ''
         }]
-        that.$gl.api.query('platform_tree_node', 'id,parent,text,type', {treeId: project.id}).then(function (res) {
+        that.$gl.api.query('platform_tree_node', 'id,parent,text,type,icon,flag', {treeId: project.id}).then(function (res) {
           console.log('gl-ide-plugin-project-tree > watch() > project.id > res:', res)
           that.newTree(treeData.concat(res.data))
         })
@@ -89,6 +91,8 @@
           }
         }
         $.extend(types, that.fileTypes)
+        console.log('gl-ide-plugin-project-tree> newTree() > fileTypes>', that.fileTypes)
+        console.log('gl-ide-plugin-project-tree> newTree() > types>', types)
         $tree.jstree({
           core: {
             themes: {
@@ -120,8 +124,9 @@
           state: {},
           plugins: ['contextmenu', 'dnd', 'state', 'types'],
           contextmenu: {
-            items: function (obj) {
-              let disable = isFile(obj.type)
+            items: function (nodeItem) {
+              console.log('isFile nodeItem>', nodeItem)
+              let disable = isFile(nodeItem.type)
               let items = {
                 create: {
                   // 解决第一下action，默认是false，移动之后才按_disabled生效的问题
@@ -144,8 +149,6 @@
                   _disabled: function (data) {
                     let node = $.jstree.reference(data.reference).get_node(data.reference)
                     if (node.type === 'root') {
-                      // node.parent === '#' || !node.parent
-//                    alert('根节点不能删除！')
                       return true
                     }
                     return false
@@ -158,8 +161,32 @@
                     $.jstree.reference(data.reference).delete_node(data.reference)
                   }
                 },
+                asMenuItem: {
+                  label: createIconLabel(isMenuItem(nodeItem) ? '设为非菜单项' : '设为菜单项', 'edit', '若为菜单项，则在最终发布的应用菜单中进行展示'),
+                  _disabled: function (data) {
+                    let node = $.jstree.reference(data.reference).get_node(data.reference)
+                    if (node.type === 'root') {
+                      return true
+                    }
+                    return !disable
+                  },
+                  action: function (data) {
+                    // let node = $.jstree.reference(data.reference).get_node(data.reference)
+                    nodeItem.flag = isMenuItem(nodeItem) ? '' : 'menuItem'
+                    nodeItem.icon = nodeItem.icon === 'iconfont icon-file' ? 'iconfont icon-file-primary' : 'iconfont icon-file'
+                    console.log('asMenuItem>', data, nodeItem)
+                    // $tree.jstree(true).rename_node(nodeItem, isMenuItem(nodeItem) ? nodeItem.text)
+                    that.updateNode(nodeItem)
+
+                    // $tree.jstree(true).refresh('#' + nodeItem.id)
+                  }
+                },
                 ccp: null
               }
+
+              // 添加应用菜单项
+
+
               return items
             }
           }
@@ -203,9 +230,16 @@
           return !!that.fileTypes[type]
         }
 
-        function createIconLabel(label, typeName) {
+        // 如果是已加入发布应用菜单项，则从发布应用菜单项移除
+        function isMenuItem(item) {
+          // 拿不到flag数据，用icon来作判断
+          // return item.flag === 'menuItem'
+          return item.icon === 'iconfont icon-file-primary'
+        }
+
+        function createIconLabel(label, typeName, title) {
           let type = types[typeName]
-          return '<span class="' + type.icon + '"></span>' + label
+          return '<span class="' + type.icon + '" title="' + title + '"></span>' + label
         }
 
         /**
@@ -236,7 +270,9 @@
                 text: '新' + label,
                 icon: type.icon,
                 type: typeName,
-                treeId: that.project.id
+                treeId: that.project.id,
+                // 新增的节点默认都当作应用的菜单
+                flag: 'menuItem'
               }
               that.$gl.api.save('platform_tree_node', treeNode, '节点保存成功').then(function (res) {
                 console.log('gl-ide-plugin-project-tree> newTree() > createNode() > save node res:', res)
@@ -354,10 +390,16 @@
             parent: node.parent,
             text: node.text,
             type: node.type,
-            treeId: that.project.id
+            icon: node.icon,
+            treeId: that.project.id,
+            flag: node.flag
           }
           that.$gl.api.save('platform_tree_node', treeNode).then(function (res) {
             console.log('更新节点名称为“' + node.text + '”,更新返回：', res)
+            console.log('更新节点图标为“' + node.icon + '”,更新返回：', res)
+            const $tree = $(that.$el)
+            $tree.jstree(true).set_icon(node, node.icon)
+            // $tree.jstree(true).refresh_node(node)
           })
         }
       }

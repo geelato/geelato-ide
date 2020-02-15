@@ -1,0 +1,44 @@
+{
+  "id": "1332397",
+  "name": "geelato",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "13036956",
+      "name": "table",
+      "font_class": "table",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "13035448",
+      "name": "file",
+      "font_class": "file-primary",
+      "unicode": "e895",
+      "unicode_decimal": 59541
+    },
+    {
+      "icon_id": "544516",
+      "name": "folder",
+      "font_class": "folder",
+      "unicode": "e744",
+      "unicode_decimal": 59204
+    },
+    {
+      "icon_id": "1261695",
+      "name": "file",
+      "font_class": "file",
+      "unicode": "e67d",
+      "unicode_decimal": 59005
+    },
+    {
+      "icon_id": "7207747",
+      "name": "interface",
+      "font_class": "interface",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    }
+  ]
+}
