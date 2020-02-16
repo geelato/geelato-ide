@@ -90,9 +90,11 @@ export default {
     // select: {field: 'id', title: '', type: 'checkbox'},
     rowAction: {
       actions: [{
+        title: '修改',
         text: '修改',
         icon: 'plus',
         type: 'primary',
+        control: 'link',
         fn: 'openModal',
         // opener、content、modal、handler，默认为handler
         ctx: 'this',

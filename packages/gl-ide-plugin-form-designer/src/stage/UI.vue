@@ -5,6 +5,7 @@
               :properties="opts.properties"
               :form="form"
               :gutter="opts.layout.gutter"
+              :toolbar="opts.toolbar"
               @updateLayoutRows="updateLayoutRows"
     ></u-i-item>
   </div>

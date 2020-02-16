@@ -12,7 +12,6 @@
             <a-icon type="setting"/>
             外观
           </div>
-
           <table class="gl-table">
             <tr class="gl-table-row">
               <td class="gl-table-cell gl-table-cell-sub-label">
@@ -25,6 +24,11 @@
               </td>
             </tr>
           </table>
+
+          <div class="gl-title">
+            <a-icon type="setting"/>
+            数据
+          </div>
           <table class="gl-table">
             <tr class="gl-table-row">
               <td class="gl-table-cell gl-table-cell-sub-label">
@@ -38,6 +42,30 @@
                     {{entityItem.value}}
                   </a-select-option>
                 </a-select>
+              </td>
+            </tr>
+          </table>
+
+          <div class="gl-title">
+            <a-icon type="setting"/>
+            工具栏
+          </div>
+          <table class="gl-table">
+            <tr class="gl-table-row">
+              <td class="gl-table-cell gl-table-cell-sub-label">
+                是否显示：
+              </td>
+              <td class="gl-table-cell">
+                <a-switch v-model="toolbar.show"></a-switch>
+              </td>
+            </tr>
+            <tr class="gl-table-row">
+              <td class="gl-table-cell gl-table-cell-sub-label">
+                <a-icon type="info-circle" title="若选择是，该工具体会合并到弹出窗口页面下方的工具栏中。"/>
+                加入弹窗工具栏：
+              </td>
+              <td class="gl-table-cell">
+                <a-switch ></a-switch>
               </td>
             </tr>
           </table>
@@ -189,20 +217,6 @@
           </table>
         </div>
       </a-tab-pane>
-      <a-tab-pane key="3">
-      <span slot="tab">
-        <!--<a-icon type="border"/>-->
-        操作栏
-      </span>
-        <div>
-          <div class="gl-title">
-            <a-icon type="setting"/>
-            操作按钮
-          </div>
-          <table class="gl-table">
-          </table>
-        </div>
-      </a-tab-pane>
     </a-tabs>
   </div>
 </template>
@@ -231,7 +245,21 @@
     },
     data() {
       return {
-        defaultEntity: '',
+        // defaultEntity: '',
+        // toolbar
+        // {
+        //   show: false,
+        //     actions: [{
+        //   gid: this.$gl.utils.uuid(8),
+        //   text: '保存',
+        //   type: 'primary',
+        //   fn: 'save',
+        //   show: 'true',
+        //   icon: '',
+        //   ctx: 'self'
+        // }]
+        // }
+        toolbar: this.opts.toolbar,
         activeTabKey: '2',
         fieldConfig: {
           title: '',

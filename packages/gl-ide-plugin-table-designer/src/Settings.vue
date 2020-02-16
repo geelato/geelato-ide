@@ -86,129 +86,133 @@
           <table class="gl-table">
             <tr class="gl-table-row gl-table-row-header">
               <th class="gl-table-cell">列名</th>
-              <th class="gl-table-cell">数据库字段</th>
+              <th class="gl-table-cell" style="width: 45%">数据库字段</th>
               <th class="gl-table-cell">设置</th>
             </tr>
-            <template v-for="(col,colIndex) in config.table.columns">
-              <tr class="gl-table-row" :key="colIndex">
-                <td class="gl-table-cell"><input v-model="col.title" style="width: 99%"/></td>
-                <td class="gl-table-cell">
-                  <a-select v-model="col.dataIndex" :allowClear="true" v-if="!isOperateColumn(col)"
-                            style="min-width: 99%">
-                    <a-select-option v-for="colMeta in currentEntityColumns" :key="colMeta.fieldName"
-                                     :title="colMeta.title">
-                      {{colMeta.fieldName}}&nbsp;({{colMeta.title}})
-                    </a-select-option>
-                  </a-select>
-                </td>
-                <td class="gl-table-cell">
-                  <a-button class="gl-mini-btn" v-if="currentColIndex!==colIndex" @click="currentColIndex = colIndex"
-                            title="显示更多设置">
-                    <a-icon type="eye"/>
-                  </a-button>
-                  <a-button class="gl-mini-btn" v-if="currentColIndex===colIndex" @click="currentColIndex = -1"
-                            title="隐藏更多设置">
-                    <a-icon type="eye-invisible"/>
-                  </a-button>
-                  <a-button class="gl-mini-btn" v-if="colIndex!==0"
-                            @click="$gl.utils.moveup(config.table.columns,colIndex)">
-                    <a-icon type="arrow-up"/>
-                  </a-button>
-                  <a-button class="gl-mini-btn" v-if="colIndex!==config.table.columns.length-1"
-                            @click="$gl.utils.movedown(config.table.columns,colIndex)">
-                    <a-icon type="arrow-down"/>
-                  </a-button>
-                  <!-- 操作列不可删除 、id列不可删除-->
-                  <a-button class="gl-mini-btn" v-if="!isOperateColumn(col)"
-                            @click="$gl.utils.remove(config.table.columns,colIndex)">
-                    <a-icon type="delete" theme="twoTone" twoToneColor="#eb2f96"/>
-                  </a-button>
-                </td>
-              </tr>
-              <tr v-if="currentColIndex===colIndex">
-                <td colspan="3" style="padding:0.2em;">
-                  <table class="gl-table" style="border: 1px solid">
-                    <tr class="gl-table-row">
-                      <td class="gl-table-cell gl-table-cell-sub-label">内容对齐：</td>
-                      <td class="gl-table-cell">
-                        <a-radio-group v-model="col.align" size="small">
-                          <a-radio-button value="left">居左</a-radio-button>
-                          <a-radio-button value="center">居中</a-radio-button>
-                          <a-radio-button value="right">居右</a-radio-button>
-                        </a-radio-group>
-                      </td>
-                    </tr>
-                    <tr class="gl-table-row">
-                      <td class="gl-table-cell gl-table-cell-sub-label">
-                        <a-icon type="info-circle" title="未设置该值转换格式时，直接以数据库查询的结果进行展示。"/>
-                        值格式化：
-                      </td>
-                      <td class="gl-table-cell">
-                        <div>
+            <gl-draggable
+                :list="config.table.columns"
+                handle=".gl-dnd-action-row-handle"
+                group='columns'
+                :sort="true"
+                element="tbody"
+            >
+              <template v-for="(col,colIndex) in config.table.columns">
+                <tr class="gl-table-row" :key="col.gid">
+                  <td class="gl-table-cell"><input v-model="col.title" style="width: 99%"/></td>
+                  <td class="gl-table-cell">
+                    <a-select v-model="col.dataIndex" :allowClear="true" v-if="!isOperateColumn(col)"
+                              style="min-width: 99%">
+                      <a-select-option v-for="colMeta in currentEntityColumns" :key="colMeta.fieldName"
+                                       :title="colMeta.title">
+                        {{colMeta.fieldName}}&nbsp;({{colMeta.title}})
+                      </a-select-option>
+                    </a-select>
+                  </td>
+                  <td class="gl-table-cell">
+                    <a-button class="gl-mini-btn" v-if="currentColIndex!==colIndex" @click="currentColIndex = colIndex"
+                              title="显示更多设置">
+                      <a-icon type="eye"/>
+                    </a-button>
+                    <a-button class="gl-mini-btn" v-if="currentColIndex===colIndex" @click="currentColIndex = -1"
+                              title="隐藏更多设置">
+                      <a-icon type="eye-invisible"/>
+                    </a-button>
+                    <!-- 操作列不可删除 、id列不可删除-->
+                    <a-button class="gl-mini-btn" v-if="!isOperateColumn(col)"
+                              @click="$gl.utils.remove(config.table.columns,colIndex)">
+                      <a-icon type="delete" theme="twoTone" twoToneColor="#eb2f96"/>
+                    </a-button>
+                    <a-button class="gl-mini-btn gl-dnd-action-row-handle">
+                      <a-icon type="swap"/>
+                    </a-button>
+                  </td>
+                </tr>
+                <tr v-if="currentColIndex===colIndex">
+                  <td colspan="3" style="padding:0.2em;">
+                    <table class="gl-table" style="border: 1px solid">
+                      <tr class="gl-table-row">
+                        <td class="gl-table-cell gl-table-cell-sub-label">内容对齐：</td>
+                        <td class="gl-table-cell">
+                          <a-radio-group v-model="col.align" size="small">
+                            <a-radio-button value="left">居左</a-radio-button>
+                            <a-radio-button value="center">居中</a-radio-button>
+                            <a-radio-button value="right">居右</a-radio-button>
+                          </a-radio-group>
+                        </td>
+                      </tr>
+                      <tr class="gl-table-row">
+                        <td class="gl-table-cell gl-table-cell-sub-label">
+                          <a-icon type="info-circle" title="未设置该值转换格式时，直接以数据库查询的结果进行展示。"/>
+                          值格式化：
+                        </td>
+                        <td class="gl-table-cell">
+                          <div>
                           <textarea v-model="col.customRenderString" style="width: 99%"
-                                 @change="changeColumnCustomRender(col)" placeholder="鼠标移上来展示示例" rows="4"/>
-                        </div>
-                        <div class="gl-ide-designer-tips">
-                          填写示例1，展示固定的字段内容：<br>
-                          () =>'内容'<br>
-                          填写示例2，判断并展示不同的内容：<br>
-                          (text) => text === 1 ? 'A' : 'B'<br>
-                          填写示例3，结合其它列进行展示：<br>
-                          (record) => record.loginName+'_'+record.sex
-                        </div>
-                        <!--<a-input-search placeholder="更新查看值效果" v-model="col.customRenderString"-->
-                        <!--@search="changeColumnCustomRender()">-->
-                        <!--<a-button type="primary" slot="enterButton">-->
-                        <!--<a-icon type="reload"/>-->
-                        <!--更新-->
-                        <!--</a-button>-->
-                        <!--</a-input-search>-->
-                      </td>
-                    </tr>
-                    <tr class="gl-table-row">
-                      <td class="gl-table-cell gl-table-cell-sub-label">可排序：</td>
-                      <td class="gl-table-cell">
-                        <a-switch :defaultChecked="col.sorter" @change="col.sorter=!col.sorter;onChange(col)"/>
-                      </td>
-                    </tr>
-                    <tr class="gl-table-row">
-                      <td class="gl-table-cell gl-table-cell-sub-label">
-                        <a-icon type="info-circle" title="可以不填，默认为1，当为0时，则不显示列头"/>
-                        列头占列数：
-                      </td>
-                      <td class="gl-table-cell">
-                        <a-input-number :min="0" :max="config.table.columns.length" v-model="col.colSpan"
-                                        style="width: 4em"/>
-                      </td>
-                    </tr>
-                    <tr class="gl-table-row">
-                      <td class="gl-table-cell gl-table-cell-sub-label">固定列：</td>
-                      <td class="gl-table-cell">
-                        <a-radio-group v-model="col.fixed" size="small">
-                          <a-radio-button value="left">左固定</a-radio-button>
-                          <a-radio-button value="">不固定</a-radio-button>
-                          <a-radio-button value="right">右固定</a-radio-button>
-                        </a-radio-group>
-                      </td>
-                    </tr>
-                    <tr class="gl-table-row">
-                      <td class="gl-table-cell gl-table-cell-sub-label">
-                        <a-icon type="info-circle" title="操作栏可见时才生效"/>
-                        是否统计：
-                      </td>
-                      <td class="gl-table-cell">
-                        <!--<a-switch :checked="col.needTotal" @change="col.needTotal=!col.needTotal"/>-->
-                        <a-switch :defaultChecked="col.needTotal"
-                                  @change="col.needTotal=!col.needTotal;onChange(true)"/>
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-            </template>
+                                    @change="changeColumnCustomRender(col)" placeholder="鼠标移上来展示示例" rows="4"/>
+                          </div>
+                          <div class="gl-ide-designer-tips">
+                            填写示例1，展示固定的字段内容：<br>
+                            () =>'内容'<br>
+                            填写示例2，判断并展示不同的内容：<br>
+                            (text) => text === 1 ? 'A' : 'B'<br>
+                            填写示例3，结合其它列进行展示：<br>
+                            (record) => record.loginName+'_'+record.sex
+                          </div>
+                          <!--<a-input-search placeholder="更新查看值效果" v-model="col.customRenderString"-->
+                          <!--@search="changeColumnCustomRender()">-->
+                          <!--<a-button type="primary" slot="enterButton">-->
+                          <!--<a-icon type="reload"/>-->
+                          <!--更新-->
+                          <!--</a-button>-->
+                          <!--</a-input-search>-->
+                        </td>
+                      </tr>
+                      <tr class="gl-table-row">
+                        <td class="gl-table-cell gl-table-cell-sub-label">可排序：</td>
+                        <td class="gl-table-cell">
+                          <a-switch :defaultChecked="col.sorter" @change="col.sorter=!col.sorter;onChange(col)"/>
+                        </td>
+                      </tr>
+                      <tr class="gl-table-row">
+                        <td class="gl-table-cell gl-table-cell-sub-label">
+                          <a-icon type="info-circle" title="可以不填，默认为1，当为0时，则不显示列头"/>
+                          列头占列数：
+                        </td>
+                        <td class="gl-table-cell">
+                          <a-input-number :min="0" :max="config.table.columns.length" v-model="col.colSpan"
+                                          style="width: 4em"/>
+                        </td>
+                      </tr>
+                      <tr class="gl-table-row">
+                        <td class="gl-table-cell gl-table-cell-sub-label">固定列：</td>
+                        <td class="gl-table-cell">
+                          <a-radio-group v-model="col.fixed" size="small">
+                            <a-radio-button value="left">左固定</a-radio-button>
+                            <a-radio-button value="">不固定</a-radio-button>
+                            <a-radio-button value="right">右固定</a-radio-button>
+                          </a-radio-group>
+                        </td>
+                      </tr>
+                      <tr class="gl-table-row">
+                        <td class="gl-table-cell gl-table-cell-sub-label">
+                          <a-icon type="info-circle" title="操作栏可见时才生效"/>
+                          是否统计：
+                        </td>
+                        <td class="gl-table-cell">
+                          <!--<a-switch :checked="col.needTotal" @change="col.needTotal=!col.needTotal"/>-->
+                          <a-switch :defaultChecked="col.needTotal"
+                                    @change="col.needTotal=!col.needTotal;onChange(true)"/>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </template>
+            </gl-draggable>
             <tr class="gl-table-row">
               <td colspan="3">
-                <a-button size="small" block @click="config.table.columns.push([{title:'',dataIndex:''}])"
+                <a-button size="small" block
+                          @click="config.table.columns.push([{gid:$gl.utils.uuid(8),title:'',dataIndex:''}])"
                           style="line-height: 1.499em">
                   <a-icon type="plus" size="small"/>
                   添加结果列
@@ -333,7 +337,7 @@
             <tr class="gl-table-row">
               <td colspan="4">
                 <a-button size="small" block
-                          @click="config.query.mix.properties.push({field: '',title: '',cop: 'eq',control: 'input',lop: 'and',props: {placeholder: '', defaultValue: ''}},)"
+                          @click="config.query.mix.properties.push({gid:$gl.utils.uuid(8),field: '',title: '',cop: 'eq',control: 'input',lop: 'and',props: {placeholder: '', defaultValue: ''}},)"
                           style="line-height: 1.499em">
                   <a-icon type="plus" size="small"/>
                   添加查询条件
@@ -360,8 +364,15 @@
               <th class="gl-table-cell" style="width: 20%">图标</th>
               <th class="gl-table-cell">设置</th>
             </tr>
-            <template v-for="(toolbarAction,toolbarActionIndex) in config.toolbar.actions">
-              <tr class="gl-table-row" :key="toolbarActionIndex">
+            <gl-draggable
+                :list="config.toolbar.actions"
+                handle=".gl-dnd-action-row-handle"
+                group='toolbarActions'
+                :sort="true"
+                element="tbody"
+            >
+              <tr v-for="(toolbarAction,toolbarActionIndex) in config.toolbar.actions" class="gl-table-row"
+                  :key="toolbarAction.gid">
                 <td class="gl-table-cell"><input v-model="toolbarAction.text" style="width: 99%"/></td>
                 <td class="gl-table-cell">
                   <a-select v-model="toolbarAction.type" :allowClear="true"
@@ -373,33 +384,20 @@
                 </td>
                 <td class="gl-table-cell"><input v-model="toolbarAction.icon" style="width: 99%"/></td>
                 <td class="gl-table-cell">
-                  <!--<a-button class="gl-mini-btn" v-if="currentRowActionIndex!==toolbarActionIndex"-->
-                  <!--@click="currentRowActionIndex = toolbarActionIndex" title="显示更多设置">-->
-                  <!--<a-icon type="eye"/>-->
-                  <!--</a-button>-->
-                  <!--<a-button class="gl-mini-btn" v-if="currentRowActionIndex===toolbarActionIndex"-->
-                  <!--@click="currentRowActionIndex = -1" title="隐藏更多设置">-->
-                  <!--<a-icon type="eye-invisible"/>-->
-                  <!--</a-button>-->
-                  <a-button class="gl-mini-btn" v-if="toolbarActionIndex!==0"
-                            @click="$gl.utils.moveup(config.toolbar.actions,toolbarActionIndex)">
-                    <a-icon type="arrow-up"/>
-                  </a-button>
-                  <a-button class="gl-mini-btn" v-if="toolbarActionIndex!==config.toolbar.actions.length-1"
-                            @click="$gl.utils.movedown(config.toolbar.actions,toolbarActionIndex)">
-                    <a-icon type="arrow-down"/>
-                  </a-button>
                   <a-button class="gl-mini-btn"
                             @click="$gl.utils.remove(config.toolbar.actions,toolbarActionIndex)">
                     <a-icon type="delete" theme="twoTone" twoToneColor="#eb2f96"/>
                   </a-button>
+                  <a-button class="gl-mini-btn gl-dnd-action-row-handle">
+                    <a-icon type="swap"/>
+                  </a-button>
                 </td>
               </tr>
-            </template>
+            </gl-draggable>
             <tr class="gl-table-row">
               <td colspan="4">
                 <a-button size="small" block
-                          @click="config.toolbar.actions.push({text: '操作',icon: 'plus',type: 'primary',fn: 'openModal',ctx: 'this',params: {}})"
+                          @click="config.toolbar.actions.push({gid:$gl.utils.uuid(8),text: '操作',icon: 'plus',type: 'primary',fn: 'openModal',ctx: 'this',params: {}})"
                           style="line-height: 1.499em">
                   <a-icon type="plus" size="small"/>
                   添加工具栏按钮
@@ -409,50 +407,40 @@
           </table>
           <h4 style="margin: 0.5em 1em">操作栏</h4>
           <table class="gl-table">
+            <thead>
             <tr class="gl-table-row gl-table-row-header">
               <th class="gl-table-cell" style="width: 65%">按钮名称</th>
               <!--<th class="gl-table-cell" style="width: 25%">类型</th>-->
               <th class="gl-table-cell">设置</th>
             </tr>
-            <template v-for="(rowAction,rowActionIndex) in config.table.rowAction.actions">
-              <tr class="gl-table-row" :key="rowActionIndex">
-                <td class="gl-table-cell"><input v-model="rowAction.text" style="width: 99%"/></td>
-                <!--<td class="gl-table-cell">-->
-                <!--<a-select v-model="rowAction.type" :allowClear="true"-->
-                <!--style="min-width: 99%">-->
-                <!--<a-select-option v-for="btnType in btnTypes" :key="btnType.value">-->
-                <!--{{btnType.text}}-->
-                <!--</a-select-option>-->
-                <!--</a-select>-->
-                <!--</td>-->
+            </thead>
+            <gl-draggable
+                :list="config.table.rowAction.actions"
+                handle=".gl-dnd-action-row-handle"
+                group='rowActions'
+                :sort="true"
+                element="tbody"
+            >
+              <tr v-for="(rowAction,rowActionIndex) in config.table.rowAction.actions" class="gl-table-row"
+                  :key="rowAction.gid">
                 <td class="gl-table-cell">
-                  <!--<a-button class="gl-mini-btn" v-if="currentRowActionIndex!==rowActionIndex"-->
-                  <!--@click="currentRowActionIndex = rowActionIndex" title="显示更多设置">-->
-                  <!--<a-icon type="eye"/>-->
-                  <!--</a-button>-->
-                  <!--<a-button class="gl-mini-btn" v-if="currentRowActionIndex===rowActionIndex"-->
-                  <!--@click="currentRowActionIndex = -1" title="隐藏更多设置">-->
-                  <!--<a-icon type="eye-invisible"/>-->
-                  <!--</a-button>-->
-                  <a-button class="gl-mini-btn" v-if="rowActionIndex!==0"
-                            @click="$gl.utils.moveup(config.table.rowAction.actions,rowActionIndex)">
-                    <a-icon type="arrow-up"/>
-                  </a-button>
-                  <a-button class="gl-mini-btn" v-if="rowActionIndex!==config.table.rowAction.actions.length-1"
-                            @click="$gl.utils.movedown(config.table.rowAction.actions,rowActionIndex)">
-                    <a-icon type="arrow-down"/>
-                  </a-button>
+                  <input v-model="rowAction.text" style="width: 99%"/>
+                </td>
+                <td class="gl-table-cell">
                   <a-button class="gl-mini-btn"
                             @click="$gl.utils.remove(config.table.rowAction.actions,rowActionIndex)">
                     <a-icon type="delete" theme="twoTone" twoToneColor="#eb2f96"/>
                   </a-button>
+                  <a-button class="gl-mini-btn gl-dnd-action-row-handle">
+                    <a-icon type="swap"/>
+                  </a-button>
                 </td>
               </tr>
-            </template>
+            </gl-draggable>
             <tr class="gl-table-row">
               <td colspan="2">
                 <a-button size="small" block
-                          @click="config.table.rowAction.actions.push({text: '操作',icon: 'plus',type: 'primary',fn: 'openModal',ctx: 'this',params: {}})"
+                          @click="config.table.rowAction.actions.push({gid:$gl.utils.uuid(8),text: '操作',icon: 'plus',type: 'primary',fn: 'openModal',ctx: 'this',params: {}})"
                           style="line-height: 1.499em">
                   <a-icon type="plus" size="small"/>
                   添加操作栏按钮
@@ -486,7 +474,6 @@
         config: this.opts,
         currentColIndex: -1,
         currentQueryIndex: -1,
-        currentRowActionIndex: -1,
         currentEntityColumns: [],
         dict: ideConfig.copDict,
         cops: ideConfig.cops,
@@ -501,8 +488,26 @@
       that.$gl.api.query('platform_dev_table', 'id,tableName,tableComment', {tableName: this.config.entity}).then(function (res) {
         that.loadEntityMeta({tableId: res.data[0].id})
       })
+      this.generateGid()
     },
     methods: {
+      /**
+       * 初始化时，为列、操作创建gid
+       */
+      generateGid() {
+        console.log('gl-ide > gl-ide-plugin-table-designer > Settings > generateGid()')
+        const that = this
+        that.opts.table.columns.forEach(function (col) {
+          col.gid = col.gid || that.$gl.utils.uuid(8)
+        })
+        that.opts.table.rowAction.actions.forEach(function (action) {
+          action.gid = action.gid || that.$gl.utils.uuid(8)
+          console.log('gl-ide > gl-ide-plugin-table-designer > Settings > generateGid() > rowAction: ', action)
+        })
+        that.opts.toolbar.actions.forEach(function (action) {
+          action.gid = action.gid || that.$gl.utils.uuid(8)
+        })
+      },
       onChange(needRefreshStage = false, data) {
         this.$emit('change', {needRefreshStage: needRefreshStage, data: data})
       },

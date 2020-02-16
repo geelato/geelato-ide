@@ -59,6 +59,18 @@ export default {
     ],
     hidden: {}
   },
+  toolbar: {
+    show: true,
+    actions: [{
+      gid: '',
+      text: '保存',
+      type: 'primary',
+      fn: 'save',
+      show: 'true',
+      icon: '',
+      ctx: 'self'
+    }]
+  },
   ds: {},
   vars: {},
   watch: {}

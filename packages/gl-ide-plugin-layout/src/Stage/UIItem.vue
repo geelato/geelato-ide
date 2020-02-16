@@ -184,7 +184,7 @@
        * 初始化创建树节点
        */
       generateTreeNodeData() {
-        console.log('gl-ide > gl-ide-plugin-item > generateTreeData() > treeNodes:', this.treeNodes)
+        console.log('gl-ide > gl-ide-plugin-layout-item> generateTreeData() > treeNodes:', this.treeNodes)
         let that = this
         if (that.treeNodes !== undefined && that.treeNodes.length > 0) {
           // 已创建，不重复创建
@@ -207,7 +207,7 @@
             })
           })
         })
-        console.log('gl-ide > gl-ide-plugin-item > generateTreeData() > componentRefs:', this.componentRefs)
+        console.log('gl-ide > gl-ide-plugin-layout-item> generateTreeData() > componentRefs:', this.componentRefs)
       },
       /**
        * 初始化组件树中的组件引用
@@ -234,9 +234,9 @@
         //   id: "XSOb2tMmwgk6KfFR"
         //   title: "列表"
         // }
-        console.log('gl-ide > gl-ide-plugin-item > generateComponentRef() > item:', item)
-        console.log('gl-ide > gl-ide-plugin-item > generateComponentRef() > this.$refs:', this.$refs)
-        console.log('gl-ide > gl-ide-plugin-item > generateComponentRef() > this.$refs[item.id]:', this.$refs[item.id])
+        console.log('gl-ide > gl-ide-plugin-layout-item> generateComponentRef() > item:', item)
+        console.log('gl-ide > gl-ide-plugin-layout-item> generateComponentRef() > this.$refs:', this.$refs)
+        console.log('gl-ide > gl-ide-plugin-layout-item> generateComponentRef() > this.$refs[item.id]:', this.$refs[item.id])
         this.componentRefs[item.id] = {
           id: item.id,
           component: this.$refs[item.id][0],
@@ -254,25 +254,26 @@
         let that = this
         // 如果已存在treeNodes中，则不添加
         if (that.treeNodes.filter((node) => node.key === item.id).length > 0) {
-          console.warn('gl-ide > gl-ide-plugin-item > generateObjectTreeNodeAndBindEvent() > 已存在treeNodes中，不添加item:', item)
+          console.warn('gl-ide > gl-ide-plugin-layout-item> generateObjectTreeNodeAndBindEvent() > 已存在treeNodes中，不添加item:', item)
           return
         }
         // 加载每张卡片组件配置cardComponent
         //  {id: item.id, component: this.$refs[item.id][0], type: item.type, meta: item.meta}
         let cardComponent = that.componentRefs[item.id]
-        console.log('gl-ide > gl-ide-plugin-item > generateObjectTreeNodeAndBindEvent() > item.id,cardComponent:', item.id, cardComponent, that.componentRefs)
+        console.log('gl-ide > gl-ide-plugin-layout-item> generateObjectTreeNodeAndBindEvent() > item.id,cardComponent:', item.id, cardComponent, that.componentRefs)
 
-        // console.log('gl-ide > gl-ide-plugin-item > generateObjectTreeNodeAndBindEvent() > cardComponent:', cardComponent)
+        // console.log('gl-ide > gl-ide-plugin-layout-item> generateObjectTreeNodeAndBindEvent() > cardComponent:', cardComponent)
         let groups = []
         if (cardComponent && cardComponent.meta && cardComponent.meta.objectTree) {
           cardComponent.meta.objectTree.forEach((treeNodeObject) => {
             // treeNodeObject: {title:xx,path:xx.yy.zz}
             let childrenNodes = []
             let childrenObjects = eval('item.bind.opts.' + treeNodeObject.path)
-            console.log('gl-ide > gl-ide-plugin-layout > generateTreeData() > childrenObjects:', cardComponent.title, childrenObjects)
+            console.log('gl-ide > gl-ide-plugin-layout > generateTreeData() > card title, childrenObjects:', cardComponent.title, childrenObjects)
             if (childrenObjects && typeof childrenObjects === "object") {
               for (let key in childrenObjects) {
                 let childObj = childrenObjects[key]
+                console.log('gl-ide > gl-ide-plugin-layout > generateTreeData() > key, gid, childObj:', key, childObj.gid, childObj)
                 if (childObj.control) {
                   // 未设置control值的，可能为form的隐藏属性，这里需过滤掉
                   // console.log('childObj>', childObj)

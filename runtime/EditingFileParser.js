@@ -170,7 +170,7 @@ export default class EditingFileParser {
    * @param controlCtx 绑定的目标控件所在的组件（上下文），如：目标控件按钮，上线文组件为表格组件
    */
   bindEvent(controlBindEvents, control, actions, controlCtx) {
-    console.log('runtime > EditingFileParser > bindEvent() > controlBindEvents, control, actions>', controlBindEvents, control, actions)
+    console.log('runtime > EditingFileParser > bindEvent() > controlBindEvents, control, actions，controlCtx>', controlBindEvents, control, actions, controlCtx)
     for (const actionIndex in actions) {
       const action = actions[actionIndex]
       const eventKey = control.gid + '_$_' + action.on
@@ -198,8 +198,9 @@ export default class EditingFileParser {
 
   createActionHandlerFn(action, controlCtx) {
     const that = this
-    return function () {
-      that.actionHandlerInstance.doAction(action, controlCtx)
+    return function (ctx, data) {
+      console.log('runtime > createActionHandlerFn controlCtx,ctx>', controlCtx, ctx)
+      that.actionHandlerInstance.doAction(action, controlCtx || ctx, data)
     }
   }
 

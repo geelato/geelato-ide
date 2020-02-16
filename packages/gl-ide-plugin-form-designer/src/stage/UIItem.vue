@@ -62,7 +62,7 @@
         从左边【布局】栏目中拖动布局行列到该区域，再从【组件】栏目拖动组件到布局行列中。
       </div>
     </gl-draggable>
-    <div class="gl-form-toolbar" v-show="toolbar.show||toolbar.show===undefined" style="text-align: center">
+    <div class="gl-form-toolbar" v-show="toolbar.show" style="text-align: center">
       <template v-for="(action,index) in toolbar.actions" v-if="action.gid=action.gid||$gl.utils.uuid(8)">
         <a-button :ref="action.gid" :type="action.type||'primary'" :icon="action.icon"
                   :key="index" v-if="action.show===undefined||action.show===''||rungs(action.show)">
@@ -142,6 +142,9 @@
       this.$gl.bus.$off('gl_ide_plugin_layout__modal_close', this.onClose)
     },
     mounted() {
+      if(this.toolbar&&!this.toolbar.gid){
+        this.toolbar.gid = this.$gl.utils.uuid(8)
+      }
     },
     methods: {
       onRowEnd: function (args) {

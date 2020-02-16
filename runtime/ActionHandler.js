@@ -14,7 +14,7 @@ export default class ActionHandler {
    * @param action
    * @param ctx 触发事件的上下文
    */
-  doAction(action, ctx) {
+  doAction(action, ctx, data) {
     const that = this
     for (const index in action.do) {
       const doItem = action.do[index]
@@ -25,14 +25,14 @@ export default class ActionHandler {
           const Handler = result.default
           that.handlers[handlerName] = new Handler(that.$root)
           try {
-            this.handlers[handlerName].doAction(doItem, ctx)
+            this.handlers[handlerName].doAction(doItem, ctx, data)
           } catch (e) {
             console.error(e, 'action:', action)
           }
         })
       } else {
         try {
-          this.handlers[handlerName].doAction(doItem, ctx)
+          this.handlers[handlerName].doAction(doItem, ctx, data)
         } catch (e) {
           console.error(e, 'action:', action)
         }
