@@ -6,7 +6,7 @@
           <a-card :title="getCardConfig(col.card).title" style="margin-top: 8px">
             <component :ref="col.card" :is="getCardComponent(col.card)"
                        :opts="getCardConfig(col.card).opts"
-                       :query="getCardConfig(col.card).query"
+                       :query="query"
             >
               正在加载...
             </component>
@@ -14,12 +14,14 @@
         </template>
         <template v-else-if="col.rows">
           <gl-page-item :rows="col.rows" :componentRefs="componentRefs" :bindEvents="bindEvents"
-                        :gutter="gutter" :treeNodes="treeNodes" @doAction="$emit('doAction',$event)"></gl-page-item>
+                        :gutter="gutter" :treeNodes="treeNodes" :query="query"
+                        @doAction="$emit('doAction',$event)"></gl-page-item>
         </template>
         <template v-else>
           <div v-for="(colItem) in col.items" :key="colItem.id" class="gl-col">
             <component :ref="colItem.id" v-show="colItem.show" :is="$globalVue.component(colItem.component)"
-                       :gid="colItem.id" v-bind="colItem.bind" @doAction="$emit('doAction',$event)"></component>
+                       :gid="colItem.id" v-bind="colItem.bind" :query="query"
+                       @doAction="$emit('doAction',$event)"></component>
           </div>
         </template>
       </a-col>
@@ -64,7 +66,13 @@
         default() {
           return 8
         }
-      }
+      },
+      query: {
+        type: Object,
+        default() {
+          return {}
+        }
+      },
     },
     data() {
       return {

@@ -68,10 +68,11 @@
 <script>
   import ActionBar from './ActionBar'
   import OpenModal from './event-detail/OpenModal'
+  import InvokeCurrentComponent from './event-detail/InvokeCurrentComponent'
   import ShowMessage from './event-detail/ShowMessage'
   import Empty from './event-detail/Empty'
 
-  let localComponents = {ActionBar, OpenModal, ShowMessage, Empty}
+  let localComponents = {ActionBar, OpenModal, ShowMessage, InvokeCurrentComponent, Empty}
 
   export default {
     name: "GlIdeSettingEvent",

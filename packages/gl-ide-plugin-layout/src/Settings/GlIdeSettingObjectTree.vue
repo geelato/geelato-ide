@@ -133,13 +133,13 @@
                 // pageName: ""
                 // height: "480px"
                 // actions: Array(1)
-                let node = {
-                  title: '打开页面-' + doItem.params.title,
-                  key: doItem.params.gid,
-                  slots: {
-                    icon: 'table',
-                  }, children: groups
-                }
+                let findNode = that.ideStore.editingFile.objectTree.find(item => item.key === doItem.params.gid)
+                let isExistNode = findNode !== undefined
+                let node = findNode || {}
+                node.title = '打开页面-' + doItem.params.title
+                node.key = doItem.params.gid
+                node.slots = {icon: 'table'}
+                node.children = groups
                 // action：Object，示例
                 // gid: "aOEek7z0"
                 // icon: "plus"
@@ -154,7 +154,10 @@
                     }
                   })
                 })
-                that.ideStore.editingFile.objectTree.push(node)
+                console.log('node>', node, doItem)
+                if (!isExistNode) {
+                  that.ideStore.editingFile.objectTree.push(node)
+                }
               })
             })
           }

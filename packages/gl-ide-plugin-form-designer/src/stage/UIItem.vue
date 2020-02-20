@@ -80,7 +80,7 @@
   let GEELATO_SCRIPT_PREFIX = 'gs:'
 
   export default {
-    name: "GlIdePluginLayoutStageUIItem",
+    name: "GlIdePluginFormDesignerStageUIItem",
     props: {
       rows: {
         type: Array,

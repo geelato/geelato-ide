@@ -10,7 +10,7 @@
           <a-select-option value="OpenWin">打开新窗口（window）</a-select-option>
         </a-select-opt-group>
         <a-select-opt-group label="控件动作">
-          <a-select-option value="keyup.enter">调用当前控件方法</a-select-option>
+          <a-select-option value="InvokeCurrentComponent">调用当前控件方法</a-select-option>
           <a-select-option value="keyup.esc">显示/隐藏</a-select-option>
         </a-select-opt-group>
          <a-select-opt-group label="其它动作">

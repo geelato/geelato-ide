@@ -373,7 +373,7 @@
             >
               <tr v-for="(toolbarAction,toolbarActionIndex) in config.toolbar.actions" class="gl-table-row"
                   :key="toolbarAction.gid">
-                <td class="gl-table-cell"><input v-model="toolbarAction.text" style="width: 99%"/></td>
+                <td class="gl-table-cell"><input v-model="toolbarAction.title" style="width: 99%"/></td>
                 <td class="gl-table-cell">
                   <a-select v-model="toolbarAction.type" :allowClear="true"
                             style="min-width: 99%">
@@ -397,7 +397,7 @@
             <tr class="gl-table-row">
               <td colspan="4">
                 <a-button size="small" block
-                          @click="config.toolbar.actions.push({gid:$gl.utils.uuid(8),text: '操作',icon: 'plus',type: 'primary',fn: 'openModal',ctx: 'this',params: {}})"
+                          @click="config.toolbar.actions.push({gid:$gl.utils.uuid(8),control:'button',title: '操作',icon: 'plus',type: 'primary',fn: 'openModal',ctx: 'this',params: {}})"
                           style="line-height: 1.499em">
                   <a-icon type="plus" size="small"/>
                   添加工具栏按钮
@@ -424,7 +424,7 @@
               <tr v-for="(rowAction,rowActionIndex) in config.table.rowAction.actions" class="gl-table-row"
                   :key="rowAction.gid">
                 <td class="gl-table-cell">
-                  <input v-model="rowAction.text" style="width: 99%"/>
+                  <input v-model="rowAction.title" style="width: 99%"/>
                 </td>
                 <td class="gl-table-cell">
                   <a-button class="gl-mini-btn"
@@ -440,7 +440,7 @@
             <tr class="gl-table-row">
               <td colspan="2">
                 <a-button size="small" block
-                          @click="config.table.rowAction.actions.push({gid:$gl.utils.uuid(8),text: '操作',icon: 'plus',type: 'primary',fn: 'openModal',ctx: 'this',params: {}})"
+                          @click="config.table.rowAction.actions.push({gid:$gl.utils.uuid(8),control:'button',title: '操作',icon: 'plus',type: 'primary',fn: 'openModal',ctx: 'this',params: {}})"
                           style="line-height: 1.499em">
                   <a-icon type="plus" size="small"/>
                   添加操作栏按钮
@@ -460,7 +460,7 @@
   import SelectEntityList from '../../gl-ide/src/select/SelectEntityList'
 
   export default {
-    name: "Settings",
+    name: "GlIdePluginTableDesignerSettings",
     components: {},
     mixins: [mixin],
     props: {

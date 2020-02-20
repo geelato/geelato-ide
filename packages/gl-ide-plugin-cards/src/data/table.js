@@ -92,45 +92,13 @@ export default {
       actions: [{
         title: '修改',
         text: '修改',
-        icon: 'plus',
+        // icon: 'plus',
         type: 'primary',
         control: 'link',
-        fn: 'openModal',
-        // opener、content、modal、handler，默认为handler
-        ctx: 'this',
-        params: {
-          title: '编辑DEMO实体',
-          width: '1200px',
-          height: '480px',
-          body: {
-            type: 'staticPage',
-            component: 'GlForm',
-            props: {opts: JSON.parse(JSON.stringify(FormData))}
-          },
-          actions: [{
-            text: '保存',
-            type: 'primary',
-            fn: 'save',
-            // opener、content、modal，默认为content
-            ctx: 'content',
-            params: {},
-            then: {
-              fn: 'close',
-              ctx: 'modal',
-              then: {
-                fn: 'refresh',
-                ctx: 'opener'
-              }
-            }
-          }, {
-            fn: 'close',
-            text: '取消',
-            ctx: 'modal'
-          }]
-        },
-        dataMapping: {
-          query: {id: '$ctx.id'}
-        }
+        // fn: 'openModal',
+        // ctx: 'this',
+        // params: {},
+        // dataMapping: {}
       }]
     },
     columns: [
@@ -152,7 +120,7 @@ export default {
       }
     ],
     pageSize: 20,
-    order: 'name|+'
+    order: 'createAt|+'
   },
   stat: ''
 }

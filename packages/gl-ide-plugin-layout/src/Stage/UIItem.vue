@@ -77,7 +77,7 @@
             </gl-draggable>
           </template>
         </a-col>
-        <div class="gl-dnd-row-toolbar" @click="removeRow(rowIndex)" title="删除行">
+        <div class="gl-dnd-row-toolbar" @click="onRowDelete(rowIndex)" title="删除行">
           <a-icon type="close-circle" theme="twoTone" twoToneColor="#f5222d"/>
         </div>
       </a-row>
@@ -253,38 +253,70 @@
 
         let that = this
         // 如果已存在treeNodes中，则不添加
-        if (that.treeNodes.filter((node) => node.key === item.id).length > 0) {
-          console.warn('gl-ide > gl-ide-plugin-layout-item> generateObjectTreeNodeAndBindEvent() > 已存在treeNodes中，不添加item:', item)
-          return
+        // if (that.treeNodes.filter((node) => node.key === item.id).length > 0) {
+        //   console.warn('gl-ide > gl-ide-plugin-layout-item> generateObjectTreeNodeAndBindEvent() > 已存在treeNodes中，不添加item:', item, that.componentRefs[item.id])
+        //   return
+        // }
+
+        let node = that.treeNodes.find(node => node.key === item.id)
+        if (!node) {
+          node = {
+            title: item.title,
+            key: item.id,
+            slots: {
+              icon: item.icon,
+            },
+            children: []
+          }
+          that.treeNodes.push(node)
         }
+        let groups = node.children
+
         // 加载每张卡片组件配置cardComponent
         //  {id: item.id, component: this.$refs[item.id][0], type: item.type, meta: item.meta}
         let cardComponent = that.componentRefs[item.id]
-        console.log('gl-ide > gl-ide-plugin-layout-item> generateObjectTreeNodeAndBindEvent() > item.id,cardComponent:', item.id, cardComponent, that.componentRefs)
-
-        // console.log('gl-ide > gl-ide-plugin-layout-item> generateObjectTreeNodeAndBindEvent() > cardComponent:', cardComponent)
-        let groups = []
+        console.log('gl-ide > gl-ide-plugin-layout > UIItem > generateObjectTreeNodeAndBindEvent() > item.id,cardComponent:', item.id, cardComponent, that.componentRefs)
         if (cardComponent && cardComponent.meta && cardComponent.meta.objectTree) {
           cardComponent.meta.objectTree.forEach((treeNodeObject) => {
             // treeNodeObject: {title:xx,path:xx.yy.zz}
-            let childrenNodes = []
-            let childrenObjects = eval('item.bind.opts.' + treeNodeObject.path)
-            console.log('gl-ide > gl-ide-plugin-layout > generateTreeData() > card title, childrenObjects:', cardComponent.title, childrenObjects)
-            if (childrenObjects && typeof childrenObjects === "object") {
-              for (let key in childrenObjects) {
-                let childObj = childrenObjects[key]
-                console.log('gl-ide > gl-ide-plugin-layout > generateTreeData() > key, gid, childObj:', key, childObj.gid, childObj)
+            let group = groups.find(group => group.key === treeNodeObject.path)
+            console.log('gl-ide > gl-ide-plugin-layout > UIItem > generateObjectTreeNodeAndBindEvent() > find group:', treeNodeObject.path, ' and result:', group)
+            if (!group) {
+              group = {
+                title: treeNodeObject.title + '[组]',
+                key: treeNodeObject.path,
+                disabled: true,
+                slots: {
+                  icon: 'folder',
+                },
+                children: []
+              }
+              groups.push(group)
+            }
+            let childNodes = group.children
+            let childObjects = eval('item.bind.opts.' + treeNodeObject.path)
+            console.log('gl-ide > gl-ide-plugin-layout > UIItem > generateObjectTreeNodeAndBindEvent() > card title, childObjects:', cardComponent.title, childObjects)
+            if (childObjects && typeof childObjects === "object") {
+              // stepA 为对象树添加，找已有的对象树中，是否存在控件，没有则添加
+              for (let key in childObjects) {
+                let childObj = childObjects[key]
+                console.log('gl-ide > gl-ide-plugin-layout > UIItem > generateObjectTreeNodeAndBindEvent() > key, gid, childObj:', key, childObj.gid, childObj)
                 if (childObj.control) {
                   // 未设置control值的，可能为form的隐藏属性，这里需过滤掉
-                  // console.log('childObj>', childObj)
-                  childrenNodes.push({
-                    title: childObj.title + ' [' + childObj.control + ']',
-                    // 组件id+组件内的控件id
-                    key: item.id + '_$_' + childObj.gid, // that.$gl.utils.uuid(8),
-                    slots: {
-                      icon: 'link',
-                    }
-                  })
+                  let foundChildrenNode = childNodes.find((childNode) => childNode.key === item.id + '_$_' + childObj.gid)
+                  let foundChildrenNodeTitle = childObj.title + ' [' + childObj.control + ']'
+                  console.log('gl-ide > gl-ide-plugin-layout > UIItem > generateObjectTreeNodeAndBindEvent() > find control:', childObj.gid, ' and result:', foundChildrenNode)
+                  if (!foundChildrenNode) {
+                    console.log('gl-ide > gl-ide-plugin-layout > UIItem > generateObjectTreeNodeAndBindEvent() > add control:', foundChildrenNodeTitle)
+                    childNodes.push({
+                      title: foundChildrenNodeTitle,
+                      // 组件id+组件内的控件id
+                      key: item.id + '_$_' + childObj.gid, // that.$gl.utils.uuid(8),
+                      slots: {
+                        icon: 'link',
+                      }
+                    })
+                  }
                   // 基于配置的事件初始化绑定
                   let componentItem = that.componentRefs[item.id]
                   let controlComponent = componentItem.component.$_getRefByGid(childObj.gid)
@@ -296,30 +328,24 @@
                   if (controlComponent && that.events[childObj.gid]) {
                     that.editingFileParser.bindEvent(that.bindEvents, control, that.events[childObj.gid])
                   }
+                } else {
+                  console.log('gl-ide > gl-ide-plugin-layout > UIItem > generateObjectTreeNodeAndBindEvent() > 未设置control值：', childObj)
                 }
               }
+              // stepB 从对象树删除多余的控件
+              childNodes.forEach((childNode, index) => {
+                let foundChildrenObject = childObjects.find((childObject) => {
+                  return childNode.key === item.id + '_$_' + childObject.gid
+                })
+                if (!foundChildrenObject) {
+                  console.log('gl-ide > gl-ide-plugin-layout > UIItem > generateObjectTreeNodeAndBindEvent() > find invalid control and delete：', childNode)
+                  childNodes.splice(index, 1)
+                }
+              })
             }
-            groups.push({
-              title: treeNodeObject.title + '[组]',
-              key: that.$gl.utils.uuid(8),
-              disabled: true,
-              slots: {
-                icon: 'folder',
-              },
-              children: childrenNodes
-            })
-            // console.log('gl-ide > gl-ide-plugin-layout > generateTreeData() > component.$refs.query:', eval('item.bind.opts.' + treeNodeObject.path))
           })
         }
-
-        that.treeNodes.push({
-          title: item.title,
-          key: item.id,
-          slots: {
-            icon: item.icon,
-          },
-          children: groups
-        })
+        console.log('gl-ide > gl-ide-plugin-layout > UIItem > generateObjectTreeNodeAndBindEvent() > treeNodes result:', that.treeNodes)
       },
 
       /**
@@ -363,7 +389,7 @@
       onRowAdd: function (args) {
         console.log('gl-ide-plugin-layout > stage > onRowAdd: ', args)
       },
-      removeRow(rowIndex) {
+      onRowDelete(rowIndex) {
         let that = this
         this.$confirm({
           title: '是否删除该行?',
@@ -373,6 +399,14 @@
           onOk() {
           },
           onCancel() {
+            // 先清除引用
+            that.rowItems[rowIndex].cols.forEach(col => {
+              col.items.forEach(item => {
+                delete that.componentRefs[item.id]
+                that.removeObjectTreeNode(item)
+                console.log('gl-ide-plugin-layout > stage > onRowDelete() > remove componentRef: ', item.id)
+              })
+            })
             that.rowItems.splice(rowIndex, 1)
           },
         });
@@ -385,10 +419,11 @@
       },
       onAddCol: function (e, col) {
         console.log('gl-ide-plugin-layout > stage > onAddCol() > event.newIndex: ', e.newIndex)
-        console.log('gl-ide-plugin-layout > stage > onAddCol() > items: ', col.items.length)
+        console.log('gl-ide-plugin-layout > stage > onAddCol() > items: ', col.items)
         let item = col.items[col.items.length === e.newIndex && e.newIndex > 0 ? e.newIndex - 1 : e.newIndex]
         this.generateComponentRef(item)
         this.generateObjectTreeNodeAndBindEvent(item)
+        console.log('gl-ide-plugin-layout > stage > onAddCol() > item: ', item)
         console.log('gl-ide-plugin-layout > stage > onAddCol() > this.refs: ', this.$refs)
         console.log('gl-ide-plugin-layout > stage > onAddCol() > this.componentRefs: ', this.componentRefs)
       },
@@ -411,13 +446,18 @@
           },
           onCancel() {
             col.items.splice(index, 1);
-            delete  that.componentRefs[item.id]
+            delete that.componentRefs[item.id]
             that.removeObjectTreeNode(item)
             console.log('gl-ide-plugin-layout > stage > onColDelete() > this.componentRefs: ', that.componentRefs)
           },
         });
       },
       onCardReload(item) {
+        console.log('gl-ide-plugin-layout > stage > onCardReload() > item: ', item)
+        // 重新创建引用、绑定事件
+        this.generateComponentRef(item)
+        this.generateObjectTreeNodeAndBindEvent(item)
+        // 重绘卡片
         item.show = !item.show
         this.$nextTick(() => {
           item.show = !item.show

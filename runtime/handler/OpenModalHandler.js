@@ -5,9 +5,9 @@ export default class OpenModalHandler {
   }
 
   doAction(action, ctx, data) {
-    console.log('runtime > OpenModalHandler.js > doAction() > action:', action)
-    console.log('runtime > OpenModalHandler.js > doAction() > ctx:', ctx)
-    console.log('runtime > OpenModalHandler.js > doAction() > data:', data)
+    console.log('geelato > runtime > OpenModalHandler.js > doAction() > action:', action)
+    console.log('geelato > runtime > OpenModalHandler.js > doAction() > ctx:', ctx)
+    console.log('geelato > runtime > OpenModalHandler.js > doAction() > data:', data)
     this.$root.$gl.ui.openModal(ctx, {
       title: action.params.title,
       width: action.params.width || '1000px',
@@ -16,7 +16,8 @@ export default class OpenModalHandler {
         type: 'dynamic',
         component: 'GlPage',
         props: {
-          extendId: action.params.pageId
+          extendId: action.params.pageId,
+          query: data
         }
       },
       actions: action.params.actions,
