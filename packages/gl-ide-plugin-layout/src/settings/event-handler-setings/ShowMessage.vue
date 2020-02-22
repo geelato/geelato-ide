@@ -1,6 +1,6 @@
 <template>
   <div>
-    <gl-form ref="form" :opts="opts" :query="params" @propertyUpdate="onPropertyUpdate"></gl-form>
+    <gl-form ref="form" :opts="opts" :query="params.ShowMessage" @propertyUpdate="onPropertyUpdate"></gl-form>
   </div>
 </template>
 
@@ -10,7 +10,7 @@
       params: {
         type: Object,
         default() {
-          return {}
+          return {ShowMessage: {}}
         }
       }
     },
@@ -28,12 +28,12 @@
             id: {},
             content: {
               control: 'input',
-              title: '提示内容x',
+              title: '提示内容',
               rules: {
                 required: true,
               },
               props: {
-                placeholder: '提示内容X'
+                placeholder: '提示内容'
               }
             },
             method: {
@@ -85,8 +85,10 @@
       onPropertyUpdate(property, val, oval) {
         let form = this.$refs.form.getValues()
         this.$emit('update', {
-          content: form.content,
-          method: form.method
+          ShowMessage: {
+            content: form.content,
+            method: form.method
+          }
         })
       }
     },

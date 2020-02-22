@@ -152,6 +152,7 @@
         console.log('gl-ide-plugin-project > Sidebar.vue > project:', project)
         this.projectId = project.id
         this.project = project
+        this.$ide.store.editingProject.id = this.project.id
       },
       onTemplateProjectSelected(params, project) {
         // 复制项目
@@ -162,12 +163,15 @@
         that.$gl.api.save('platform_app', that.project).then(function (res) {
           that.project.id = res.data
           that.projectId = res.data
+          this.$ide.store.editingProject.id = this.project.id
         })
       },
       onSaveProject(params, data) {
         console.log('gl-ide > gl-ide-plugin-project > onSaveProject() > params,data: ', params, data)
         this.projectId = data.id
         this.project = {id: this.projectId, name: data.name}
+        this.$ide.store.editingProject.id = this.project.id
+        this.$ide.store.editingProject.name = this.project.name
       },
       saveFile() {
         this.$refs.fileTree.savePage()

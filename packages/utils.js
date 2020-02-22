@@ -365,7 +365,7 @@ utils.remove = function (items, index, confirmMsg) {
  * @param pid  根id
  * @returns {Array}
  */
-utils.listToTree = function (data, pid) {
+utils.listToTree = function (data, pid, mapping) {
   let tree = [];
   let temp;
   for (let i = 0; i < data.length; i++) {
@@ -381,9 +381,56 @@ utils.listToTree = function (data, pid) {
   return tree;
 }
 
+/**
+ *
+ * @param data 列表数据
+ * @param pid  根id
+ * @param isLeafSelectableOnly 是否叶子节点才可以选择，依据icon值不是：iconfont icon-folder区分为非叶子
+ * @returns {Array}
+ */
+utils.listToAntTree = function (data, pid, isLeafSelectableOnly) {
+  let tree = [];
+  let temp;
+  for (let i = 0; i < data.length; i++) {
+    if (data[i].parent == pid) {
+      let obj = {
+        title: data[i].text,
+        key: data[i].id,
+        value: data[i].id
+      }
+      temp = utils.listToAntTree(data, data[i].id, isLeafSelectableOnly);
+      if (isLeafSelectableOnly && data[i].icon === 'iconfont icon-folder') {
+        obj.selectable = false
+      }
+      if (temp.length > 0) {
+        obj.children = temp
+      }
+      tree.push(obj);
+    }
+  }
+  return tree;
+}
+
+// utils.listToTree = function (data, pid, mapping) {
+//   let tree = [];
+//   let temp;
+//   for (let i = 0; i < data.length; i++) {
+//     if (data[i].pid == pid) {
+//       let obj = data[i];
+//       temp = utils.listToTree(data, data[i].id);
+//       if (temp.length > 0) {
+//         obj.children = temp;
+//       }
+//       tree.push(obj);
+//     }
+//   }
+//   return tree;
+// }
+
 utils.sleep = function (time) {
   return new Promise((resolve) => setTimeout(resolve, time));
 }
+
 // utils.CryptoJS = CryptoJS
 // window.utils = utils
 // let content = utils.CryptoJS.enc.Utf8.parse(str)

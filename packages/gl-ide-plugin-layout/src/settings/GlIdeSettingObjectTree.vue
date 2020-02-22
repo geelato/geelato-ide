@@ -22,7 +22,8 @@
              @ok="() => modalVisible = false" @cancel="onCloseModal" okText="保存" cancelText="取消"
              :maskClosable="false">
       <gl-ide-setting-event :ideStore="ideStore" :currentControl="currentControl"
-                            :currentActions="currentActions"></gl-ide-setting-event>
+                            :currentActions="currentActions"
+                            :currentComponent="currentComponent"></gl-ide-setting-event>
       <template slot="footer">
         <div style="text-align: center">
           <a-button type="danger" @click="onCloseModal">
@@ -88,6 +89,7 @@
       return {
         modalWidth: (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) * .70,
         modalVisible: false,
+        currentComponent: {},
         currentControl: {
           gid: '',
           title: '',
@@ -107,8 +109,10 @@
         this.modalVisible = false
         // bind actions
         this.editingFileParser.bindEvent(this.ideStore.editingFile.sourceContent._bindEvents, this.currentControl, this.currentActions)
-        this.generateObjectTreeNodeOfOpenModalAndBindEvent()
+        // TODO 暂不支持，需同时考虑在删除卡片内容时，怎么同步删除引用页面
+        // this.generateObjectTreeNodeOfOpenModalAndBindEvent()
         console.log('gl-ide > gl-ide-plugin-layout > onCloseModal() > editingFile: ', this.ideStore.editingFile)
+        console.log('gl-ide > gl-ide-plugin-layout > onCloseModal() > currentControl: ', this.currentControl)
         console.log('gl-ide > gl-ide-plugin-layout > onCloseModal() > bind currentActions: ', this.currentActions)
       },
       /**
@@ -179,7 +183,10 @@
         // let controlShortKey = keys[1]
         let item = that.ideStore.editingFile.sourceContent._componentRefs[componentKey]
         let controlComponent = item.component.$_getRefByGid(controlKey)
-        console.log('that.ideStore.editingFile.sourceContent>', that.ideStore.editingFile.sourceContent)
+        this.currentComponent = item
+        console.log('gl-ide-setting-object-tree> onSelect() > currentComponent:', item)
+        console.log('gl-ide-setting-object-tree> onSelect() > controlKey:', controlKey)
+        console.log('gl-ide-setting-object-tree> onSelect() > that.ideStore.editingFile.sourceContent:', that.ideStore.editingFile.sourceContent)
 
         if (controlComponent) {
           that.$set(that, 'currentControl', {
@@ -199,8 +206,8 @@
           console.log('Not found.', item)
         }
 
-        console.log('gl-ide-setting-object-tree> onSelect() selectedKeys:', selectedKeys);
-        console.log('gl-ide-setting-object-tree> onSelect() e:', e);
+        console.log('gl-ide-setting-object-tree> onSelect() > selectedKeys:', selectedKeys);
+        console.log('gl-ide-setting-object-tree> onSelect() > e:', e);
         console.log('gl-ide-setting-object-tree> onSelect() > find component by gid:', that.currentControl.gid, that.currentControl.component)
       },
       onCheck(checkedKeys, info) {

@@ -11,7 +11,7 @@
         @clone="onRowClone"
         @change="onRowChange"
     >
-      <a-row v-for="(row,rowIndex) in rowItems" :gutter="row.gutter||gutter" :key="rowIndex"
+      <a-row v-for="(row,rowIndex) in rowItems" :gutter="row.gutter||gutter" :key="row.gid"
              class="gl-dnd-form-row-handle-target">
         <a-col v-for="(col,colIndex) in row.cols" :span="col.span" :offset="col.offset" :key="colIndex" style="">
           <!--col.items为最后一级。未支持嵌套rows的场景，即不支持col.rows-->
@@ -142,9 +142,11 @@
       this.$gl.bus.$off('gl_ide_plugin_layout__modal_close', this.onClose)
     },
     mounted() {
-      if(this.toolbar&&!this.toolbar.gid){
+      if (this.toolbar && !this.toolbar.gid) {
         this.toolbar.gid = this.$gl.utils.uuid(8)
       }
+      // 初始化rowId，若无则初始化id
+      this.rowItems.forEach(row => row.gid = row.gid || this.$gl.utils.uuid(8))
     },
     methods: {
       onRowEnd: function (args) {

@@ -42,7 +42,7 @@
                             @doActionChange="doActionChange"></action-bar>
                 <div class="line" v-if="doItem.then" v-for="(thenItem,thenItemIndex) in doItem.then"
                      :key="actionIndex+'_'+doItemIndex+'_'+thenItemIndex">
-                  <action-bar label="回调动作" :doItems="doItem.then" :doItem="thenItem" :doItemIndex="thenItemIndex"
+                  <action-bar label="回调动作" :isLastOne="true" :doItems="doItem.then" :doItem="thenItem" :doItemIndex="thenItemIndex"
                               @doActionSetting="doActionSetting" @doActionRemove="doActionRemove"
                               @doActionChange="doActionChange"></action-bar>
                 </div>
@@ -54,6 +54,7 @@
           <a-card title="动作详细设置" :bordered="false">
             <p>
               <component :is="currentDetailComponentName" v-bind="currentDoItem"
+                         :designComponentName="currentComponent.meta.component"
                          @update="(params)=>currentDoItem.params = params"></component>
             </p>
           </a-card>
@@ -67,10 +68,10 @@
 
 <script>
   import ActionBar from './ActionBar'
-  import OpenModal from './event-detail/OpenModal'
-  import InvokeCurrentComponent from './event-detail/InvokeCurrentComponent'
-  import ShowMessage from './event-detail/ShowMessage'
-  import Empty from './event-detail/Empty'
+  import OpenModal from './event-handler-setings/OpenModal'
+  import InvokeCurrentComponent from './event-handler-setings/InvokeCurrentComponent/InvokeCurrentComponent'
+  import ShowMessage from './event-handler-setings/ShowMessage'
+  import Empty from './event-handler-setings/Empty'
 
   let localComponents = {ActionBar, OpenModal, ShowMessage, InvokeCurrentComponent, Empty}
 
@@ -81,6 +82,16 @@
       ideStore: {
         type: Object,
         required: true
+      },
+      currentComponent: {
+        type: Object,
+        default() {
+          return {
+            meta: {
+              component: ""
+            }
+          }
+        }
       },
       currentControl: {
         type: Object,
@@ -114,7 +125,7 @@
         console.log(e, action, actionIndex)
       },
       doActionChange($event, doItem, actionIndex) {
-        console.log('doActionChange>', $event, doItem, actionIndex)
+        console.log('gl-ide-plugin-layout > GlIdeSettingEvent > doActionChange() >  $event, doItem, actionIndex:', $event, doItem, actionIndex)
         doItem.handler = $event
         this.doActionSetting($event, doItem, actionIndex)
       },

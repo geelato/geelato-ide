@@ -23,7 +23,7 @@
     <span>
        <a-button @click="$emit('doActionSetting',doItem.handler,doItem,doItemIndex)" type="link" title="设置动作"><a-icon
            type="setting"/></a-button>
-      <a-button @click="doItems.push({handler:'',fn:'',params:{}})" type="link" title="添加回调"><a-icon
+      <a-button v-if="isLastOne!==true" @click="addCallback" type="link" title="添加回调"><a-icon
           type="plus-circle"/></a-button>
       <a-button @click="$emit('doActionRemove',doItem.handler,doItems,doItemIndex)" class="remove" type="link"
                 style="color: red"
@@ -36,10 +36,21 @@
   export default {
     name: "ActionBar",
     props: {
+      isLastOne: Boolean,
       label: String,
       doItems: Array,
       doItem: Object,
       doItemIndex: Number
+    },
+    methods: {
+      addCallback() {
+        // if (this.doItem.then === undefined) {
+        //   this.doItem.then = []
+        // }
+        this.doItem.then.push({handler: '', fn: '', params: {}, then: []})
+        // this.doItems.push({handler: '', fn: '', params: {}})
+        console.log('doItems>', this.doItems, this.doItem)
+      }
     }
   }
 </script>

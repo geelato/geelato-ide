@@ -14,6 +14,8 @@ let GlobalVue
 let defaultFile = {}
 let store = {
   refreshToggleFlag: true,
+  // 当打开的project
+  editingProject: {id: undefined, name: undefined},
   editingFile: {
     // 加载时，动态渲染的组件树
     // objectTree: [],
@@ -25,6 +27,9 @@ let store = {
   settingPanels: []
 }
 
+/**
+ *  除了project，其它的需重置
+ */
 function resetStore() {
   GlobalVue.set(store, 'stagePanels', [])
   GlobalVue.set(store, 'settingPanels', [])

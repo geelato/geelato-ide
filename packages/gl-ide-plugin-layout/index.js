@@ -1,9 +1,9 @@
 // 导入组件，组件必须声明 name
 import Sidebar from './src/Sidebar'
-import StageUI from './src/Stage/UI'
-import StageSrc from './src/Stage/Src'
+import StageUI from './src/stage/UI'
+import StageSrc from './src/stage/Src'
 import events from './src/events'
-import GlIdeSettingObjectTree from './src/Settings/GlIdeSettingObjectTree'
+import GlIdeSettingObjectTree from './src/settings/GlIdeSettingObjectTree'
 // import formData from "../gl-ide-plugin-file-combination/src/formData";
 
 const plugin = {

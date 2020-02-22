@@ -12,7 +12,8 @@ export default {
     show: true,
     bind: {opts: table, query: {}},
     meta: {
-      component: 'GlIdePluginTableDesigner',
+      component: 'GlTable',
+      designer: 'GlIdePluginTableDesigner',
       title: '列表编辑器',
       objectTree: [{title: '查询栏', path: 'query.mix.properties'}, {title: '工具栏', path: 'toolbar.actions'}, {
         title: '列操作',
@@ -31,7 +32,8 @@ export default {
       // 初始化的模板数据
       bind: {opts: form, query: {}},
       meta: {
-        component: 'GlIdePluginFormDesigner',
+        component: 'GlForm',
+        designer: 'GlIdePluginFormDesigner',
         title: '表单编辑器',
         objectTree: [{title: '表单控件', path: 'properties'}]
       }
@@ -43,7 +45,7 @@ export default {
       description: '',
       show: true,
       bind: {opts: table, query: {}},
-      meta: {component: 'GlIdePluginPageLoaderDesigner', title: '设置'}
+      meta: {component: 'GlPageLoader',designer: 'GlIdePluginPageLoaderDesigner', title: '设置'}
     }, {
       title: '工具条',
       icon: 'tool',
@@ -52,7 +54,7 @@ export default {
       description: '',
       show: true,
       bind: {opts: {}, query: {}},
-      meta: {component: 'GlIdePluginToolbarDesigner', title: '工具条设置'}
+      meta: {component: 'GlToolbar',designer: 'GlIdePluginToolbarDesigner', title: '工具条设置'}
     },
     {
       title: '标题',
@@ -62,6 +64,6 @@ export default {
       description: '',
       show: true,
       bind: header,
-      meta: {component: 'GlIdePluginHeaderDesigner', title: '标题设置', objectTree: [], inSettingPanel: true}
+      meta: {component: 'GlHeader',designer: 'GlIdePluginHeaderDesigner', title: '标题设置', objectTree: [], inSettingPanel: true}
     }],
 }

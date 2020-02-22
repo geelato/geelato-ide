@@ -90,7 +90,7 @@
       <a-modal class="gl-card-designer" :title="modalTitle" centered :width=modalWidth v-model="modalVisible"
                @ok="() => modalVisible = false" @cancel="onCloseModal" okText="保存" cancelText="取消"
                :maskClosable="false">
-        <component :is="$globalVue.component(currentOpenedCard.meta.component)"
+        <component :is="$globalVue.component(currentOpenedCard.meta.designer)"
                    v-bind="currentOpenedCard.bind"></component>
         <template slot="footer">
           <div style="text-align: center">
@@ -294,8 +294,9 @@
               groups.push(group)
             }
             let childNodes = group.children
+            // childObjects 为简单对象或数组
             let childObjects = eval('item.bind.opts.' + treeNodeObject.path)
-            console.log('gl-ide > gl-ide-plugin-layout > UIItem > generateObjectTreeNodeAndBindEvent() > card title, childObjects:', cardComponent.title, childObjects)
+            console.log('gl-ide > gl-ide-plugin-layout > UIItem > generateObjectTreeNodeAndBindEvent() > card title, childObjects:', cardComponent.meta.title, childObjects, treeNodeObject.path)
             if (childObjects && typeof childObjects === "object") {
               // stepA 为对象树添加，找已有的对象树中，是否存在控件，没有则添加
               for (let key in childObjects) {
@@ -326,7 +327,7 @@
                     component: controlComponent
                   }
                   if (controlComponent && that.events[childObj.gid]) {
-                    that.editingFileParser.bindEvent(that.bindEvents, control, that.events[childObj.gid])
+                    that.editingFileParser.bindEvent(that.bindEvents, control, that.events[childObj.gid], controlComponent.$parent)
                   }
                 } else {
                   console.log('gl-ide > gl-ide-plugin-layout > UIItem > generateObjectTreeNodeAndBindEvent() > 未设置control值：', childObj)
@@ -334,13 +335,28 @@
               }
               // stepB 从对象树删除多余的控件
               childNodes.forEach((childNode, index) => {
-                let foundChildrenObject = childObjects.find((childObject) => {
-                  return childNode.key === item.id + '_$_' + childObject.gid
-                })
-                if (!foundChildrenObject) {
-                  console.log('gl-ide > gl-ide-plugin-layout > UIItem > generateObjectTreeNodeAndBindEvent() > find invalid control and delete：', childNode)
-                  childNodes.splice(index, 1)
+                // 是个数组
+                let childObjectIndex = 0
+                let found = false
+                for (let key in childObjects) {
+                  let childObject = childObjects[key]
+                  if (childNode.key === item.id + '_$_' + childObject.gid) {
+                    found = true
+                    break
+                  }
+                  childObjectIndex++
                 }
+                if (!found) {
+                  console.log('gl-ide > gl-ide-plugin-layout > UIItem > generateObjectTreeNodeAndBindEvent() > find invalid control and delete：', childNode)
+                  childNodes.splice(childObjectIndex, 1)
+                }
+                // let foundChildrenObject = childObjects.find((childObject) => {
+                //   return childNode.key === item.id + '_$_' + childObject.gid
+                // })
+                // if (!foundChildrenObject) {
+                //   console.log('gl-ide > gl-ide-plugin-layout > UIItem > generateObjectTreeNodeAndBindEvent() > find invalid control and delete：', childNode)
+                //   childNodes.splice(index, 1)
+                // }
               })
             }
           })

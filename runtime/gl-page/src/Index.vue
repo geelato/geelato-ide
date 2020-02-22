@@ -70,14 +70,17 @@
         }
         that.$gl.api.query('platform_app_page', 'id,type,code,description,sourceContent', condition).then(function (res) {
           console.log('geelato > runtime > gl-page > Index.vue > refresh() > query platform_app_page res:', res)
-
-          that.config = JSON.parse(res.data[0].sourceContent)
-          that.config.componentRefs = that.config.componentRefs || {}
-          that.config._bindEvents = {}
-          console.log('that.config>', that.config)
+          if (res.data.length === 0) {
+            that.$message.warn('从服务端获取不到该页面信息，可能该页面已删除！')
+          } else {
+            that.config = JSON.parse(res.data[0].sourceContent)
+            that.config.componentRefs = that.config.componentRefs || {}
+            that.config._bindEvents = {}
+            console.log('geelato > runtime > gl-page > Index.vue > refresh() > config:', that.config)
+          }
         }).catch(function (e) {
-          console.error(e)
-          that.$message.error('geelato > runtime > gl-page > Index.vue > refresh() > query platform_app_page res: 从服务端获取、解析信息失败！')
+          console.error('geelato > runtime > gl-page > Index.vue > refresh() > query platform_app_page res: ', e)
+          that.$message.error('从服务端获取、解析信息失败！')
         })
       },
       doAction(data) {

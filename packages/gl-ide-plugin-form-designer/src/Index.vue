@@ -6,7 +6,7 @@
       </a-col>
       <a-col :span="14" style="border-right: 1px solid #F2F2F2;padding: 2em 2em">
         <div style="text-align: right;width: 100%;padding-right: 3em;line-height: 2em">
-          <a @click="printSrc">打印当前配置</a>
+          <a @click="printSrc">控制台打印当前配置</a>
         </div>
         <stage :size="size" :height="height" :opts="cardBind" style="padding-right: 3.5em;padding-top: 1em"></stage>
       </a-col>

@@ -172,11 +172,12 @@ export default class EditingFileParser {
   bindEvent(controlBindEvents, control, actions, controlCtx) {
     console.log('geelato > runtime > EditingFileParser > bindEvent() > controlBindEvents, control, actions，controlCtx>', controlBindEvents, control, actions, controlCtx)
     for (const actionIndex in actions) {
-      const action = actions[actionIndex]
-      const eventKey = control.gid + '_$_' + action.on
-      controlBindEvents[eventKey] = this.createActionHandlerFn(action, controlCtx)
+      // 侦听事件配置信息，侦听事件类型为onAction.on的值。在onAction中，里面包含了执行事件(doAction)配置信息
+      const onAction = actions[actionIndex]
+      const eventKey = control.gid + '_$_' + onAction.on
+      controlBindEvents[eventKey] = this.createActionHandlerFn(onAction, controlCtx)
       // control.component.$off(action.on, controlBindEvents[eventKey])
-      control.component.$on(action.on, controlBindEvents[eventKey])
+      control.component.$on(onAction.on, controlBindEvents[eventKey])
       console.log('geelato > runtime > EditingFileParser > bindEvent() > this.controlBindEvents>', controlBindEvents, eventKey)
     }
   }
@@ -201,7 +202,7 @@ export default class EditingFileParser {
     const that = this
     return function (ctx, data) {
       console.log('geelato > runtime > createActionHandlerFn controlCtx,ctx>', controlCtx, ctx)
-      that.actionHandlerInstance.doAction(action, controlCtx || ctx, data)
+      return that.actionHandlerInstance.doAction(action, controlCtx || ctx, data)
     }
   }
 
