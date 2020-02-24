@@ -65,7 +65,7 @@
                 加入弹窗工具栏：
               </td>
               <td class="gl-table-cell">
-                <a-switch ></a-switch>
+                <a-switch></a-switch>
               </td>
             </tr>
           </table>
@@ -116,7 +116,7 @@
             <tr class="gl-table-row">
               <td class="gl-table-cell gl-table-cell-sub-label">
                 <a-icon type="info-circle" title="绑定数据库的字段，才可以存储到后台。"/>
-                绑定数据库字段：
+                绑定数据：
               </td>
               <td class="gl-table-cell">
                 <div style="line-height: 2em;margin-left: 0.5em">先选择实体：</div>
@@ -152,22 +152,28 @@
                     <span v-if="!colMeta.nullable" class="gl-required" style="font-weight: bold">*</span>{{colMeta.fieldName}}&nbsp;({{colMeta.title}})
                   </a-select-option>
                 </a-select>
+                <div style="margin: 0.2em">
+                  <a-switch v-model="fieldConfig.isServerSaveIgnore"></a-switch>
+                  保存时是否排除该字段
+                </div>
               </td>
             </tr>
-            <tr class="gl-table-row">
-              <td class="gl-table-cell gl-table-cell-sub-label">
-                保存时是否排除该字段：
-              </td>
-              <td class="gl-table-cell">
-                <a-switch v-model="fieldConfig.isServerSaveIgnore"></a-switch>
-              </td>
-            </tr>
+            <!--<tr class="gl-table-row">-->
+              <!--<td class="gl-table-cell gl-table-cell-sub-label">-->
+                <!--是否排除：-->
+              <!--</td>-->
+              <!--<td class="gl-table-cell">-->
+                <!--<a-switch v-model="fieldConfig.isServerSaveIgnore"></a-switch>-->
+                <!--保存时是否排除该字段-->
+              <!--</td>-->
+            <!--</tr>-->
             <tr class="gl-table-row" v-if="freshFlag&&isContainDataItems(fieldConfig)">
               <td class="gl-table-cell gl-table-cell-sub-label">
                 {{getControlType(fieldConfig.control).title}}项：
               </td>
               <td class="gl-table-cell">
-                <select-settings :dataItems="fieldConfig.data"></select-settings>
+                <gl-data-source :dataItems="fieldConfig.data" :dsKey="fieldConfig.ds" :dsMap="opts.ds"
+                                @update="onDataSourceUpdate"></gl-data-source>
               </td>
             </tr>
           </table>
@@ -224,14 +230,14 @@
 <script>
   import mixin from '../mixin'
   import controlTypes from '../data/controlTypes'
-  import SelectEntityList from '../../../gl-ide/src/select/SelectEntityList'
-  import SelectSettings from './SelectSettings'
+  import SelectEntityList from '../../../components/gl-data-source/src/SelectEntityList'
+  import GlDataSource from "../../../components/gl-data-source/src/Index";
 
 
   export default {
     name: "Settings",
     components: {
-      SelectSettings, GlVNodes: {
+      GlDataSource, GlVNodes: {
         functional: true,
         render: (h, ctx) => ctx.props.vnodes,
       }
@@ -270,7 +276,8 @@
           rules: {
             required: false
           },
-          data: []
+          data: [],
+          ds: ''
         },
         freshFlag: true,
         currentEntityColumns: [],
@@ -325,13 +332,11 @@
         }
         console.log(JSON.stringify(item), bindEntityNames, 'toSelectEntityNames: ', this.toSelectEntityNames)
         if (item.rules === undefined) {
-          // item.rules = {}
           this.$set(item, 'rules', {required: undefined, unique: undefined})
           // this.$set(item.rules, 'required', undefined)
           // this.$set(item.rules, 'unique', undefined)
         }
         if (item.props === undefined) {
-          // item.props = {}
           this.$set(item, 'props', {placeholder: undefined})
           // this.$set(item.props, 'placeholder', undefined)
         }
@@ -344,6 +349,9 @@
           this.$set(item, 'data', [{text: '选项一', value: 0}])
           // item.props.defaultActiveIndex = item.props.defaultActiveIndex || 0
           this.$set(item.props, 'defaultActiveIndex', item.props.defaultActiveIndex || 0)
+        }
+        if (item.ds === undefined) {
+          this.$set(item, 'ds', '')
         }
 
         // 对于无实体的，从当前表单已配置的实体中，默认选择第一项
@@ -437,6 +445,11 @@
       changeTab(key) {
         console.log('key>', key)
         this.activeTabKey = key
+      },
+      onDataSourceUpdate({dsItem, dsKey, dsMap}) {
+        console.log('gl-ide-plugin-form-designer > Settings > onDataSourceUpdate() > dsItem, dsKey, dsMap:', dsItem, dsKey, dsMap)
+        this.$set(this.fieldConfig, 'ds', dsKey)
+        this.$set(this.opts, 'ds', dsMap)
       }
     }
 
@@ -447,6 +460,6 @@
   .gl-table-cell-sub-label {
     /*重置该样式*/
     vertical-align: middle;
-    width: 40%;
+    width: 30%;
   }
 </style>

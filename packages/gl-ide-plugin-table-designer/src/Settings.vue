@@ -461,7 +461,7 @@
 <script>
   import mixin from '../../mixin-x-designer'
   import ideConfig from '../../gl-ide/src/data/ideSelectItems.js'
-  import SelectEntityList from '../../gl-ide/src/select/SelectEntityList'
+  import SelectEntityList from '../../components/gl-data-source/src/SelectEntityList'
 
   export default {
     name: "GlIdePluginTableDesignerSettings",

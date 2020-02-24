@@ -26,7 +26,7 @@
         <td class="gl-table-cell" colspan="3">
           <!--<input v-model="modalInfo.pageId" style="width: 100%"/>-->
           <a-tree-select
-              style="width: 300px"
+              style="width: 100%"
               :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }"
               :treeData="treeData"
               placeholder="Please select"

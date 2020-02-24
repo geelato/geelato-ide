@@ -58,19 +58,7 @@
             props: {}
           }
         },
-        then: [{
-          handler: 'ShowMessage',
-          fn: '',
-          ctx: '',
-          params: {
-            // info|success|error...
-            method: 'info',
-            // 提示内容
-            content: '1200px',
-            // 自动关闭的延时，单位秒。设为 0 时不自动关闭。
-            duration: '10',
-          }
-        }]
+        then: []
       }
     ],
     ctx: 'this'

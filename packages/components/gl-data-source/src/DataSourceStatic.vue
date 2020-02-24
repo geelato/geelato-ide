@@ -28,7 +28,7 @@
 
 <script>
   export default {
-    name: "Select",
+    name: "GlDataSourceStatic",
     props: {
       dataItems: {
         type: Array

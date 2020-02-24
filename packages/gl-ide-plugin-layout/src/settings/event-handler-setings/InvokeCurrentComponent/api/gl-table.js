@@ -12,6 +12,7 @@ export default {
       params: [{
         name: 'entityName',
         title: '实体名称(英文)',
+        placeholder:'不填时，为列表默认实体',
         value: '',
         description: '需要删除的实体'
       }],
@@ -26,6 +27,7 @@ export default {
       params: [{
         name: 'entityName',
         title: '实体名称(英文)',
+        placeholder:'不填时，为列表默认实体',
         value: '',
         description: '需要删除的实体'
       }],

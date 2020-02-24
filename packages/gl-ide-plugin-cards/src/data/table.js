@@ -16,12 +16,11 @@ export default {
         {
           field: 'name',
           title: '名称',
-          cop: 'eq',
+          cop: 'contains',
           control: 'input',
           lop: 'and',
           props: {placeholder: '姓名', defaultValue: ''}
         },
-        {field: 'code', title: '编码', cop: 'contains', control: 'input', lop: 'and', props: {placeholder: ''}},
         {
           field: 'type',
           title: '类型',
@@ -30,8 +29,7 @@ export default {
           data: [{text: '默认', value: 0}, {text: '类型一', value: 1}, {text: '类型二', value: 2}],
           // 增加指定选择项，如所有项、默认项，AddPreOptionText：为项的展示内容，AddPreOptionValue为项的展示值
           props: {AddPreOptionText: '全部', AddPreOptionValue: undefined, placeholder: '请选择'}
-        },
-        {field: 'description', title: '描述', cop: 'contains', control: 'input', lop: 'and'},
+        }
       ],
       layout: {
         display: 'auto',
@@ -42,46 +40,23 @@ export default {
   },
   toolbar: {
     actions: [{
-      text: '创建',
       title: '创建',
       control: 'button',
       icon: 'plus',
       type: 'primary',
-      // fn: 'openModal',
-      // // opener、content、modal、handler，默认为handler
-      // ctx: 'this',
-      // params: {
-      //   title: '编辑DEMO实体',
-      //   width: '1200px',
-      //   height: '480px',
-      //   body: {
-      //     type: 'staticPage',
-      //     component: 'GlForm',
-      //     // component: resolve => require(['/components/Form/Base/Example.vue'], resolve),
-      //     props: {opts: JSON.parse(JSON.stringify(FormData))}
-      //   },
-      //   actions: [{
-      //     text: '保存',
-      //     type: 'primary',
-      //     fn: 'save',
-      //     // opener、content、modal，默认为content
-      //     ctx: 'content',
-      //     params: {},
-      //     then: {
-      //       fn: 'close',
-      //       ctx: 'modal',
-      //       then: {
-      //         fn: 'refresh',
-      //         ctx: 'opener'
-      //       }
-      //     }
-      //   }, {
-      //     fn: 'close',
-      //     text: '取消',
-      //     ctx: 'modal'
-      //   }]
-      // }
-    }],
+      fn: 'openModal',
+      ctx: 'this',
+      params: {}
+    },
+      {
+        control: 'button',
+        title: '删除',
+        icon: 'delete',
+        type: 'danger',
+        fn: 'openModal',
+        ctx: 'this',
+        params: {}
+      }],
     css: {align: 'right'}
   },
   alert: null,
@@ -91,15 +66,31 @@ export default {
     rowAction: {
       actions: [{
         title: '修改',
-        text: '修改',
-        // icon: 'plus',
+        icon: 'plus',
         type: 'primary',
         control: 'link',
-        // fn: 'openModal',
-        // ctx: 'this',
-        // params: {},
-        // dataMapping: {}
-      }]
+        fn: 'openModal',
+        ctx: 'this',
+        params: {}
+      },
+        {
+          control: 'button',
+          title: '删除',
+          icon: 'plus',
+          type: 'primary',
+          fn: 'openModal',
+          ctx: 'this',
+          params: {}
+        },
+        {
+          control: 'button',
+          title: '详情',
+          icon: 'plus',
+          type: 'primary',
+          fn: 'openModal',
+          ctx: 'this',
+          params: {}
+        }]
     },
     columns: [
       {title: '#', dataIndex: 'id', scopedSlots: {customRender: 'serial'}},

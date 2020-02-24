@@ -12,6 +12,7 @@ import GlIdePluginProject from './gl-ide-plugin-project/index'
 import GlIdePluginCards from './gl-ide-plugin-cards/index'
 import GlIdePluginFields from './gl-ide-plugin-fields/index'
 import GlPage from '../runtime/gl-page/index'
+import GlDataSource from './components/gl-data-source/index'
 
 // import GlIdePluginStructure from './gl-ide-plugin-structure/index'
 import ide from './gl-ide/src/ide'
@@ -33,7 +34,8 @@ import './ide.css'
 const components = [
   Verte,
   GlIde,
-  GlPage
+  GlPage,
+  GlDataSource
 ]
 
 
