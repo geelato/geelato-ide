@@ -40,15 +40,69 @@
         </td>
       </tr>
       <tr>
-        <td class="gl-table-cell label" style="width: 30%">按钮位置</td>
-        <td>
-          <a-radio-group v-model="modalInfo.actionAlign" size="small" @change="onChange()">
-            <a-radio-button value="left">左</a-radio-button>
-            <a-radio-button value="middle">中</a-radio-button>
-            <a-radio-button value="right">右</a-radio-button>
-          </a-radio-group>
+        <td class="gl-table-cell label" style="width: 30%">参数</td>
+        <td class="gl-table-cell" colspan="3">
+          <table class="gl-table">
+            <thead>
+            <tr class="gl-table-row">
+              <td style="width: 25%">参数名</td>
+              <td style="width: 50%">参数值</td>
+              <td></td>
+            </tr>
+            </thead>
+            <gl-draggable
+                :list="modalParams"
+                handle=".gl-dnd-param-handle"
+                group='columns'
+                :sort="true"
+                element="tbody"
+            >
+              <tr class="gl-table-row" v-for="(param,paramIndex) in modalParams">
+                <td class="gl-table-cell label">
+                  <input v-model="param.name" style="width: 100%"/>
+                </td>
+                <td class="gl-table-cell label">
+                  <input v-model="param.value" style="width: 100%"/>
+                </td>
+                <td class="gl-table-cell">
+                  <a-button class="gl-mini-btn" @click="modalParams.splice(paramIndex,1)">
+                    <a-icon type="delete" theme="twoTone" twoToneColor="#eb2f96"/>
+                  </a-button>
+                  <a-button class="gl-mini-btn gl-dnd-param-handle">
+                    <a-icon type="swap"/>
+                  </a-button>
+
+                  <!--<a-icon type="swap" style="color: #f5222d" title="移动行" class="gl-dnd-param-handle"/>-->
+                  <!--<a-icon type="delete" theme="twoTone" twoToneColor="#f5222d" style="margin-left: 0.1em"-->
+                  <!--@click="modalParams.splice(paramIndex,1)"-->
+                  <!--title="删除参数"/>-->
+                  <!--<a-icon type="delete" size="small" @click="modalParams.splice(paramIndex,1)"/>-->
+                </td>
+              </tr>
+            </gl-draggable>
+            <tr class="gl-table-row">
+              <td colspan="3">
+                <a-button size="small" block
+                          @click="modalParams.push({gid:$gl.utils.uuid(8),title: '',name: '',value: undefined})"
+                          style="line-height: 1.499em">
+                  <a-icon type="plus" size="small"/>
+                  添加参数
+                </a-button>
+              </td>
+            </tr>
+          </table>
         </td>
       </tr>
+      <!--<tr>-->
+      <!--<td class="gl-table-cell label" style="width: 30%">按钮位置</td>-->
+      <!--<td>-->
+      <!--<a-radio-group v-model="modalInfo.actionAlign" size="small" @change="onChange()">-->
+      <!--<a-radio-button value="left">左</a-radio-button>-->
+      <!--<a-radio-button value="middle">中</a-radio-button>-->
+      <!--<a-radio-button value="right">右</a-radio-button>-->
+      <!--</a-radio-group>-->
+      <!--</td>-->
+      <!--</tr>-->
       </tbody>
     </table>
 
@@ -97,7 +151,7 @@
       <tr class="gl-table-row">
         <td colspan="3">
           <a-button size="small" block
-                    @click="modalInfo.actions.push({gid:$gl.utils.uuid(8),text: '操作',icon: 'plus',type: 'primary'});onActionUpdate()"
+                    @click="modalInfo.actions.push({gid:$gl.utils.uuid(8),title: '操作',icon: 'plus',type: 'primary'});onActionUpdate()"
                     style="line-height: 1.499em">
             <a-icon type="plus" size="small"/>
             添加行操作按钮
@@ -173,6 +227,7 @@
           actionAlign: this.params.actionAlign,
           actions: this.params.actions
         },
+        modalParams: [{gid: this.$gl.utils.uuid(8), name: '', title: '', value: undefined}],
         treeData: [],
         currentActionIndex: 0,
         btnTypes: ideConfig.btnTypes,

@@ -224,7 +224,7 @@
         // 新增加或拖动，都会产生e.added
         // console.log('gl-ide-plugin-form-designer > stage > onControlChange() > e: ', e, 'fieldItems: ', fieldItems)
         // if (e.added) {
-          // this.$emit('updateLayoutRows', this.rowItems)
+        // this.$emit('updateLayoutRows', this.rowItems)
         // }
       },
       onControlChoose(e, fieldItems) {
@@ -243,8 +243,9 @@
           },
           onCancel() {
             item.fields.forEach((fieldItem) => {
-              console.log('gl-ide-plugin-form-designer > stage > removeControl() > 删除字段：', fieldItem.field, that.getProperty(fieldItem.field).gid)
-              delete that.properties[that.getProperty(fieldItem.field).gid]
+              let gid = that.getProperty(fieldItem.field).gid
+              console.log('gl-ide-plugin-form-designer > stage > removeControl() > 删除字段：', fieldItem, fieldItem.field, gid)
+              delete that.properties[gid]
             })
             item.fields.splice(0, item.fields.length)
             console.log('gl-ide-plugin-form-designer > stage > removeControl() > item：', item, col, row)
