@@ -1,8 +1,8 @@
 <template>
   <div :style="style">
-    <div style=" padding:0.5em">
+    <div style=" padding:1em">
       <a-row :gutter="8">
-        <a-col :span="10">
+        <a-col :span="12">
           <div class="line">
             <div slot="title">
               <span>对控件&nbsp;&nbsp;</span>
@@ -50,7 +50,7 @@
             </div>
           </div>
         </a-col>
-        <a-col :span="14">
+        <a-col :span="12">
           <a-card title="动作详细设置" :bordered="false">
             <p>
               <component :is="currentDetailComponentName" v-bind="currentDoItem"
@@ -162,7 +162,7 @@
 <style scoped>
 
   .line {
-    padding: 0.25em 1em 0.25em 1em;
+    padding: 0.25em 2em 0.25em 2em;
     line-height: 30px;
     background-color: rgba(114, 218, 255, 0.2);
   }

@@ -11,6 +11,7 @@ import GlIdePluginTableDesigner from './gl-ide-plugin-table-designer/index'
 import GlIdePluginProject from './gl-ide-plugin-project/index'
 import GlIdePluginCards from './gl-ide-plugin-cards/index'
 import GlIdePluginFields from './gl-ide-plugin-fields/index'
+import GlIdePluginDataMeta from './gl-ide-plugin-data-meta/index'
 import GlPage from '../runtime/gl-page/index'
 import GlDataSource from './components/gl-data-source/index'
 
@@ -54,7 +55,8 @@ const install = function (Vue, options) {
   ide.use(GlIdePluginFormDesigner)
   ide.use(GlIdePluginTableDesigner)
   ide.use(GlIdePluginCards)
-  ide.use(GlIdePluginFields)
+  // ide.use(GlIdePluginFields)
+  ide.use(GlIdePluginDataMeta)
 
   Vue.prototype.$ide = Vue.prototype.$ide || ide
   Vue.prototype.$globalVue = Vue

@@ -201,7 +201,7 @@ export default class EditingFileParser {
   createActionHandlerFn(action, controlCtx) {
     const that = this
     return function (ctx, data) {
-      console.log('geelato > runtime > createActionHandlerFn controlCtx,ctx>', controlCtx, ctx)
+      console.log('geelato > runtime > createActionHandlerFn controlCtx,ctx>', controlCtx, ctx, data)
       return that.actionHandlerInstance.doAction(action, controlCtx || ctx, data)
     }
   }

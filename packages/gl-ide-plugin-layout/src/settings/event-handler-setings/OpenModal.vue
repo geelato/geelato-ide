@@ -11,11 +11,11 @@
       <tr>
         <td class="gl-table-cell label" style="width: 20%">宽度</td>
         <td class="gl-table-cell" style="width: 30%">
-          <input v-model="modalInfo.width"/>
+          <input v-model="modalInfo.width" placeholder="1200px"/>
         </td>
         <td class="gl-table-cell label" style="width: 20%">高度</td>
         <td class="gl-table-cell" style="width: 30%">
-          <input v-model="modalInfo.height"/>
+          <input v-model="modalInfo.height" placeholder="800px"/>
         </td>
       </tr>
       <tr>
@@ -40,50 +40,67 @@
         </td>
       </tr>
       <tr>
-        <td class="gl-table-cell label" style="width: 30%">参数</td>
+        <td class="gl-table-cell label" style="width: 30%">传递参数</td>
         <td class="gl-table-cell" colspan="3">
           <table class="gl-table">
-            <thead>
-            <tr class="gl-table-row">
-              <td style="width: 25%">参数名</td>
-              <td style="width: 50%">参数值</td>
-              <td></td>
-            </tr>
-            </thead>
             <gl-draggable
-                :list="modalParams"
+                :list="modalInfo.paramMapping"
                 handle=".gl-dnd-param-handle"
                 group='columns'
                 :sort="true"
                 element="tbody"
             >
-              <tr class="gl-table-row" v-for="(param,paramIndex) in modalParams">
-                <td class="gl-table-cell label">
-                  <input v-model="param.name" style="width: 100%"/>
+              <tr class="gl-table-row" v-for="(param,paramIndex) in modalInfo.paramMapping">
+                <td style="width: 2em;text-align: center">{{paramIndex+1}}:</td>
+                <td class="gl-table-cell" style="width: 75%">
+                  <table class="gl-table">
+                    <tr>
+                      <td class="gl-table-cell label" style="font-weight: normal;width: 4em">
+                        参数名
+                      </td>
+                      <td class="gl-table-cell">
+                        <!--@change="$emit('doActionChange',$event,param,paramIndex)" :allowClear="true"-->
+                        <a-select v-model="param.name" style="width: 100%">
+                          <a-select-opt-group v-for="optionData in inParamSelection"
+                                              :label="optionData.title" :key="optionData.gid">
+                            <a-select-option v-for="inParam in optionData.inParams" :key="inParam.gid"
+                                             :value="inParam.gid">{{inParam.name+'-'+inParam.title}}
+                            </a-select-option>
+                          </a-select-opt-group>
+                        </a-select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="gl-table-cell label" style="font-weight: normal">
+                        参数值
+                      </td>
+                      <td class="gl-table-cell">
+                        <a-select v-model="param.value" style="width: 100%" @change="onChangeOutParam">
+                          <a-select-opt-group v-for="optionData in outParamSelection"
+                                              :label="optionData.title" :key="optionData.gid">
+                            <a-select-option v-for="outParam in optionData.outParams" :key="outParam.gid"
+                                             :value="outParam.name">{{outParam.name+'-'+outParam.title}}
+                            </a-select-option>
+                          </a-select-opt-group>
+                        </a-select>
+                      </td>
+                    </tr>
+                  </table>
                 </td>
-                <td class="gl-table-cell label">
-                  <input v-model="param.value" style="width: 100%"/>
-                </td>
-                <td class="gl-table-cell">
-                  <a-button class="gl-mini-btn" @click="modalParams.splice(paramIndex,1)">
+                <td class="gl-table-cell" style="padding-top: 1.5em">
+                  <a-button class="gl-mini-btn" @click="modalInfo.paramMapping.splice(paramIndex,1)">
                     <a-icon type="delete" theme="twoTone" twoToneColor="#eb2f96"/>
                   </a-button>
                   <a-button class="gl-mini-btn gl-dnd-param-handle">
                     <a-icon type="swap"/>
                   </a-button>
-
-                  <!--<a-icon type="swap" style="color: #f5222d" title="移动行" class="gl-dnd-param-handle"/>-->
-                  <!--<a-icon type="delete" theme="twoTone" twoToneColor="#f5222d" style="margin-left: 0.1em"-->
-                  <!--@click="modalParams.splice(paramIndex,1)"-->
-                  <!--title="删除参数"/>-->
-                  <!--<a-icon type="delete" size="small" @click="modalParams.splice(paramIndex,1)"/>-->
                 </td>
               </tr>
             </gl-draggable>
             <tr class="gl-table-row">
               <td colspan="3">
                 <a-button size="small" block
-                          @click="modalParams.push({gid:$gl.utils.uuid(8),title: '',name: '',value: undefined})"
+                          @click="modalInfo.paramMapping.push({gid:$gl.utils.uuid(8),title: '',name: '',value: undefined})"
                           style="line-height: 1.499em">
                   <a-icon type="plus" size="small"/>
                   添加参数
@@ -163,40 +180,10 @@
 </template>
 
 <script>
-  /* eslint-disable no-unused-vars */
 
   import ideConfig from '../../../../gl-ide/src/data/ideSelectItems.js'
   import utils from '../../../../utils.js'
-
-  // const treeData = [
-  //   {
-  //     title: 'Node1',
-  //     value: '0-0',
-  //     key: '0-0',
-  //     selectable: false,
-  //     children: [
-  //       {
-  //         value: '0-0-1',
-  //         key: '0-0-1',
-  //         scopedSlots: {
-  //           // custom title
-  //           title: 'title',
-  //         },
-  //       },
-  //       {
-  //         title: 'Child Node2',
-  //         value: '0-0-2',
-  //         key: '0-0-2',
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     title: 'Node2',
-  //     value: '0-1',
-  //     key: '0-1',
-  //     selectable: false
-  //   },
-  // ];
+  import cardsDefined from '../../../../gl-ide-plugin-cards/src/data/cards.js'
 
   export default {
     props: {
@@ -207,7 +194,8 @@
             title: '',
             width: '',
             height: '',
-            actions: []
+            actions: [],
+            paramMapping: [{gid: '', target: '', name: '', title: '', value: undefined}]
           }
         }
       },
@@ -225,31 +213,174 @@
           pageId: this.params.pageId,
           pageName: this.params.pageName,
           actionAlign: this.params.actionAlign,
-          actions: this.params.actions
+          actions: this.params.actions,
+          paramMapping: this.params.paramMapping
         },
-        modalParams: [{gid: this.$gl.utils.uuid(8), name: '', title: '', value: undefined}],
         treeData: [],
         currentActionIndex: 0,
         btnTypes: ideConfig.btnTypes,
-        formLayout: 'horizontal'
+        formLayout: 'horizontal',
+        // 输入参数选择项 [{cardItemId,inParams}]
+        inParamSelection: [],
+        outParamSelection: [],
+        // 加载页面之后，刷新参数表
+        refreshFlag: true
       };
+    },
+    watch: {
+      'modalInfo.pageId': {
+        handler(val, oval) {
+          console.log('val:', val, ',oval:', oval)
+          this.loadTargetPage(val)
+          this.loadAndParseSourcePage()
+        },
+        immediate: true
+      }
     },
     created() {
       this.loadPageTreeData()
     },
     mounted() {
-
+      if (!this.modalInfo.paramMapping) {
+        this.modalInfo.paramMapping = [{gid: '', target: '', name: '', title: '', value: undefined}]
+      }
     },
     beforeDestroy() {
-      console.log('this.modalInfo.actions>', this.modalInfo.actions)
+      console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > beforeDestroy() > result of modalInfo:', this.modalInfo)
       this.$emit('update', this.modalInfo)
     },
     methods: {
+      forceFresh() {
+        this.refreshFlag = false
+        this.$nextTick(function () {
+          this.refreshFlag = true
+        })
+      },
+      getCardDefined(componentName) {
+        let cardDefined = cardsDefined.items.find(cardDefined => cardDefined.component === componentName)
+        if (!cardDefined) {
+          console.error('gl-ide-plugin-layout > event-handler-settings > OpenModal > getCardDefined() > not found by componentName:', componentName)
+        }
+        return cardDefined
+      },
+      // 基于页面文件树节点id，加载需要打开页面的配置
+      loadTargetPage(pageId) {
+        if (!pageId) {
+          console.warn('gl-ide-plugin-layout > event-handler-settings > OpenModal > loadTargetPage() > pageId can not be ', pageId)
+        }
+        const that = this
+        let condition = {extendId: pageId}
+        that.$gl.api.query('platform_app_page', 'id,type,code,description,sourceContent', condition).then(function (res) {
+          // console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > loadTargetPage() > query platform_app_page res:', res)
+          if (res.data.length === 0) {
+            that.$message.warn('从服务端获取不到该页面配置信息，可能该页面已删除！')
+          } else {
+            that.config = JSON.parse(res.data[0].sourceContent)
+            that.parseTargetPage(that.config)
+            that.forceFresh()
+            console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > loadTargetPage() > config:', that.config)
+          }
+        }).catch(function (e) {
+          console.error('gl-ide-plugin-layout > event-handler-settings > OpenModal > loadTargetPage() > query platform_app_page e: ', e)
+          that.$message.error('从服务端获取、解析页面配置信息失败！')
+        })
+      },
+      parseTargetPage(page) {
+        let that = this
+        that.inParamSelection.splice(0, that.inParamSelection.length)
+        page.opts.layout.rows.forEach(row => {
+          row.cols.forEach(col => {
+            col.items.forEach(cardItem => {
+              let cardDefined = that.getCardDefined(cardItem.component)
+              console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > parseTargetPage() > forEach cardItem:', cardItem)
+              console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > parseTargetPage() > get cardDefined:', cardDefined, ' by componentName:', cardItem.component)
+              console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > parseTargetPage() > the cardDefined.meta.inParam.path:', cardDefined.meta.inParam.path)
+              let inParams = utils.eval('$ctx.' + cardDefined.meta.inParam.path, cardItem.bind.opts)
+              let newInParams = []
+              for (let index in inParams) {
+                let inParam = inParams[index]
+                let newInParam = {}
+                newInParam.gid = inParam.gid
+                newInParam.name = inParam[cardDefined.meta.inParam.name]
+                newInParam.title = inParam[cardDefined.meta.inParam.title]
+                newInParam.title = newInParam.title === 'undefined' ? '' : (newInParam.title || '')
+                newInParams.push(newInParam)
+                console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > parseTargetPage() > push newInParam:', newInParam)
+              }
+              that.inParamSelection.push({
+                gid: cardItem.id,
+                component: cardItem.component,
+                title: cardItem.bind.opts.title,
+                inParams: newInParams
+              })
+            })
+          })
+        })
+        console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > parseTargetPage() > parse result of inParamSelection:', that.inParamSelection)
+      },
+      loadAndParseSourcePage() {
+        let that = this
+        that.outParamSelection.splice(0, that.outParamSelection.length)
+        console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > loadAndParseSourcePage() > parsing sourcePage:', that.$ide.store.editingFile.sourceContent)
+
+        that.$ide.store.editingFile.sourceContent.opts.layout.rows.forEach(row => {
+          row.cols.forEach(col => {
+            col.items.forEach(cardItem => {
+              let cardDefined = that.getCardDefined(cardItem.component)
+              console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > loadAndParseSourcePage() > forEach cardItem:', cardItem)
+              console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > loadAndParseSourcePage() > get cardDefined:', cardDefined, ' by componentName:', cardItem.component)
+              console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > loadAndParseSourcePage() > the cardDefined.meta.outParams:', cardDefined.meta.outParams)
+              cardDefined.meta.outParams.forEach(outParamItem => {
+                let outParams = utils.eval('$ctx.' + outParamItem.path, cardItem.bind.opts)
+                let newOutParams = []
+                for (let index in outParams) {
+                  let outParam = outParams[index]
+                  // 过滤掉无效的(name为空)，如操作列
+                  if (outParam[outParamItem.name]) {
+                    let newOutParam = {}
+                    newOutParam.gid = outParam.gid
+                    newOutParam.name = outParam[outParamItem.name]
+                    newOutParam.title = outParam[outParamItem.title]
+                    newOutParam.title = newOutParam.title === 'undefined' ? '' : (newOutParam.title || '')
+                    newOutParam.dataCtx = outParamItem.dataCtx
+                    newOutParams.push(newOutParam)
+                    console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > loadAndParseSourcePage() > push newOutParam:', newOutParam)
+                  }
+                }
+                that.outParamSelection.push({
+                  gid: cardItem.id,
+                  component: cardItem.component,
+                  title: cardItem.bind.opts.title + '-' + outParamItem.group,
+                  outParams: newOutParams
+                })
+
+              })
+              console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > loadAndParseSourcePage() > parse result of outParamSelection:', that.outParamSelection)
+            })
+          })
+        })
+      },
+
       onPropertyUpdate(property, val, oval) {
         this.onUpdate()
       },
       onActionUpdate() {
         this.onUpdate()
+      },
+      onChangeOutParam(data) {
+        let that = this
+        let foundOutParam = undefined
+        that.outParamSelection.forEach(optionData => {
+          if (optionData.outParams) {
+            console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > onChangeOutParam() > outParams: ', optionData.outParams)
+            foundOutParam = optionData.outParams.find(outParam => outParam.name === data)
+            if (foundOutParam !== undefined) {
+              return
+            }
+          }
+        })
+        console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > onChangeOutParam() > get data: ', data, ' and find outParam:', foundOutParam)
+        return foundOutParam
       },
       onChange(data) {
         console.log('change..........>', data)
@@ -261,7 +392,6 @@
           console.log('gl-ide-plugin-layout > OpenModal > loadPageTreeData() > res:', res)
           that.treeData = utils.listToAntTree(res.data, that.$ide.store.editingProject.id, true)
           console.log('gl-ide-plugin-layout > OpenModal > loadPageTreeData() > treeData:', that.treeData)
-
         })
       }
     }

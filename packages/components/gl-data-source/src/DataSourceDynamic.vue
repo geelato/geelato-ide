@@ -20,20 +20,22 @@
   <table class="gl-table">
     <tbody>
     <tr class="gl-table-row">
-      <td class="gl-table-cell gl-table-cell-sub-label">
-        查询实体：
-      </td>
+      <!--<td class="gl-table-cell gl-table-cell-sub-label" style="width: 20%">-->
+        <!--实体：-->
+      <!--</td>-->
       <td class="gl-table-cell">
+        <div> 实体：</div>
         <gl-data-source-dynamic-select-entity :entityName="dsItem.entity" :toSelectEntityNames="toSelectEntityNames"
                                               @updateEntity="onSelectEntity"
                                               @updateFieldMeta="onUpdateFieldMeta"></gl-data-source-dynamic-select-entity>
       </td>
     </tr>
     <tr class="gl-table-row">
-      <td class="gl-table-cell gl-table-cell-sub-label">
-        查询字段：
-      </td>
+      <!--<td class="gl-table-cell gl-table-cell-sub-label">-->
+        <!--字段：-->
+      <!--</td>-->
       <td class="gl-table-cell">
+        <div> 字段：</div>
         <div>标题字段：</div>
         <a-select v-model="dsItem.resultMapping.text" :allowClear="true" style="min-width: 99%" v-if="refreshFlag"
                   @change="forceFresh">
@@ -53,29 +55,67 @@
       </td>
     </tr>
     <tr class="gl-table-row">
-      <td class="gl-table-cell gl-table-cell-sub-label">
-        查询过滤：
-      </td>
+      <!--<td class="gl-table-cell gl-table-cell-sub-label">-->
+        <!--过滤：-->
+      <!--</td>-->
       <td class="gl-table-cell">
-        <template class="gl-table-row" v-for="(param,paramIndex) in dsItem.params">
-          <div :key="paramIndex">{{param.key}}&nbsp;</div>
-          <input v-model="param.value"/>
-        </template>
+        <div> 过滤：</div>
+        <table class="gl-table">
+          <tr>
+            <th>参数</th>
+            <th>比较</th>
+            <th colspan="2">值</th>
+          </tr>
+          <gl-draggable
+              :list="dsItem.params"
+              handle=".gl-dnd-action-row-handle"
+              :group="{ name: 'queryProperties',  put: true }"
+              :sort="true"
+              element="tbody"
+          >
+            <template class="gl-table-row" v-for="(param,paramIndex) in dsItem.params">
+              <tr :key="paramIndex">
+                <td class="gl-table-cell"><input v-model="param.key"/></td>
+                <td class="gl-table-cell"><input v-model="param.cop"/></td>
+                <td class="gl-table-cell"><input v-model="param.value"/></td>
+                <td class="gl-table-cell">
+                  <a-button class="gl-mini-btn gl-dnd-action-row-handle">
+                    <a-icon type="swap"/>
+                  </a-button>
+                  <a-button class="gl-mini-btn"
+                            @click="dsItem.params.splice(propertyIndex,1)">
+                    <a-icon type="delete" theme="twoTone" twoToneColor="#eb2f96"/>
+                  </a-button>
+                </td>
+              </tr>
+            </template>
+          </gl-draggable>
+        </table>
+
+        <a-button size="small" block
+                  @click="dsItem.params.push({key:'',value:''})"
+                  style="line-height: 1.499em">
+          <a-icon type="plus" size="small"/>
+          添加查询条件
+        </a-button>
       </td>
     </tr>
     <tr class="gl-table-row">
-      <td class="gl-table-cell gl-table-cell-sub-label">
-        初始加载：
-      </td>
+      <!--<td class="gl-table-cell gl-table-cell-sub-label">-->
+        <!--初始：-->
+      <!--</td>-->
       <td class="gl-table-cell">
+        <div> 初始：</div>
         <a-switch v-model="dsItem.lazy"></a-switch>
+        <span>初始加载</span>
       </td>
     </tr>
     <tr class="gl-table-row">
-      <td class="gl-table-cell gl-table-cell-sub-label">
-        描述：
-      </td>
+      <!--<td class="gl-table-cell gl-table-cell-sub-label">-->
+        <!--描述：-->
+      <!--</td>-->
       <td class="gl-table-cell">
+        <div> 描述：</div>
         <textarea v-model="dsItem.description" rows="4" style="width: 100%"></textarea>
       </td>
     </tr>

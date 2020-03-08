@@ -65,7 +65,7 @@
           // kv to array
           let params = []
           for (let key in ds.params) {
-            params.push({key: ds.params[key]})
+            params.push({key: key, value: ds.params[key]})
           }
           this.dsItem = {
             entity: ds.entity,

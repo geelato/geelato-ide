@@ -1,11 +1,11 @@
 <template>
   <div style="width:100%;">
     <a-row>
-      <a-col :span="18" style="border-right: 1px solid #F2F2F2">
+      <a-col :span="17" style="border-right: 1px solid #F2F2F2">
         <stage v-if="refreshToggleFlag" :size="size" :height="height" :tabPanelStyle="tabPanelStyle"
                :opts="cardBind"></stage>
       </a-col>
-      <a-col :span="6">
+      <a-col :span="7">
         <settings :size="size" :height="height" :tabPanelStyle="tabPanelStyle" :opts="cardBind"
                   @change="onChange"></settings>
       </a-col>
