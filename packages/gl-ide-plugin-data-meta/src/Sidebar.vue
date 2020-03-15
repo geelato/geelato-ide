@@ -40,7 +40,7 @@
 <script>
 
   export default {
-    name: "gl-ide-layout-sidebar",
+    name: "gl-ide-plugin-data-meta-sidebar",
     components: {},
     props: {
       layout: {

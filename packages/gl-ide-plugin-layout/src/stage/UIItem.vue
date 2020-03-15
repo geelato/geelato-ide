@@ -11,7 +11,15 @@
         @change="onRowChange"
     >
       <a-row v-for="(row,rowIndex) in rowItems" :gutter="row.gutter||gutter" :key="rowIndex" class="gl-dnd-row-handle">
-        <a-col v-for="(col,colIndex) in row.cols" :span="col.span" :offset="col.offset" :key="colIndex" style="">
+        <a-col v-for="(col,colIndex) in row.cols" :span="col.span" :offset="col.offset" :key="colIndex"
+               class="gl-dnd-col">
+          <div class="gl-dnd-card-toolbar" style="background-color: rgba(114,218,255,0)">
+            <a-button size="small" @click="onCardSetting(col,colIndex)"
+                      title="卡片设置" style=" border-radius: 8px;width: 7em">
+              <a-icon type="setting" theme="filled"/>
+              <span>卡片设置</span>
+            </a-button>
+          </div>
           <template v-if="col.card">
             <a-card :title="getCardConfig(col.card).title" style="margin-top: 8px">
               <!--<component :ref="col.card" :is="getCardComponent(col.card)"-->
@@ -34,13 +42,14 @@
                 :list="col.items"
                 handle=".gl-dnd-col-handle"
                 group='card'
-                :sort="false"
+                :sort="true"
                 @add="onAddCol($event,col)"
                 @change="onColChange"
                 @choose="onColChoose"
                 class="gl-dnd-col-wrapper"
             >
-              <div v-for="(colItem,colItemIndex) in col.items" :key="colItem.id" class="gl-dnd-col-handle">
+              <div v-for="(colItem,colItemIndex) in col.items" :key="colItem.id" class="gl-dnd-col-handle"
+                   style="padding-top: 0.1em">
                 <div class="gl-dnd-col-toolbar">
                   <div style="text-align: left;display:inline" title="拖动卡片">
                     <a-icon :type="colItem.icon"/>
@@ -90,8 +99,8 @@
       <a-modal class="gl-card-designer" :title="modalTitle" centered :width=modalWidth v-model="modalVisible"
                @ok="() => modalVisible = false" @cancel="onCloseModal" okText="保存" cancelText="取消"
                :maskClosable="false">
-        <component :is="$globalVue.component(currentOpenedCard.meta.designer)"
-                   v-bind="currentOpenedCard.bind"></component>
+        <component :is="$globalVue.component(currentOpenedCardItem.meta.designer)"
+                   v-bind="currentOpenedCardItem.bind"></component>
         <template slot="footer">
           <div style="text-align: center">
             <!--<a-button type="primary" @click="saveCardComponent">暂存</a-button>-->
@@ -109,6 +118,7 @@
   /* eslint-disable no-unused-vars */
   import EditingFileParser from '../../../../runtime/EditingFileParser'
   import Vue from 'vue'
+  import events from '../../../gl-ide/src/events'
 
   export default {
     name: "GlIdePluginLayoutStageUIItem",
@@ -149,7 +159,10 @@
         color: '#FFF',
         modalTitle: '&nbsp;',
         modalWidth: (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) * .98,
+        // 一个卡片对应一个col
         currentOpenedCard: {},
+        // 卡片内的项，即表单、列表等组件
+        currentOpenedCardItem: {},
         modalVisible: false,
         rowItems: this.rows,
         colItems: [],
@@ -383,14 +396,19 @@
       onCloseModal(e) {
         this.modalVisible = false
         this.$gl.bus.$emit('gl_ide_plugin_layout__modal_close')
-        this.onCardReload(this.currentOpenedCard)
+        this.onCardReload(this.currentOpenedCardItem)
       },
       onCardOpen(col, item, index) {
         if (item.meta) {
           this.modalTitle = item.meta.title
-          this.currentOpenedCard = item
+          this.currentOpenedCardItem = item
         }
         this.modalVisible = true
+      },
+      onCardSetting(col, colIndex) {
+        console.log('onCardSetting>', col, colIndex)
+        this.currentOpenedCard = col
+        this.$gl.bus.$emit(events.ide_setting_open, {panelName: 'GlIdePluginLayoutCardSettings', config: col})
       },
       getCardConfig(cardId) {
         return this.componentRefs[cardId]

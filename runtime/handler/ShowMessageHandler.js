@@ -5,8 +5,7 @@ export default class ShowMessageHandler {
   }
 
   doAction(action, ctx, data) {
-    let msg = action.params.ShowMessage
-    this.$root.$message[msg.method](msg.content,msg.duration)
+    const msg = action.params.ShowMessage
+    this.$root.$message[msg.method](msg.content, msg.duration)
   }
-
 }

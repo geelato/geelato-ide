@@ -60,7 +60,8 @@
                       </td>
                       <td class="gl-table-cell">
                         <!--@change="$emit('doActionChange',$event,param,paramIndex)" :allowClear="true"-->
-                        <a-select v-model="param.name" style="width: 100%">
+                        <a-select v-model="param.target.gid" style="width: 100%"
+                                  @change="onChangeInParam($event,param)">
                           <a-select-opt-group v-for="optionData in inParamSelection"
                                               :label="optionData.title" :key="optionData.gid">
                             <a-select-option v-for="inParam in optionData.inParams" :key="inParam.gid"
@@ -75,11 +76,11 @@
                         参数值
                       </td>
                       <td class="gl-table-cell">
-                        <a-select v-model="param.value" style="width: 100%" @change="onChangeOutParam">
+                        <a-select v-model="param.src.gid" style="width: 100%" @change="onChangeOutParam($event,param)">
                           <a-select-opt-group v-for="optionData in outParamSelection"
                                               :label="optionData.title" :key="optionData.gid">
                             <a-select-option v-for="outParam in optionData.outParams" :key="outParam.gid"
-                                             :value="outParam.name">{{outParam.name+'-'+outParam.title}}
+                                             :value="outParam.gid">{{outParam.name+'-'+outParam.title}}
                             </a-select-option>
                           </a-select-opt-group>
                         </a-select>
@@ -100,7 +101,7 @@
             <tr class="gl-table-row">
               <td colspan="3">
                 <a-button size="small" block
-                          @click="modalInfo.paramMapping.push({gid:$gl.utils.uuid(8),title: '',name: '',value: undefined})"
+                          @click="modalInfo.paramMapping.push({target: {gid: ''}, src: {gid: ''}, title: ''})"
                           style="line-height: 1.499em">
                   <a-icon type="plus" size="small"/>
                   添加参数
@@ -113,7 +114,7 @@
       <!--<tr>-->
       <!--<td class="gl-table-cell label" style="width: 30%">按钮位置</td>-->
       <!--<td>-->
-      <!--<a-radio-group v-model="modalInfo.actionAlign" size="small" @change="onChange()">-->
+      <!--<a-radio-group v-model="modalInfo.actionAlign" size="small">-->
       <!--<a-radio-button value="left">左</a-radio-button>-->
       <!--<a-radio-button value="middle">中</a-radio-button>-->
       <!--<a-radio-button value="right">右</a-radio-button>-->
@@ -195,7 +196,7 @@
             width: '',
             height: '',
             actions: [],
-            paramMapping: [{gid: '', target: '', name: '', title: '', value: undefined}]
+            paramMapping: []
           }
         }
       },
@@ -241,8 +242,8 @@
       this.loadPageTreeData()
     },
     mounted() {
-      if (!this.modalInfo.paramMapping) {
-        this.modalInfo.paramMapping = [{gid: '', target: '', name: '', title: '', value: undefined}]
+      if (!this.modalInfo.paramMapping || !this.modalInfo.paramMapping.src || !this.modalInfo.paramMapping.src.gid) {
+        this.modalInfo.paramMapping = []
       }
     },
     beforeDestroy() {
@@ -367,23 +368,42 @@
       onActionUpdate() {
         this.onUpdate()
       },
-      onChangeOutParam(data) {
+      onChangeInParam(data, currentParam) {
+        let that = this
+        let foundInParam = undefined
+        that.inParamSelection.forEach(optionData => {
+          if (optionData.inParams) {
+            console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > onChangeInParam() > inParams: ', optionData.inParams)
+            foundInParam = optionData.inParams.find(inParam => inParam.gid === data)
+            if (foundInParam !== undefined) {
+              currentParam.target.name = foundInParam.name
+              currentParam.target.title = foundInParam.title
+              return
+            }
+          }
+        })
+        console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > onChangeOutParam() > get data: ', data, ' and find inParam:', foundInParam)
+        console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > onChangeOutParam() > set current select param and result: ', currentParam)
+        return foundInParam
+      },
+      onChangeOutParam(data, currentParam) {
         let that = this
         let foundOutParam = undefined
         that.outParamSelection.forEach(optionData => {
           if (optionData.outParams) {
             console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > onChangeOutParam() > outParams: ', optionData.outParams)
-            foundOutParam = optionData.outParams.find(outParam => outParam.name === data)
+            foundOutParam = optionData.outParams.find(outParam => outParam.gid === data)
             if (foundOutParam !== undefined) {
+              currentParam.src.name = foundOutParam.name
+              currentParam.src.title = foundOutParam.title
               return
             }
           }
         })
+
         console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > onChangeOutParam() > get data: ', data, ' and find outParam:', foundOutParam)
+        console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > onChangeOutParam() > set current select param and result: ', currentParam)
         return foundOutParam
-      },
-      onChange(data) {
-        console.log('change..........>', data)
       },
       loadPageTreeData() {
         const that = this

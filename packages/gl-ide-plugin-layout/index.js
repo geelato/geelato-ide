@@ -4,6 +4,7 @@ import StageUI from './src/stage/UI'
 import StageSrc from './src/stage/Src'
 import events from './src/events'
 import GlIdeSettingObjectTree from './src/settings/GlIdeSettingObjectTree'
+import GlIdePluginLayoutCardSettings from './src/settings/CardSettings'
 // import formData from "../gl-ide-plugin-file-combination/src/formData";
 
 const plugin = {
@@ -47,8 +48,7 @@ const plugin = {
         componentRefs: {},
         layout: {
           gutter: 4,
-          rows: [
-          ]
+          rows: []
         }
       },
       query: {}
@@ -66,6 +66,12 @@ const plugin = {
         component: 'GlIdeSettingObjectTree',
         opts: {},
         query: {}
+      },
+      {
+        title: '卡片',
+        component: 'GlIdePluginLayoutCardSettings',
+        opts: {},
+        query: {}
       }
     ]
   },
@@ -81,6 +87,7 @@ export default {
     Vue.component(StageUI.name, StageUI)
     Vue.component(StageSrc.name, StageSrc)
     Vue.component(GlIdeSettingObjectTree.name, GlIdeSettingObjectTree)
+    Vue.component(GlIdePluginLayoutCardSettings.name, GlIdePluginLayoutCardSettings)
   },
   config: plugin,
   events: events

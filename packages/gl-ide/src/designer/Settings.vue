@@ -1,10 +1,12 @@
 <template>
   <div class="gl-designer-properties" v-if="ideStore.refreshToggleFlag">
-    <a-tabs @change="callback" size="small" class="gl-compact" v-if="ideStore.editingFile&&ideStore.editingFile.type">
+    <a-tabs :activeKey="activeTabKey" @change="(key)=>{activeTabKey=key}" size="small" class="gl-compact"
+            v-if="ideStore.editingFile&&ideStore.editingFile.type">
       <a-tab-pane v-for="(panel,index) in ideStore.settingPanels" :tab="panel.title" :key="index"
                   :style="{padding:`${panelPadding}px`}">
         <component :is="panel.component" v-bind="panel.opts" :ideStore="ideStore"
-                   style="overflow-y: auto" :style="{width:`${layout.width-4}px`}"></component>
+                   style="overflow-y: auto" :style="{width:`${layout.width-4}px`}" :config="setting.config"
+                   @update="onUpdate"></component>
       </a-tab-pane>
     </a-tabs>
     <div v-else style="text-align: center;margin-top: 12em">
@@ -15,24 +17,39 @@
 
 <script>
   import mixin from '../../../mixin'
-  import events from '../../../gl-ide-plugin-layout/src/events'
+  import events from '../events'
+  import ATextarea from "ant-design-vue/es/input/TextArea";
 
   export default {
-    name: "GlIdeProperties",
+    name: "GlIdeSettings",
+    components: {ATextarea},
     mixins: [mixin],
     props: {},
     data() {
-      return {}
+      return {
+        activeTabKey: 1,
+        currentPanelName: '',
+        setting: {}
+      }
     },
     created() {
-      this.$gl.bus.$on(events.card_open, this.onCardOpen)
+      this.$gl.bus.$on(events.ide_setting_open, this.onOpenSetting)
+    },
+    beforeDestroy() {
+      this.$gl.bus.$off(events.ide_setting_open, this.onOpenSetting)
+      this.currentPanelName = ''
     },
     methods: {
-      onCardOpen(card) {
-        console.log('onCardOpen >', card)
+      onOpenSetting(setting) {
+        this.setting = setting
+        console.log('gl-ide > Settings > onOpenSetting > setting:', setting)
+        this.currentPanelName = setting.panelName
+        this.activeTabKey = this.ideStore.settingPanels.findIndex(panel => panel.name === setting.panelName) || 0
       },
-      callback(key) {
-        console.log(key)
+      onUpdate({value}) {
+        Object.assign(this.setting.config, value)
+        console.log('gl-ide > Settings > onUpdate > value:', value)
+        console.log('gl-ide > Settings > onUpdate > this.setting:', this.setting)
       }
     }
   }

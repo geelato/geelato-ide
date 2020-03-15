@@ -18,11 +18,29 @@
                         @doAction="$emit('doAction',$event)"></gl-page-item>
         </template>
         <template v-else>
-          <div v-for="(colItem) in col.items" :key="colItem.id" class="gl-col">
-            <component :ref="colItem.id" v-show="colItem.show" :is="$globalVue.component(colItem.component)"
-                       :gid="colItem.id" v-bind="colItem.bind" :query="query"
-                       @doAction="$emit('doAction',$event)"></component>
-          </div>
+          <!-- 卡片内的组件渲染  -->
+          <template v-if="col.displayMode==='Tabs'">
+            <!-- 卡片内的组件渲染 --采用tabs方式  -->
+            <a-tabs :defaultActiveKey="col.opts?col.opts.defaultActiveKey||0:0"
+                    :tabPosition="col.opts?col.opts.tabPosition:'top'">
+              <a-tab-pane :forceRender="true" v-for="(colItem,colItemIndex) in col.items" :tab="colItem.title"
+                          :key="colItemIndex">
+                <!--v-show="colItem.show"-->
+                <component :ref="colItem.id" :is="$globalVue.component(colItem.component)"
+                           :gid="colItem.id" v-bind="colItem.bind" :query="query"
+                           @doAction="$emit('doAction',$event)"></component>
+              </a-tab-pane>
+            </a-tabs>
+          </template>
+          <template v-else>
+            <!-- 卡片内的组件渲染 --采用默认方式  -->
+            <div v-for="(colItem) in col.items" :key="colItem.id" class="gl-col">
+              <!--v-show="colItem.show"-->
+              <component :ref="colItem.id" :is="$globalVue.component(colItem.component)"
+                         :gid="colItem.id" v-bind="colItem.bind" :query="query"
+                         @doAction="$emit('doAction',$event)"></component>
+            </div>
+          </template>
         </template>
       </a-col>
     </a-row>
@@ -133,7 +151,7 @@
       generateComponentRef(item) {
         console.log('gl-ide > gl-ide-plugin-item > generateComponentRef() > item:', item)
         console.log('gl-ide > gl-ide-plugin-item > generateComponentRef() > this.$refs:', this, this.$refs)
-        console.log('gl-ide > gl-ide-plugin-item > generateComponentRef() > this.$refs[item.id]:', this.$refs[item.id])
+        console.log('gl-ide > gl-ide-plugin-item > generateComponentRef() > this.$refs[item.id]:', this.$refs[item.id], ' by item.id:', item.id)
         this.componentRefs[item.id] = {
           id: item.id,
           component: this.$refs[item.id][0],

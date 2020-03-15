@@ -10,7 +10,7 @@ let GlobalVue
 //   type: 'GlPageLayout',
 //   content: {opts: {ui: ''}}
 // }
-// let editingCard = {}
+// let editingCardItem = {}
 let defaultFile = {}
 let store = {
   refreshToggleFlag: true,
@@ -22,7 +22,7 @@ let store = {
     // 该文件绑定的事件集合，key为控件gid，需持久化
     // events: {}
   },
-  editingCard: {},
+  editingCardItem: {},
   stagePanels: [],
   settingPanels: []
 }
@@ -34,7 +34,7 @@ function resetStore() {
   GlobalVue.set(store, 'stagePanels', [])
   GlobalVue.set(store, 'settingPanels', [])
   GlobalVue.set(store, 'editingFile', {})
-  GlobalVue.set(store, 'editingCard', {})
+  GlobalVue.set(store, 'editingCardItem', {})
 }
 
 function checkPlugin() {
@@ -81,6 +81,7 @@ function findPanelsCopy(fileType, panelsGroup) {
           title: panel.title,
           type: panel.type,
           component: parseComponent(panel.component),
+          name: panel.component,
           opts: panel.opts ? JSON.parse(JSON.stringify(panel.opts)) : {}
         })
         console.log('geelato-ide > ide.js > findPanelsCopy() > matchPanel panel.component: ', panel.component, 'panel: ', matchPanels[matchPanels.length - 1])
@@ -181,8 +182,8 @@ export default {
       }
     })
   },
-  openCard(cardConfig) {
-    GlobalVue.set(store, 'editingCard', cardConfig)
+  openCardItem(cardItemConfig) {
+    GlobalVue.set(store, 'editingCardItem', cardItemConfig)
   },
   commitFile(fileConfig) {
     if (typeof fileConfig !== 'object') {

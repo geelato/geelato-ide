@@ -15,7 +15,7 @@ export default class OpenModalHandler {
     console.log('geelato > runtime > OpenModalHandler.js > doAction() > action:', action)
     console.log('geelato > runtime > OpenModalHandler.js > doAction() > ctx:', ctx)
     console.log('geelato > runtime > OpenModalHandler.js > doAction() > data:', data)
-    let query = {}
+    const query = {}
     if (action.params.paramMapping) {
       action.params.paramMapping.forEach(param => {
         query[param.name] = param.value

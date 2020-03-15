@@ -1,9 +1,9 @@
 // 导入组件，组件必须声明 name
 import Sidebar from './src/Sidebar'
-import StageUI from './src/stage/UI'
-import StageSrc from './src/stage/Src'
+// import StageUI from './src/stage/UI'
+// import StageSrc from './src/stage/Src'
 import events from './src/events'
-import GlIdeSettingObjectTree from './src/settings/GlIdeSettingObjectTree'
+// import GlIdeSettingObjectTree from './src/settings/GlIdeSettingObjectTree'
 // import formData from "../gl-ide-plugin-file-combination/src/formData";
 
 const plugin = {
@@ -48,8 +48,8 @@ const plugin = {
 export default {
   name: plugin.name,
   install: function (Vue) {
-    Vue.component(StageUI.name, StageUI)
-    Vue.component(StageSrc.name, StageSrc)
+    // Vue.component(StageUI.name, StageUI)
+    // Vue.component(StageSrc.name, StageSrc)
   },
   config: plugin,
   events: events
