@@ -54,23 +54,6 @@
           </td>
         </tr>
       </table>
-
-      <div class="gl-title">
-        <a-icon type="setting"/>
-        工具栏
-      </div>
-      <!--<table class="gl-table">-->
-
-      <!--<tr class="gl-table-row">-->
-      <!--<td class="gl-table-cell gl-table-cell-sub-label">-->
-      <!--<a-icon type="info-circle" title="若选择是，该工具体会合并到弹出窗口页面下方的工具栏中。"/>-->
-      <!--加入弹窗工具栏：-->
-      <!--</td>-->
-      <!--<td class="gl-table-cell">-->
-      <!--<a-switch></a-switch>-->
-      <!--</td>-->
-      <!--</tr>-->
-      <!--</table>-->
     </div>
     <a-alert v-else
              message="未选择卡片"
@@ -100,6 +83,15 @@
         deep: true
       }
     },
+    updated() {
+      console.log('updated config..........', this.config)
+      this.card.showBorder = this.config && this.config.showBorder
+      this.card.displayMode = this.config && this.config.displayMode || 'Default'
+      this.card.items = this.config && this.config.items
+    },
+    mounted() {
+      console.log('mounted config..........', this.config)
+    },
     data() {
       return {
         card: {
@@ -125,7 +117,6 @@
         this.$emit('update', {value: this.card})
       }
     }
-
   }
 </script>
 

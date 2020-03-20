@@ -158,7 +158,9 @@
       return {
         color: '#FFF',
         modalTitle: '&nbsp;',
-        modalWidth: (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) * .98,
+        modalWidthPercentDefault: .98,
+        modalWidthPercent: this.modalWidthPercentDefault,
+        // modalWidth: (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) * this.modalWidthPercent,
         // 一个卡片对应一个col
         currentOpenedCard: {},
         // 卡片内的项，即表单、列表等组件
@@ -169,6 +171,11 @@
         // {id:component}
         colCards: {},
         currentCardId: ''
+      }
+    },
+    computed: {
+      modalWidth: function () {
+        return (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) * this.modalWidthPercent
       }
     },
     watch: {
@@ -395,13 +402,16 @@
 
       onCloseModal(e) {
         this.modalVisible = false
+        this.modalWidthPercent = this.modalWidthPercentDefault
         this.$gl.bus.$emit('gl_ide_plugin_layout__modal_close')
         this.onCardReload(this.currentOpenedCardItem)
       },
       onCardOpen(col, item, index) {
+        console.log('gl-ide > gl-ide-plugin-layout > UIItem > onCardOpen() > item:', item)
         if (item.meta) {
           this.modalTitle = item.meta.title
           this.currentOpenedCardItem = item
+          this.modalWidthPercent = item.meta.modalWidthPercent || this.modalWidthPercentDefault
         }
         this.modalVisible = true
       },
@@ -492,6 +502,10 @@
         this.generateComponentRef(item)
         this.generateObjectTreeNodeAndBindEvent(item)
         // 重绘卡片
+        console.log('..................', this.$refs[item.id][0].name, typeof this.$refs[item.id][0].refresh)
+        if (typeof this.$refs[item.id][0].refresh === 'function') {
+          this.$refs[item.id][0].refresh()
+        }
         item.show = !item.show
         this.$nextTick(() => {
           item.show = !item.show

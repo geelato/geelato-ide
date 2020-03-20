@@ -1,6 +1,6 @@
 <template>
   <div class="gl-table-designer"
-       style="height: 760px;overflow-x: hidden;padding-left: 0.5em;padding-right: 1em">
+       style="height: 550px;overflow-x: hidden;padding-left: 0.5em;padding-right: 1em">
     <u-i-item :rows="rows"
               :properties="opts.properties"
               :form="form"

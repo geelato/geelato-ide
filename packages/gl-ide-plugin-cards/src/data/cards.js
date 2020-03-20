@@ -1,6 +1,8 @@
 import form from './form.js'
 import table from './table.js'
 import header from './header.js'
+import pageLoader from './page_loader.js'
+
 
 export default {
   items: [{
@@ -66,22 +68,23 @@ export default {
     }, {
       title: '页面引用',
       icon: 'link',
-      component: 'GlPageLoader',
+      component: 'GlPage',
       img: '',
       description: '',
       show: true,
-      bind: {opts: table, query: {}},
-      meta: {component: 'GlPageLoader', designer: 'GlIdePluginPageLoaderDesigner', title: '设置'}
-    }, {
-      title: '工具条',
-      icon: 'tool',
-      component: 'GlToolbar',
-      img: '',
-      description: '',
-      show: true,
-      bind: {opts: {}, query: {}},
-      meta: {component: 'GlToolbar', designer: 'GlIdePluginToolbarDesigner', title: '工具条设置'}
+      bind: {opts: pageLoader, query: {}},
+      meta: {component: 'GlPage', designer: 'GlIdePluginPageLoaderDesigner', title: '设置', modalWidthPercent: .5}
     },
+    // {
+    //   title: '工具条',
+    //   icon: 'tool',
+    //   component: 'GlToolbar',
+    //   img: '',
+    //   description: '',
+    //   show: true,
+    //   bind: {opts: {}, query: {}},
+    //   meta: {component: 'GlToolbar', designer: 'GlIdePluginToolbarDesigner', title: '工具条设置'}
+    // },
     {
       title: '标题',
       icon: 'bars',

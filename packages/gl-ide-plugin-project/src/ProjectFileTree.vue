@@ -4,7 +4,6 @@
 </template>
 
 <script>
-  /* eslint-disable no-unused-vars */
   import SimplePageDefinition from '../../../runtime/SimplePageDefinition'
   import EditingFileParser from '../../../runtime/EditingFileParser'
 
@@ -79,6 +78,9 @@
           },
           root: {
             icon: 'iconfont icon-folder'
+          },
+          page: {
+            icon: 'iconfont icon-file'
           },
           plus: {
             icon: 'plus icon'
@@ -219,6 +221,7 @@
           for (let type in that.fileTypes) {
             let selector = '.' + that.fileTypes[type].icon.split(' ').join('.').replace(/\s+/g, '')
             let data = $.jstree.reference($tree).get_node($node.find(selector))
+            console.log('..........data>', $node, selector, data)
             if (data.type) {
               return data
             }

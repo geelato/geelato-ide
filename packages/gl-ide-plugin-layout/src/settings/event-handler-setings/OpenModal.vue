@@ -2,27 +2,8 @@
   <div>
     <table class="gl-table">
       <tbody v-if="designComponentName">
-      <tr class="gl-table-row">
-        <td class="gl-table-cell label" style="width: 20%">窗口标题</td>
-        <td class="gl-table-cell" colspan="3">
-          <input v-model="modalInfo.title" style="width: 100%"/>
-        </td>
-      </tr>
       <tr>
-        <td class="gl-table-cell label" style="width: 20%">宽度</td>
-        <td class="gl-table-cell" style="width: 30%">
-          <input v-model="modalInfo.width" placeholder="1200px"/>
-        </td>
-        <td class="gl-table-cell label" style="width: 20%">高度</td>
-        <td class="gl-table-cell" style="width: 30%">
-          <input v-model="modalInfo.height" placeholder="800px"/>
-        </td>
-      </tr>
-      <tr>
-
-      </tr>
-      <tr>
-        <td class="gl-table-cell label" style="width: 30%">页面</td>
+        <td class="gl-table-cell label" style="width: 30%">打开页面</td>
         <td class="gl-table-cell" colspan="3">
           <!--<input v-model="modalInfo.pageId" style="width: 100%"/>-->
           <a-tree-select
@@ -39,8 +20,28 @@
           </a-tree-select>
         </td>
       </tr>
+      <tr class="gl-table-row">
+        <td class="gl-table-cell label" style="width: 20%">页面标题</td>
+        <td class="gl-table-cell" colspan="3">
+          <input v-model="modalInfo.title" style="width: 100%"/>
+        </td>
+      </tr>
       <tr>
-        <td class="gl-table-cell label" style="width: 30%">传递参数</td>
+        <td class="gl-table-cell label" style="width: 20%">页面宽度</td>
+        <td class="gl-table-cell" style="width: 30%">
+          <input v-model="modalInfo.width" placeholder="1200px" style="width: 98%"/>
+        </td>
+        <td class="gl-table-cell label" style="width: 20%">页面高度</td>
+        <td class="gl-table-cell" style="width: 30%">
+          <input v-model="modalInfo.height" placeholder="800px" style="width: 98%"/>
+        </td>
+      </tr>
+      <tr>
+
+      </tr>
+
+      <tr>
+        <td class="gl-table-cell label" style="width: 30%">页面接收参数</td>
         <td class="gl-table-cell" colspan="3">
           <table class="gl-table">
             <gl-draggable
@@ -293,27 +294,29 @@
           row.cols.forEach(col => {
             col.items.forEach(cardItem => {
               let cardDefined = that.getCardDefined(cardItem.component)
-              console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > parseTargetPage() > forEach cardItem:', cardItem)
-              console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > parseTargetPage() > get cardDefined:', cardDefined, ' by componentName:', cardItem.component)
-              console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > parseTargetPage() > the cardDefined.meta.inParam.path:', cardDefined.meta.inParam.path)
-              let inParams = utils.eval('$ctx.' + cardDefined.meta.inParam.path, cardItem.bind.opts)
-              let newInParams = []
-              for (let index in inParams) {
-                let inParam = inParams[index]
-                let newInParam = {}
-                newInParam.gid = inParam.gid
-                newInParam.name = inParam[cardDefined.meta.inParam.name]
-                newInParam.title = inParam[cardDefined.meta.inParam.title]
-                newInParam.title = newInParam.title === 'undefined' ? '' : (newInParam.title || '')
-                newInParams.push(newInParam)
-                console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > parseTargetPage() > push newInParam:', newInParam)
+              if (cardDefined.meta.inParam && cardDefined.meta.inParam.path) {
+                console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > parseTargetPage() > forEach cardItem:', cardItem)
+                console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > parseTargetPage() > get cardDefined:', cardDefined, ' by componentName:', cardItem.component)
+                console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > parseTargetPage() > the cardDefined.meta.inParam.path:', cardDefined.meta.inParam.path)
+                let inParams = utils.eval('$ctx.' + cardDefined.meta.inParam.path, cardItem.bind.opts)
+                let newInParams = []
+                for (let index in inParams) {
+                  let inParam = inParams[index]
+                  let newInParam = {}
+                  newInParam.gid = inParam.gid
+                  newInParam.name = inParam[cardDefined.meta.inParam.name]
+                  newInParam.title = inParam[cardDefined.meta.inParam.title]
+                  newInParam.title = newInParam.title === 'undefined' ? '' : (newInParam.title || '')
+                  newInParams.push(newInParam)
+                  console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > parseTargetPage() > push newInParam:', newInParam)
+                }
+                that.inParamSelection.push({
+                  gid: cardItem.id,
+                  component: cardItem.component,
+                  title: cardItem.bind.opts.title,
+                  inParams: newInParams
+                })
               }
-              that.inParamSelection.push({
-                gid: cardItem.id,
-                component: cardItem.component,
-                title: cardItem.bind.opts.title,
-                inParams: newInParams
-              })
             })
           })
         })

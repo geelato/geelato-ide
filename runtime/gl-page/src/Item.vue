@@ -32,6 +32,16 @@
               </a-tab-pane>
             </a-tabs>
           </template>
+          <template v-else-if="col.displayMode==='Collapse'">
+            <!-- 卡片内的组件渲染 --采用Collapse方式  -->
+            <a-collapse :defaultActiveKey="col.opts?col.opts.defaultActiveKey||0:0">
+              <a-collapse-panel :forceRender="true" v-for="(colItem,colItemIndex) in col.items" :header="colItem.title" :key="colItemIndex">
+                  <component :ref="colItem.id" :is="$globalVue.component(colItem.component)"
+                             :gid="colItem.id" v-bind="colItem.bind" :query="query"
+                             @doAction="$emit('doAction',$event)"></component>
+              </a-collapse-panel>
+            </a-collapse>
+          </template>
           <template v-else>
             <!-- 卡片内的组件渲染 --采用默认方式  -->
             <div v-for="(colItem) in col.items" :key="colItem.id" class="gl-col">

@@ -8,9 +8,10 @@ import GlIdePluginLayout from './gl-ide-plugin-layout/index'
 import GlIdePluginHeaderDesigner from './gl-ide-plugin-header-designer/index'
 import GlIdePluginFormDesigner from './gl-ide-plugin-form-designer/index'
 import GlIdePluginTableDesigner from './gl-ide-plugin-table-designer/index'
+import GlIdePluginPageLoaderDesigner from './gl-ide-plugin-page-loader-designer/index'
 import GlIdePluginProject from './gl-ide-plugin-project/index'
 import GlIdePluginCards from './gl-ide-plugin-cards/index'
-import GlIdePluginFields from './gl-ide-plugin-fields/index'
+// import GlIdePluginFields from './gl-ide-plugin-fields/index'
 import GlIdePluginDataMeta from './gl-ide-plugin-data-meta/index'
 import GlPage from '../runtime/gl-page/index'
 import GlDataSource from './components/gl-data-source/index'
@@ -54,6 +55,7 @@ const install = function (Vue, options) {
   ide.use(GlIdePluginHeaderDesigner)
   ide.use(GlIdePluginFormDesigner)
   ide.use(GlIdePluginTableDesigner)
+  ide.use(GlIdePluginPageLoaderDesigner)
   ide.use(GlIdePluginCards)
   // ide.use(GlIdePluginFields)
   ide.use(GlIdePluginDataMeta)
