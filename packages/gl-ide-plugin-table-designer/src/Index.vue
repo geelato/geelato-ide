@@ -2,12 +2,10 @@
   <div style="width:100%;">
     <a-row>
       <a-col :span="17" style="border-right: 1px solid #F2F2F2">
-        <stage v-if="refreshToggleFlag" :size="size" :height="height" :tabPanelStyle="tabPanelStyle"
-               :opts="cardBind"></stage>
+        <stage v-if="refreshToggleFlag" :opts="cardBind"></stage>
       </a-col>
       <a-col :span="7">
-        <settings :size="size" :height="height" :tabPanelStyle="tabPanelStyle" :opts="cardBind"
-                  @change="onChange"></settings>
+        <settings :opts="cardBind" @change="onChange"></settings>
       </a-col>
     </a-row>
   </div>
@@ -30,14 +28,7 @@
       return {
         refreshToggleFlag: true,
         size: 'default',
-        cardBind: {},
-        height: window.innerHeight * .85,
-        tabPanelStyle: {
-          'height': '100%',
-          'min-height': window.innerHeight * .85 - 48 + 'px',
-          'max-height': window.innerHeight * .85 - 48 + 'px',
-          'overflow-y': "scroll"
-        }
+        cardBind: {}
       }
     },
     watch: {},

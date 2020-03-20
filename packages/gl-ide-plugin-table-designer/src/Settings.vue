@@ -72,7 +72,6 @@
             <!--</tr>-->
           </table>
         </div>
-        {{tabPanelStyle}}
       </a-tab-pane>
       <!--*******************************************************************************-->
       <!--******************************* 2、结果列 ****************************************-->
@@ -475,7 +474,7 @@
 </template>
 
 <script>
-  import mixin from '../../mixin-x-designer'
+  import mixin from '../../mixin-designer'
   import ideConfig from '../../gl-ide/src/data/ideSelectItems.js'
   import SelectEntityList from '../../components/gl-data-source/src/SelectEntityList'
 

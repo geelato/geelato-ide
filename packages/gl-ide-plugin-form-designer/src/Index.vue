@@ -1,17 +1,17 @@
 <template>
-  <div class="gl-ide-plugin-form-designer" style="width:100%;overflow-y: scroll">
+  <div class="gl-ide-plugin-form-designer" style="width:100%">
     <a-row>
       <a-col :span="4" style="border-right: 1px solid #F2F2F2">
-        <sidebar :size="size" :height="height" :opts="cardBind"></sidebar>
+        <sidebar :size="size" :opts="cardBind"></sidebar>
       </a-col>
       <a-col :span="14" style="border-right: 1px solid #F2F2F2;padding: 2em 2em">
         <div style="text-align: right;width: 100%;padding-right: 3em;line-height: 2em">
           <a @click="printSrc">控制台打印当前配置</a>
         </div>
-        <stage :size="size" :height="height" :opts="cardBind" style="padding-right: 3.5em;padding-top: 1em"></stage>
+        <stage :size="size" :opts="cardBind" style="padding-right: 3.5em;padding-top: 1em"></stage>
       </a-col>
       <a-col :span="6">
-        <settings :size="size" :height="height" :opts="cardBind"></settings>
+        <settings :size="size" :opts="cardBind"></settings>
       </a-col>
     </a-row>
   </div>
@@ -37,14 +37,7 @@
         // size: 'small',
         refreshToggleFlag: true,
         size: 'default',
-        cardBind: {},
-        height: window.innerHeight * .85,
-        tabPanelStyle: {
-          'height': '100%',
-          'min-height': window.innerHeight * .85 - 48 + 'px',
-          'max-height': window.innerHeight * .85 - 48 + 'px',
-          'overflow-y': "scroll"
-        }
+        cardBind: {}
       }
     },
     created() {

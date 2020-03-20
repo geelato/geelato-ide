@@ -95,8 +95,7 @@
       </div>
     </gl-draggable>
     <div v-if="modalVisible">
-      <!--<a-button type="primary" @click="() => modalVisible = true">Vertically centered modal dialog</a-button>-->
-      <a-modal class="gl-card-designer" :title="modalTitle" centered :width=modalWidth v-model="modalVisible"
+      <a-modal class="gl-card-designer" :title="modalTitle" centered :width="modalWidth" v-model="modalVisible"
                @ok="() => modalVisible = false" @cancel="onCloseModal" okText="保存" cancelText="取消"
                :maskClosable="false">
         <component :is="$globalVue.component(currentOpenedCardItem.meta.designer)"

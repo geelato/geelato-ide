@@ -4,10 +4,10 @@
             :style="{'min-height':`${height}px`,'max-height':`${height}px`}">
       <a-tab-pane key="1">
       <span slot="tab">
-        <!--<a-icon type="info-circle"/>-->
+        <a-icon type="profile"/>
         表单
       </span>
-        <div>
+        <div :style="tabPanelStyle">
           <div class="gl-title">
             <a-icon type="setting"/>
             外观
@@ -73,154 +73,156 @@
       </a-tab-pane>
       <a-tab-pane key="2">
       <span slot="tab">
-        <!--<a-icon type="edit"/>-->
+        <a-icon type="edit"/>
         字段
       </span>
-        <a-alert v-if="!fieldConfig.field" style="text-align: center" message="请先点击选择左边字段" type="info"
-                 class="gl-card-gutter"/>
-        <div v-if="fieldConfig.field">
-          <div class="gl-title">
-            <a-icon type="setting"/>
-            外观
-          </div>
-          <table class="gl-table">
-            <tr class="gl-table-row">
-              <td class="gl-table-cell gl-table-cell-sub-label">
-                字段名：
-              </td>
-              <td class="gl-table-cell">
-                <input v-model="fieldConfig.title" style="width: 99%"/>
-              </td>
-            </tr>
-            <tr class="gl-table-row">
-              <td class="gl-table-cell gl-table-cell-sub-label">
-                <a-icon type="info-circle" title=""/>
-                控件类型：
-              </td>
-              <td class="gl-table-cell">
-                <a-select v-model="fieldConfig.control" :allowClear="true" style="min-width: 99%">
-                  <a-select-option v-for="(controlItem,controlItemIndex) in controlTypes" :key="controlItemIndex"
-                                   :value="controlItem.control"
-                                   :title="controlItem.title">
-                    <a-icon :type="controlItem.icon"/>&nbsp;&nbsp;{{controlItem.title}}
-                  </a-select-option>
-                </a-select>
-              </td>
-            </tr>
-          </table>
-          <div class="gl-title">
-            <a-icon type="setting"/>
-            数据
-          </div>
-          <table class="gl-table">
-            <tr class="gl-table-row">
-              <td class="gl-table-cell gl-table-cell-sub-label">
-                <a-icon type="info-circle" title="绑定数据库的字段，才可以存储到后台。"/>
-                绑定数据：
-              </td>
-              <td class="gl-table-cell">
-                <div style="line-height: 2em;margin-left: 0.5em">先选择实体：</div>
-                <!--<a-input-search placeholder="选择并绑定实体" v-model="fieldConfig.entity" @search="openSelectEntityList"-->
-                <!--readOnly>-->
-                <!--<a-button type="primary" slot="enterButton">-->
-                <!--<a-icon type="select"/>-->
-                <!--选择-->
-                <!--</a-button>-->
-                <!--</a-input-search>-->
-                <a-select v-model="fieldConfig.entity" :allowClear="true" style="min-width: 99%" v-if="refreshFlag"
-                          @change="onChangeSelectEntity">
-                  <div slot="dropdownRender" slot-scope="menu">
-                    <gl-v-nodes :vnodes="menu"/>
-                    <a-divider style="margin: 4px 0;"/>
-                    <div style="padding: 8px; cursor: pointer;" @click="openSelectEntityList">
-                      <a-icon type="plus"/>
-                      添加
+        <div :style="tabPanelStyle">
+          <a-alert v-if="!fieldConfig.field" style="text-align: center" message="请先点击选择左边字段" type="info"
+                   class="gl-card-gutter"/>
+          <div v-if="fieldConfig.field">
+            <div class="gl-title">
+              <a-icon type="setting"/>
+              外观
+            </div>
+            <table class="gl-table">
+              <tr class="gl-table-row">
+                <td class="gl-table-cell gl-table-cell-sub-label">
+                  字段名：
+                </td>
+                <td class="gl-table-cell">
+                  <input v-model="fieldConfig.title" style="width: 99%"/>
+                </td>
+              </tr>
+              <tr class="gl-table-row">
+                <td class="gl-table-cell gl-table-cell-sub-label">
+                  <a-icon type="info-circle" title=""/>
+                  控件类型：
+                </td>
+                <td class="gl-table-cell">
+                  <a-select v-model="fieldConfig.control" :allowClear="true" style="min-width: 99%">
+                    <a-select-option v-for="(controlItem,controlItemIndex) in controlTypes" :key="controlItemIndex"
+                                     :value="controlItem.control"
+                                     :title="controlItem.title">
+                      <a-icon :type="controlItem.icon"/>&nbsp;&nbsp;{{controlItem.title}}
+                    </a-select-option>
+                  </a-select>
+                </td>
+              </tr>
+            </table>
+            <div class="gl-title">
+              <a-icon type="setting"/>
+              数据
+            </div>
+            <table class="gl-table">
+              <tr class="gl-table-row">
+                <td class="gl-table-cell gl-table-cell-sub-label">
+                  <a-icon type="info-circle" title="绑定数据库的字段，才可以存储到后台。"/>
+                  绑定数据：
+                </td>
+                <td class="gl-table-cell">
+                  <div style="line-height: 2em;margin-left: 0.5em">先选择实体：</div>
+                  <!--<a-input-search placeholder="选择并绑定实体" v-model="fieldConfig.entity" @search="openSelectEntityList"-->
+                  <!--readOnly>-->
+                  <!--<a-button type="primary" slot="enterButton">-->
+                  <!--<a-icon type="select"/>-->
+                  <!--选择-->
+                  <!--</a-button>-->
+                  <!--</a-input-search>-->
+                  <a-select v-model="fieldConfig.entity" :allowClear="true" style="min-width: 99%" v-if="refreshFlag"
+                            @change="onChangeSelectEntity">
+                    <div slot="dropdownRender" slot-scope="menu">
+                      <gl-v-nodes :vnodes="menu"/>
+                      <a-divider style="margin: 4px 0;"/>
+                      <div style="padding: 8px; cursor: pointer;" @click="openSelectEntityList">
+                        <a-icon type="plus"/>
+                        添加
+                      </div>
                     </div>
+                    <a-select-option v-for="entityItem in toSelectEntityNames" :key="entityItem.value"
+                                     :value="entityItem.value"
+                                     :title="entityItem.text">
+                      {{entityItem.value}}
+                    </a-select-option>
+                  </a-select>
+                  <div style="line-height: 2em;margin-left: 0.5em">再绑定字段：</div>
+                  <!--:style="{color:!containField()?'':'red'}"-->
+                  <a-select v-model="fieldConfig.field" :allowClear="true" style="min-width: 99%" v-if="refreshFlag"
+                            @change="forceFresh">
+                    <a-select-option v-for="(colMeta,colMetaIndex) in currentEntityColumns" :key="colMetaIndex"
+                                     :value="colMeta.fieldName" :title="colMeta.title">
+                      <span v-if="!colMeta.nullable" class="gl-required" style="font-weight: bold">*</span>{{colMeta.fieldName}}&nbsp;({{colMeta.title}})
+                    </a-select-option>
+                  </a-select>
+                  <div style="margin: 0.2em">
+                    <a-switch v-model="fieldConfig.isServerSaveIgnore"></a-switch>
+                    保存时是否排除该字段
                   </div>
-                  <a-select-option v-for="entityItem in toSelectEntityNames" :key="entityItem.value"
-                                   :value="entityItem.value"
-                                   :title="entityItem.text">
-                    {{entityItem.value}}
-                  </a-select-option>
-                </a-select>
-                <div style="line-height: 2em;margin-left: 0.5em">再绑定字段：</div>
-                <!--:style="{color:!containField()?'':'red'}"-->
-                <a-select v-model="fieldConfig.field" :allowClear="true" style="min-width: 99%" v-if="refreshFlag"
-                          @change="forceFresh">
-                  <a-select-option v-for="(colMeta,colMetaIndex) in currentEntityColumns" :key="colMetaIndex"
-                                   :value="colMeta.fieldName" :title="colMeta.title">
-                    <span v-if="!colMeta.nullable" class="gl-required" style="font-weight: bold">*</span>{{colMeta.fieldName}}&nbsp;({{colMeta.title}})
-                  </a-select-option>
-                </a-select>
-                <div style="margin: 0.2em">
-                  <a-switch v-model="fieldConfig.isServerSaveIgnore"></a-switch>
-                  保存时是否排除该字段
-                </div>
-              </td>
-            </tr>
-            <!--<tr class="gl-table-row">-->
+                </td>
+              </tr>
+              <!--<tr class="gl-table-row">-->
               <!--<td class="gl-table-cell gl-table-cell-sub-label">-->
-                <!--是否排除：-->
+              <!--是否排除：-->
               <!--</td>-->
               <!--<td class="gl-table-cell">-->
-                <!--<a-switch v-model="fieldConfig.isServerSaveIgnore"></a-switch>-->
-                <!--保存时是否排除该字段-->
+              <!--<a-switch v-model="fieldConfig.isServerSaveIgnore"></a-switch>-->
+              <!--保存时是否排除该字段-->
               <!--</td>-->
-            <!--</tr>-->
-            <tr class="gl-table-row" v-if="freshFlag&&isContainDataItems(fieldConfig)">
-              <td class="gl-table-cell gl-table-cell-sub-label">
-                {{getControlType(fieldConfig.control).title}}项：
-              </td>
-              <td class="gl-table-cell">
-                <gl-data-source :dataItems="fieldConfig.data" :dsKey="fieldConfig.ds" :dsMap="opts.ds"
-                                @update="onDataSourceUpdate"></gl-data-source>
-              </td>
-            </tr>
-          </table>
-          <div class="gl-title">
-            <a-icon type="setting"/>
-            验证、权限规则
+              <!--</tr>-->
+              <tr class="gl-table-row" v-if="freshFlag&&isContainDataItems(fieldConfig)">
+                <td class="gl-table-cell gl-table-cell-sub-label">
+                  {{getControlType(fieldConfig.control).title}}项：
+                </td>
+                <td class="gl-table-cell">
+                  <gl-data-source :dataItems="fieldConfig.data" :dsKey="fieldConfig.ds" :dsMap="opts.ds"
+                                  @update="onDataSourceUpdate"></gl-data-source>
+                </td>
+              </tr>
+            </table>
+            <div class="gl-title">
+              <a-icon type="setting"/>
+              验证、权限规则
+            </div>
+            <table class="gl-table">
+              <tr class="gl-table-row">
+                <td class="gl-table-cell gl-table-cell-sub-label">
+                  是否必填：
+                </td>
+                <td class="gl-table-cell">
+                  <a-switch v-model="fieldConfig.rules.required"></a-switch>
+                </td>
+              </tr>
+              <tr class="gl-table-row">
+                <td class="gl-table-cell gl-table-cell-sub-label">
+                  是否唯一：
+                </td>
+                <td class="gl-table-cell">
+                  <a-switch v-model="fieldConfig.rules.unique"></a-switch>
+                </td>
+              </tr>
+            </table>
+            <div class="gl-title">
+              <a-icon type="setting"/>
+              提示、描述、说明
+            </div>
+            <table class="gl-table">
+              <tr class="gl-table-row">
+                <td class="gl-table-cell gl-table-cell-sub-label">
+                  占位符：
+                </td>
+                <td class="gl-table-cell">
+                  <input v-model="fieldConfig.props.placeholder" style="width: 99%"/>
+                </td>
+              </tr>
+              <tr class="gl-table-row">
+                <td class="gl-table-cell gl-table-cell-sub-label">
+                  提示描述：
+                </td>
+                <td class="gl-table-cell">
+                  <textarea v-model="fieldConfig.tips" style="width: 99%" rows="5"></textarea>
+                </td>
+              </tr>
+            </table>
           </div>
-          <table class="gl-table">
-            <tr class="gl-table-row">
-              <td class="gl-table-cell gl-table-cell-sub-label">
-                是否必填：
-              </td>
-              <td class="gl-table-cell">
-                <a-switch v-model="fieldConfig.rules.required"></a-switch>
-              </td>
-            </tr>
-            <tr class="gl-table-row">
-              <td class="gl-table-cell gl-table-cell-sub-label">
-                是否唯一：
-              </td>
-              <td class="gl-table-cell">
-                <a-switch v-model="fieldConfig.rules.unique"></a-switch>
-              </td>
-            </tr>
-          </table>
-          <div class="gl-title">
-            <a-icon type="setting"/>
-            提示、描述、说明
-          </div>
-          <table class="gl-table">
-            <tr class="gl-table-row">
-              <td class="gl-table-cell gl-table-cell-sub-label">
-                占位符：
-              </td>
-              <td class="gl-table-cell">
-                <input v-model="fieldConfig.props.placeholder" style="width: 99%"/>
-              </td>
-            </tr>
-            <tr class="gl-table-row">
-              <td class="gl-table-cell gl-table-cell-sub-label">
-                提示描述：
-              </td>
-              <td class="gl-table-cell">
-                <textarea v-model="fieldConfig.tips" style="width: 99%" rows="5"></textarea>
-              </td>
-            </tr>
-          </table>
         </div>
       </a-tab-pane>
     </a-tabs>
@@ -228,7 +230,7 @@
 </template>
 
 <script>
-  import mixin from '../mixin'
+  import mixin from '../../../mixin-designer'
   import controlTypes from '../data/controlTypes'
   import SelectEntityList from '../../../components/gl-data-source/src/SelectEntityList'
   import GlDataSource from "../../../components/gl-data-source/src/Index";

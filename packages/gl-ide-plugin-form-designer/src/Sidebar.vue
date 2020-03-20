@@ -6,29 +6,31 @@
         <a-icon type="edit"/>
         字段
       </span>
-        <div class="toolbar-item-header">
-          通用字段
-        </div>
-        <div style="padding: 8px">
-          <gl-draggable
-              v-model="toolbar.controls"
-              handle=".gl-dnd-control-handle"
-              :group="{ name: 'field', pull: 'clone', put: false }"
-              ghost-class="ghost"
-              :sort="false"
-              @start="drag=true"
-              @end="drag=false"
-              @choose="onChoose"
-              :clone="cloneControl"
-          >
-            <div class="item toolbar-item gl-dnd-control-handle" v-for="controlItem in toolbar.controls"
-                 :data-control="controlItem.control">
-              <a-icon :type="controlItem.icon"/>
-              <div class="content" readonly>
-                {{controlItem.title}}
+        <div :style="tabPanelStyle">
+          <div class="toolbar-item-header">
+            通用字段
+          </div>
+          <div style="padding: 8px">
+            <gl-draggable
+                v-model="toolbar.controls"
+                handle=".gl-dnd-control-handle"
+                :group="{ name: 'field', pull: 'clone', put: false }"
+                ghost-class="ghost"
+                :sort="false"
+                @start="drag=true"
+                @end="drag=false"
+                @choose="onChoose"
+                :clone="cloneControl"
+            >
+              <div class="item toolbar-item gl-dnd-control-handle" v-for="controlItem in toolbar.controls"
+                   :data-control="controlItem.control">
+                <a-icon :type="controlItem.icon"/>
+                <div class="content" readonly>
+                  {{controlItem.title}}
+                </div>
               </div>
-            </div>
-          </gl-draggable>
+            </gl-draggable>
+          </div>
         </div>
       </a-tab-pane>
       <a-tab-pane key="2">
@@ -36,7 +38,7 @@
         <a-icon type="layout"/>
         表单布局
       </span>
-        <div class="gl-ide-layout-sidebar">
+        <div class="gl-ide-layout-sidebar" :style="tabPanelStyle" style="padding: 0 8px">
           <a-alert message="选择并拖放到右边界面" type="info" closeText="关闭" class="gl-card-gutter"/>
           <gl-draggable
               v-model="rows"
@@ -50,7 +52,7 @@
           >
             <a-row :gutter="gutter" v-for="(row,rowIndex) in rows" :key="rowIndex" :title="row.title"
                    class="gl-dnd-row-handle">
-              <a-col v-for="(col,colIndex) in row.cols" :key="colIndex" :span="col.span">
+              <a-col v-for="(col,colIndex) in row.cols" :key="colIndex" :span="col.span" style="padding-left: 0px; padding-right: 0px;">
                 <div style="min-height: 2em">{{parseInt(col.span/24*100)}}%</div>
               </a-col>
             </a-row>
@@ -62,7 +64,7 @@
 </template>
 
 <script>
-  import mixin from './mixin'
+  import mixin from '../../mixin-designer'
   import controlTypes from './data/controlTypes'
 
   export default {
