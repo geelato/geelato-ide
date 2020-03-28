@@ -231,6 +231,9 @@
           </table>
         </div>
       </a-tab-pane>
+      <!--*******************************************************************************-->
+      <!--******************************* 3、查询列 ****************************************-->
+      <!--*******************************************************************************-->
       <a-tab-pane key="3">
       <span slot="tab">
         <a-icon type="search"/>
@@ -285,7 +288,8 @@
                     <table style="width: 100%;">
                       <tr v-if="property" class="gl-table-row"
                           :key="propertyIndex">
-                        <td class="gl-table-cell" style="width: 20%;border-left: 0;border-top: 0"><input v-model="property.title" style="width: 99%"/></td>
+                        <td class="gl-table-cell" style="width: 20%;border-left: 0;border-top: 0"><input
+                            v-model="property.title" style="width: 99%"/></td>
                         <td class="gl-table-cell" style="width: 32%;border-left: 0;border-top: 0">
                           <a-select v-model="property.field" :allowClear="true" style="min-width: 99%">
                             <a-select-option v-for="colMeta in currentEntityColumns" :key="colMeta.fieldName"
@@ -322,6 +326,12 @@
                       <tr class="gl-table-row" v-if="property&&currentQueryIndex===propertyIndex">
                         <td colspan="4" style="padding:0.2em;">
                           <table class="gl-table" style="border: 1px solid">
+                            <tr class="gl-table-row">
+                              <td class="gl-table-cell gl-table-cell-sub-label">是否展示：</td>
+                              <td class="gl-table-cell">
+                                <a-switch v-model="property.show" />
+                              </td>
+                            </tr>
                             <tr class="gl-table-row">
                               <td class="gl-table-cell gl-table-cell-sub-label">控件类型：</td>
                               <td class="gl-table-cell">
@@ -367,7 +377,7 @@
         </div>
       </a-tab-pane>
       <!--*******************************************************************************-->
-      <!--******************************* 行操作 ****************************************-->
+      <!--******************************* 4、行操作 ****************************************-->
       <!--*******************************************************************************-->
       <a-tab-pane key="4">
       <span slot="tab">
@@ -522,6 +532,10 @@
       generateGid() {
         console.log('gl-ide > gl-ide-plugin-table-designer > Settings > generateGid()')
         const that = this
+        that.config.query.mix.properties.forEach(function (property) {
+          property.gid = property.gid || that.$gl.utils.uuid(8)
+          that.$set(property, 'show', property.show === undefined ? true : property.show)
+        })
         that.config.table.columns.forEach(function (col) {
           col.gid = col.gid || that.$gl.utils.uuid(8)
         })
@@ -603,8 +617,7 @@
       },
       isOperateColumn(col) {
         return col.scopedSlots && col.scopedSlots.customRender === 'action'
-      },
-
+      }
     }
   }
 </script>

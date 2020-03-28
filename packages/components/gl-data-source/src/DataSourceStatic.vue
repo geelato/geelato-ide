@@ -13,8 +13,11 @@
         <span>
           <input v-model="item.text" style="width: 6em" placeholder="选项内容"/>
         </span>
+        <!--<span>-->
+          <!--<input v-model="item.value" style="width: 4em" placeholder="选项值"/>-->
+        <!--</span>-->
         <span>
-          <input v-model="item.value" style="width: 4em" placeholder="选项值"/>
+          <a-input-number v-model="item.value" style="width: 4em" placeholder="选项值"/>
         </span>
         <span class="icons-list">
           <a-icon type="plus" @click="add(item,index)"/>
@@ -23,6 +26,8 @@
         </span>
       </div>
     </gl-draggable>
+    <!--<a-switch :checked="dataType==='number'" @click='changeType'/>-->
+    <!--是否数值类型-->
   </div>
 </template>
 
@@ -36,12 +41,19 @@
     },
     data() {
       return {
-        items: this.dataItems
+        items: this.dataItems,
+        // dataType: 'number'
       }
     },
     mounted() {
     },
     methods: {
+      // changeType() {
+      //   this.dataType = this.isNumber() ? '' : 'number'
+      // },
+      // isNumber() {
+      //   return this.dataType === 'number'
+      // },
       add(item, index) {
         console.log('index>', index)
         this.items.splice(index + 1, 0, {text: '选项', value: this.items.length + 1})
