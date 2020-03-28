@@ -1,6 +1,6 @@
 <template>
   <div class="gl-file-content-wrapper">
-    <component :is="content.component" :opts="ideStore.editingFile.sourceContent.opts.ui||content.opts" :query="queryString">
+    <component :is="content.component" :opts="ideStore.editingFile.sourceContent.opts.ui||content.opts" :params="queryString">
       <!-- 组件在 vm.currentview 变化时改变！ -->
     </component>
   </div>

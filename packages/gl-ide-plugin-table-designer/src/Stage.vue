@@ -1,6 +1,6 @@
 <template>
   <div :size="size" style="padding: 2em" :style="{'min-height':`${height}px`,'max-height':`${height}px`}">
-    <gl-table ref="table" :opts="config" :query="{em:'platform_user'}"></gl-table>
+    <gl-table ref="table" :opts="config" :params="{em:'platform_user'}"></gl-table>
   </div>
 </template>
 

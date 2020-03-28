@@ -12,7 +12,7 @@ export default {
     img: '',
     description: '',
     show: true,
-    bind: {opts: table, query: {}},
+    bind: {opts: table, params: {}},
     meta: {
       component: 'GlTable',
       designer: 'GlIdePluginTableDesigner',
@@ -52,7 +52,7 @@ export default {
       description: '',
       show: true,
       // 初始化的模板数据
-      bind: {opts: form, query: {}},
+      bind: {opts: form, params: {}},
       meta: {
         component: 'GlForm',
         designer: 'GlIdePluginFormDesigner',
@@ -72,7 +72,7 @@ export default {
       img: '',
       description: '',
       show: true,
-      bind: {opts: pageLoader, query: {}},
+      bind: {opts: pageLoader, params: {}},
       meta: {component: 'GlPage', designer: 'GlIdePluginPageLoaderDesigner', title: '设置', modalWidthPercent: .5}
     },
     // {

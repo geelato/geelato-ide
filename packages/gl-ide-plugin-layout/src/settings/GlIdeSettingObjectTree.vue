@@ -1,5 +1,9 @@
 <template>
   <div>
+    <span style="padding-left: 2.4em">
+        <a-icon type="file"/>
+        当前页面
+    </span>
     <a-tree
         showIcon
         :treeData="ideStore.editingFile.objectTree"
@@ -162,6 +166,9 @@
         //     icon: 'table',
         //   }
         // })
+      },
+      onSelectPage() {
+
       },
       onSelect(selectedKeys, e) {
         let that = this

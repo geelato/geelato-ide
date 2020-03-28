@@ -7,6 +7,7 @@ const plugin = {
   description: '组件库，以卡片的方式展示在sidebar中',
   sidebar: {
     title: '组件',
+    icon: 'ant-design',
     component: Sidebar
   }
 }

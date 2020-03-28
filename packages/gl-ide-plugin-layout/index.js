@@ -39,7 +39,7 @@ const plugin = {
           ]
         }
       },
-      query: {}
+      params: {}
     }, {
       title: '源码',
       type: 'src',
@@ -51,7 +51,7 @@ const plugin = {
           rows: []
         }
       },
-      query: {}
+      params: {}
     }
     ],
     settingPanels: [
@@ -59,24 +59,25 @@ const plugin = {
         title: '页面信息',
         component: 'GlIdeSettingFileInfo',
         opts: {},
-        query: {}
+        params: {}
       },
       {
         title: '对象树',
         component: 'GlIdeSettingObjectTree',
         opts: {},
-        query: {}
+        params: {}
       },
       {
         title: '卡片',
         component: 'GlIdePluginLayoutCardSettings',
         opts: {},
-        query: {}
+        params: {}
       }
     ]
   },
   sidebar: {
     title: '布局',
+    icon:'layout',
     component: Sidebar
   }
 }

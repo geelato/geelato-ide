@@ -15,13 +15,16 @@ export default class OpenModalHandler {
     console.log('geelato > runtime > OpenModalHandler.js > doAction() > action:', action)
     console.log('geelato > runtime > OpenModalHandler.js > doAction() > ctx:', ctx)
     console.log('geelato > runtime > OpenModalHandler.js > doAction() > data:', data)
-    const query = {}
+    const params = {}
     if (action.params.paramMapping) {
       action.params.paramMapping.forEach(param => {
-        query[param.name] = param.value
+        params[param.target.cardItemGid] = params[param.target.cardItemGid] || {}
+        // 传过来的数据data一般来说是用gid作为key的，也有可能用name作为key
+        let targetGid = param.target.gid.substring(param.target.gid.lastIndexOf('.')+1)
+        params[param.target.cardItemGid][targetGid] = data[param.src.gid] || data[param.src.name]
       })
     }
-    console.log('geelato > runtime > OpenModalHandler.js > doAction() > parse paramMapping and get param:', query)
+    console.log('geelato > runtime > OpenModalHandler.js > doAction() > parse paramMapping and get param:', params)
 
     this.$root.$gl.ui.openModal(ctx, {
       title: action.params.title,
@@ -32,7 +35,7 @@ export default class OpenModalHandler {
         component: 'GlPage',
         props: {
           extendId: action.params.pageId,
-          query: query || data
+          params: params || data
         }
       },
       actions: action.params.actions,

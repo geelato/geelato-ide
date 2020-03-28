@@ -4,7 +4,7 @@
       <div class="leftToolBarBtn" v-for="(plugin,index) in pluginSidebars" :key="index"
            :class="{activated:selectedPanelTitle?(selectedPanelTitle===plugin.sidebar.title):index===0}"
            @click="onToolbarClick(plugin.sidebar.title)" readonly>
-        {{plugin.sidebar.title}}
+        <a-icon v-if="plugin.sidebar.icon" :type="plugin.sidebar.icon"/>{{plugin.sidebar.title}}
       </div>
     </div>
     <div class="rightPanel" :style="{padding:`${panelPadding}px`}" v-show="showPanel">

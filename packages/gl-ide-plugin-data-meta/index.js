@@ -23,11 +23,10 @@ const plugin = {
         componentRefs: {},
         layout: {
           gutter: 4,
-          rows: [
-          ]
+          rows: []
         }
       },
-      query: {}
+      params: {}
     }
     ],
     settingPanels: [
@@ -35,12 +34,13 @@ const plugin = {
         title: '页面信息',
         component: 'GlIdeSettingFileInfo',
         opts: {},
-        query: {}
+        params: {}
       }
     ]
   },
   sidebar: {
     title: '数据模型',
+    icon: 'table',
     component: Sidebar
   }
 }

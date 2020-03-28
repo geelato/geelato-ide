@@ -15,7 +15,7 @@ export default {
       required: false
     },
     // 表单的查询信息，如{id:'1345362334482731423'}，{treeNodeId:'1345362334482731423'}
-    query: {
+    params: {
       type: Object,
       required: false,
       default() {

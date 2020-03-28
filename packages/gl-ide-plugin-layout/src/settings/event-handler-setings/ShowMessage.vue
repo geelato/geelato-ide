@@ -1,6 +1,6 @@
 <template>
   <div>
-    <gl-form ref="form" :opts="opts" :query="params.ShowMessage" @propertyUpdate="onPropertyUpdate"></gl-form>
+    <gl-form ref="form" :opts="opts" :params="params.ShowMessage" @propertyUpdate="onPropertyUpdate"></gl-form>
   </div>
 </template>
 

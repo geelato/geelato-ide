@@ -68,7 +68,7 @@
   import controlTypes from './data/controlTypes'
 
   export default {
-    name: "Sidebar",
+    name: "GlIdePluginFormDesignerSidebar",
     mixins: [mixin],
     props: {
       opts: {

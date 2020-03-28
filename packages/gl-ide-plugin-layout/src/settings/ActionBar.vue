@@ -1,5 +1,10 @@
 <template>
   <div>
+    <span @click="$emit('setCondition',doItem)">
+      <a v-if="doItem.if">有条件</a>
+      <a v-else>无条件</a>
+      &nbsp;
+    </span>
     <span>{{label}}&nbsp;&nbsp;</span>
     <span>
       <a-select :defaultValue="doItem.handler" style="width: 200px"
@@ -11,12 +16,14 @@
         </a-select-opt-group>
         <a-select-opt-group label="控件动作">
           <a-select-option value="InvokeCurrentComponent">调用当前控件方法</a-select-option>
-          <a-select-option value="keyup.esc">显示/隐藏</a-select-option>
+          <a-select-option value="ShowAndHide">显示/隐藏</a-select-option>
+          <a-select-option value="ReadAndWrite">只读/可写</a-select-option>
         </a-select-opt-group>
          <a-select-opt-group label="其它动作">
            <a-select-option value="ShowMessage">提醒消息</a-select-option>
-          <a-select-option value="setVars">设置变量值</a-select-option>
-          <a-select-option value="triggerEvent">触发事件</a-select-option>
+          <a-select-option value="SetVars">设置变量值</a-select-option>
+           <a-select-option value="ScriptBlock">执行代码块</a-select-option>
+           <!--<a-select-option value="triggerEvent">触发事件</a-select-option>-->
         </a-select-opt-group>
       </a-select>
     </span>

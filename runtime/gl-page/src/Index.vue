@@ -13,7 +13,7 @@
             :bindEvents="config._bindEvents"
             :gutter="config.opts.layout.gutter"
             :treeNodes="config.objectTree"
-            :query="query"
+            :params="params"
             @doAction="doAction"
         ></gl-page-item>
       </template>
@@ -54,7 +54,7 @@
       },
       pageId: String,
       extendId: String,
-      query: {
+      params: {
         type: Object,
         default() {
           return {}
@@ -95,7 +95,7 @@
     },
     mounted() {
       console.log('geelato > runtime > gl-page > Index.vue > mounted() > opts: ', this.opts)
-      console.log('geelato > runtime > gl-page > Index.vue > mounted() > query: ', this.query)
+      console.log('geelato > runtime > gl-page > Index.vue > mounted() > params: ', this.params)
       console.log('geelato > runtime > gl-page > Index.vue > mounted() > $refs: ', this.$refs)
       if (this.opts.src === 'external') {
         let iframe = this.$refs.iframe

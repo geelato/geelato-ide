@@ -6,6 +6,7 @@
       </a-col>
       <a-col :span="14" style="border-right: 1px solid #F2F2F2;padding: 2em 2em">
         <div style="text-align: right;width: 100%;padding-right: 3em;line-height: 2em">
+          <a @click="openLogicAndRuleSettings">规则与校验</a>&nbsp;&nbsp;&nbsp;&nbsp;
           <a @click="printSrc">控制台打印当前配置</a>
         </div>
         <stage :size="size" :opts="cardBind" style="padding-right: 3.5em;padding-top: 1em"></stage>
@@ -14,6 +15,20 @@
         <settings :size="size" :opts="cardBind"></settings>
       </a-col>
     </a-row>
+    <div v-if="modalVisible">
+      <a-modal class="gl-card-designer" title="规则与校验" centered :width="modalWidth" v-model="modalVisible"
+               @ok="() => modalVisible = false" @cancel="onCloseModal" okText="保存" cancelText="取消"
+               :maskClosable="false">
+        <logic-and-rule-settings :opts="cardBind"></logic-and-rule-settings>
+        <template slot="footer">
+          <div style="text-align: center">
+            <a-button type="danger" @click="onCloseModal">
+              关闭
+            </a-button>
+          </div>
+        </template>
+      </a-modal>
+    </div>
   </div>
 </template>
 
@@ -21,10 +36,11 @@
   import Sidebar from './Sidebar'
   import Stage from './stage/UI'
   import Settings from './settings/Settings'
+  import LogicAndRuleSettings from './settings/logic-and-rule/Index'
 
   export default {
     name: "GlIdePluginFormDesigner",
-    components: {Sidebar, Stage, Settings},
+    components: {Sidebar, Stage, Settings, LogicAndRuleSettings},
     props: {
       opts: {
         type: Object,
@@ -37,7 +53,13 @@
         // size: 'small',
         refreshToggleFlag: true,
         size: 'default',
-        cardBind: {}
+        cardBind: {},
+        modalVisible: false
+      }
+    },
+    computed: {
+      modalWidth: function () {
+        return (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) * .80
       }
     },
     created() {
@@ -74,6 +96,12 @@
     methods: {
       onFieldSelect(event) {
         console.log('event>', event)
+      },
+      openLogicAndRuleSettings() {
+        this.onCloseModal()
+      },
+      onCloseModal() {
+        this.modalVisible = true
       },
       printSrc() {
         console.log('当前表单配置：', this.opts)

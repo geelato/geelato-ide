@@ -1,6 +1,6 @@
 <template>
   <div class="gl-content-wrapper">
-    <gl-form ref="form" :opts="formConfig" :query="formQuery" @propertyUpdate="onPropertyUpdate"></gl-form>
+    <gl-form ref="form" :opts="formConfig" :params="formQuery" @propertyUpdate="onPropertyUpdate"></gl-form>
   </div>
 </template>
 <script>

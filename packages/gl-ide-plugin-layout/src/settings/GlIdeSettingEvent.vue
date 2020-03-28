@@ -2,7 +2,7 @@
   <div :style="style">
     <div style=" padding:0.5em">
       <a-row :gutter="8">
-        <a-col :span="10">
+        <a-col :span="11">
           <div class="line">
             <div slot="title">
               <span>对控件&nbsp;&nbsp;</span>
@@ -20,17 +20,21 @@
                       <a-select-option value="dbclick">双击</a-select-option>
                       <a-select-option value="click.right">鼠标右击</a-select-option>
                     </a-select-opt-group>
+                    <a-select-opt-group label="值">
+                       <a-select-option value="change">值变化</a-select-option>
+                    </a-select-opt-group>
                     <a-select-opt-group label="键盘">
                       <a-select-option value="keyup.enter">按键按下[enter]时</a-select-option>
                       <a-select-option value="keyup.esc">按键按下[esc]时</a-select-option>
                     </a-select-opt-group>
                      <a-select-opt-group label="外观">
-                      <a-select-option value="show">显示时</a-select-option>
-                      <a-select-option value="hide">隐藏时</a-select-option>
+                       <a-select-option value="mounted">载入时</a-select-option>
+                       <a-select-option value="show">显示时</a-select-option>
+                       <a-select-option value="hide">隐藏时</a-select-option>
                     </a-select-opt-group>
                   </a-select>
                 </span>
-                <span>&nbsp;&nbsp;时</span>
+                <span>&nbsp;&nbsp;且满足</span><a @click="onSetCondition">条件<span>（未设置）</span></a><span>时</span>
                 <span @click="action.do.push({handler:'',fn:'',params:{}})">
                   <a-button type="link" title="触发动作"><a-icon type="plus-circle"/></a-button>
                 </span>
@@ -39,10 +43,11 @@
                    :key="actionIndex+'_'+doItemIndex">
                 <action-bar label="触发动作" :doItems="action.do" :doItem="doItem" :doItemIndex="doItemIndex"
                             @doActionSetting="doActionSetting" @doActionRemove="doActionRemove"
-                            @doActionChange="doActionChange"></action-bar>
+                            @doActionChange="doActionChange" @setCondition="onSetCondition"></action-bar>
                 <div class="line" v-if="doItem.then" v-for="(thenItem,thenItemIndex) in doItem.then"
                      :key="actionIndex+'_'+doItemIndex+'_'+thenItemIndex">
-                  <action-bar label="回调动作" :isLastOne="true" :doItems="doItem.then" :doItem="thenItem" :doItemIndex="thenItemIndex"
+                  <action-bar label="回调动作" :isLastOne="true" :doItems="doItem.then" :doItem="thenItem"
+                              :doItemIndex="thenItemIndex"
                               @doActionSetting="doActionSetting" @doActionRemove="doActionRemove"
                               @doActionChange="doActionChange"></action-bar>
                 </div>
@@ -50,8 +55,12 @@
             </div>
           </div>
         </a-col>
-        <a-col :span="14">
-          <a-card title="动作详细设置" :bordered="false">
+        <a-col :span="13">
+          <a-card title="条件设置" :bordered="false" v-if="currentEditingType==='condition'"
+                  class="gl-condition-container">
+            <script-block></script-block>
+          </a-card>
+          <a-card title="动作设置" :bordered="false" v-if="currentEditingType==='control'">
             <p>
               <component :is="currentDetailComponentName" v-bind="currentDoItem"
                          :designComponentName="currentComponent.meta.component"
@@ -68,12 +77,26 @@
 
 <script>
   import ActionBar from './ActionBar'
+  import ScriptBlock from './event-handler-setings/ScriptBlock'
+  import SetVars from './event-handler-setings/SetVars'
   import OpenModal from './event-handler-setings/OpenModal'
   import InvokeCurrentComponent from './event-handler-setings/InvokeCurrentComponent/InvokeCurrentComponent'
   import ShowMessage from './event-handler-setings/ShowMessage'
+  import ShowAndHide from './event-handler-setings/ShowAndHide'
+  import ReadAndWrite from './event-handler-setings/ReadAndWrite'
   import Empty from './event-handler-setings/Empty'
 
-  let localComponents = {ActionBar, OpenModal, ShowMessage, InvokeCurrentComponent, Empty}
+  let localComponents = {
+    ActionBar,
+    SetVars,
+    ScriptBlock,
+    OpenModal,
+    ShowMessage,
+    ShowAndHide,
+    ReadAndWrite,
+    InvokeCurrentComponent,
+    Empty
+  }
 
   export default {
     name: "GlIdeSettingEvent",
@@ -118,6 +141,9 @@
         currentDoItemIndex: -1,
         currentDetailComponentName: 'Empty',
         style: {'min-height': (window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight) * .80 + 'px'},
+        currentCondition: {},
+        // control/condition/page
+        currentEditingType: 'control'
       }
     },
     methods: {
@@ -130,6 +156,7 @@
         this.doActionSetting($event, doItem, actionIndex)
       },
       doActionSetting($event, doItem, doItemIndex) {
+        this.currentEditingType = 'control'
         let that = this
         console.log($event, doItem, doItemIndex)
         this.currentDoItem = doItem
@@ -149,6 +176,11 @@
         }
         doItems.splice(index, 1)
         // this.$gl.utils.remove(doItems, index)
+      },
+      onSetCondition(item) {
+        console.log('gl-ide-plugin-layout > GlIdeSettingEvent > onSetCondition() > item:', item)
+
+        this.currentEditingType = 'condition'
       },
       hasDetailComponent(name) {
         return !!localComponents[name]
@@ -180,7 +212,8 @@
     margin: 0 5px;
   }
 
-  /*.line + .line {*/
-  /*padding: 0.5em 2em 0em 2em*/
-  /*}*/
+  .gl-condition-container .ant-card-body {
+    padding: 0;
+    border-left: 2px solid #F2F2F2;
+  }
 </style>

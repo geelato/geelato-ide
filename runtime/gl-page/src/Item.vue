@@ -6,7 +6,7 @@
           <a-card :title="getCardConfig(col.card).title" style="margin-top: 8px">
             <component :ref="col.card" :is="getCardComponent(col.card)"
                        :opts="getCardConfig(col.card).opts"
-                       :query="query"
+                       :params="params"
             >
               正在加载...
             </component>
@@ -14,7 +14,7 @@
         </template>
         <template v-else-if="col.rows">
           <gl-page-item :rows="col.rows" :componentRefs="componentRefs" :bindEvents="bindEvents"
-                        :gutter="gutter" :treeNodes="treeNodes" :query="query"
+                        :gutter="gutter" :treeNodes="treeNodes" :params="params"
                         @doAction="$emit('doAction',$event)"></gl-page-item>
         </template>
         <template v-else>
@@ -27,7 +27,7 @@
                           :key="colItemIndex">
                 <!--v-show="colItem.show"-->
                 <component :ref="colItem.id" :is="$globalVue.component(colItem.component)"
-                           :gid="colItem.id" v-bind="colItem.bind" :query="query"
+                           :gid="colItem.id" v-bind="colItem.bind" :params="params"
                            @doAction="$emit('doAction',$event)"></component>
               </a-tab-pane>
             </a-tabs>
@@ -37,7 +37,7 @@
             <a-collapse :defaultActiveKey="col.opts?col.opts.defaultActiveKey||0:0">
               <a-collapse-panel :forceRender="true" v-for="(colItem,colItemIndex) in col.items" :header="colItem.title" :key="colItemIndex">
                   <component :ref="colItem.id" :is="$globalVue.component(colItem.component)"
-                             :gid="colItem.id" v-bind="colItem.bind" :query="query"
+                             :gid="colItem.id" v-bind="colItem.bind" :params="params"
                              @doAction="$emit('doAction',$event)"></component>
               </a-collapse-panel>
             </a-collapse>
@@ -46,8 +46,10 @@
             <!-- 卡片内的组件渲染 --采用默认方式  -->
             <div v-for="(colItem) in col.items" :key="colItem.id" class="gl-col">
               <!--v-show="colItem.show"-->
+              <!--<textarea :value="JSON.stringify(colItem.bind)" style="width: 100%"></textarea>-->
+              <!--<textarea :value="JSON.stringify(params[colItem.id])" style="width: 100%"></textarea>-->
               <component :ref="colItem.id" :is="$globalVue.component(colItem.component)"
-                         :gid="colItem.id" v-bind="colItem.bind" :query="query"
+                         :gid="colItem.id" v-bind="colItem.bind" :params="params[colItem.id]"
                          @doAction="$emit('doAction',$event)"></component>
             </div>
           </template>
@@ -95,7 +97,7 @@
           return 8
         }
       },
-      query: {
+      params: {
         type: Object,
         default() {
           return {}
@@ -130,11 +132,11 @@
         that.rows.filter((row) => !!row.cols).forEach((row) => {
           row.cols.filter((col) => !!col.items).forEach((col) => {
             // ==========item为卡片内一个组件的配置信息，例如下方所示
-            // {id:'',title: '列表',icon: 'table',component: 'GlTable',bind: {opts: table, query: {}},
+            // {id:'',title: '列表',icon: 'table',component: 'GlTable',bind: {opts: table, params: {}},
             //   meta: {
             //     component: 'GlIdePluginTableDesigner',
             //       title: '列表编辑器',
-            //       objectTree: [{title: '查询栏', path: 'query.mix.properties'}, {title: '工具栏', path: 'toolbar.actions'}]
+            //       objectTree: [{title: '查询栏', path: 'params.mix.properties'}, {title: '工具栏', path: 'toolbar.actions'}]
             //   }
             // }
 
@@ -231,7 +233,7 @@
               },
               children: childrenNodes
             })
-            // console.log('gl-ide > gl-ide-plugin-layout > generateTreeData() > component.$refs.query:', eval('item.bind.opts.' + treeNodeObject.path))
+            // console.log('gl-ide > gl-ide-plugin-layout > generateTreeData() > component.$refs.params:', eval('item.bind.opts.' + treeNodeObject.path))
           })
         }
 

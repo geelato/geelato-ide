@@ -1,3 +1,5 @@
+import utils from '../../../utils'
+
 export default {
   type: 'object',
   // 表单可绑定多实体，这是默认第一实体
@@ -6,7 +8,8 @@ export default {
   state: 'save',
   properties: {
     // 设置该id:{}，便于子实体中依赖该id
-    id: {},
+    id: {
+    },
     name: {
       control: 'input',
       title: '名称'
@@ -29,6 +32,7 @@ export default {
       }
     },
     description: {
+      gid: utils.uuid(16),
       control: 'textarea',
       title: '描述'
     }
@@ -62,7 +66,6 @@ export default {
   toolbar: {
     show: true,
     actions: [{
-      gid: '',
       text: '保存',
       type: 'primary',
       fn: 'save',

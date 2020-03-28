@@ -2,7 +2,7 @@ export default {
   component: 'GlForm',
   // 组件的接收参数
   props: [
-    {name: 'query', description: '输入查询条件数据，如{id:1}'}
+    {name: 'params', description: '输入查询条件数据，如{id:1}'}
   ],
   methods: [
     {

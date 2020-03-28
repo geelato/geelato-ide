@@ -1,5 +1,4 @@
-import FormData from './form'
-
+import utils from '../../../utils'
 export default {
   title: '示例信息',
   entity: 'platform_demo_entity',

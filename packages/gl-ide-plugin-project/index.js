@@ -6,6 +6,7 @@ const plugin = {
   name: 'gl-ide-plugin-project',
   sidebar: {
     title: '应用结构',
+    icon:'apartment',
     component: Sidebar
   }
 }

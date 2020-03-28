@@ -89,7 +89,7 @@
             type: 'staticPage',
             component: ProjectList,
             opts: {},
-            query: {}
+            params: {}
           },
           actions: [{
             fn: 'close',
@@ -123,7 +123,7 @@
             type: 'staticPage',
             component: ProjectList,
             opts: {},
-            query: {}
+            params: {}
           },
           actions: [{
             fn: 'close',

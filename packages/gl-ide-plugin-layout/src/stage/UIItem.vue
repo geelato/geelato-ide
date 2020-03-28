@@ -156,6 +156,7 @@
     data() {
       return {
         color: '#FFF',
+        modalVisible: false,
         modalTitle: '&nbsp;',
         modalWidthPercentDefault: .98,
         modalWidthPercent: this.modalWidthPercentDefault,
@@ -164,7 +165,6 @@
         currentOpenedCard: {},
         // 卡片内的项，即表单、列表等组件
         currentOpenedCardItem: {},
-        modalVisible: false,
         rowItems: this.rows,
         colItems: [],
         // {id:component}

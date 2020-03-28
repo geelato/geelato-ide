@@ -136,7 +136,7 @@ export default {
           }]
         },
         dataMapping: {
-          query: {id: '$ctx.id'}
+          params: {id: '$ctx.id'}
         }
       }]
     },
