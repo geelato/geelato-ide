@@ -32,6 +32,7 @@
     created() {
       // 默认加载，我的最近一个应用
       this.$gl.bus.$on('gl-ide.designer.showProjectForm', this.showProjectForm)
+      this.$gl.bus.$on('gl-ide.designer.showCurrentProjectForm', this.showCurrentProjectForm)
       this.$gl.bus.$on('gl-ide.designer.showTemplateProjectForm', this.showTemplateProjectForm)
       this.$gl.bus.$on('gl-ide.designer.showProjectList', this.showProjectList)
       this.$gl.bus.$on('gl-ide.designer.saveFile', this.saveFile)
@@ -41,10 +42,11 @@
     beforeDestroy() {
       // 默认加载，我的最近一个应用
       this.$gl.bus.$off('gl-ide.designer.showProjectForm', this.showProjectForm)
+      this.$gl.bus.$off('gl-ide.designer.showCurrentProjectForm', this.showCurrentProjectForm)
       this.$gl.bus.$off('gl-ide.designer.showProjectList', this.showProjectList)
     },
     methods: {
-      showProjectForm() {
+      showProjectForm(params) {
         //TODO 是否保存旧应用
         this.$gl.ui.openModal(this, {
           title: '创建应用',
@@ -53,7 +55,7 @@
           body: {
             type: 'static',
             component: ProjectCreate,
-            props: {}
+            props: params
           },
           actions: [{
             fn: 'save',
@@ -79,6 +81,13 @@
           }]
         })
         console.log('this.project>', this.project)
+      },
+      showCurrentProjectForm() {
+        if (!this.project || !this.project.id) {
+          this.$message.info('无当前设置项目')
+        } else {
+          this.showProjectForm({params: this.project})
+        }
       },
       showTemplateProjectForm() {
         this.$gl.ui.openModal(this, {

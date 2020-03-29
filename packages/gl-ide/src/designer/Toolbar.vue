@@ -16,6 +16,10 @@
           <a-icon type="appstore"/>
           打开已创建应用
         </a-menu-item>
+        <a-menu-item size="small" key="2" style="font-size: 12px" @click="showCurrentProjectForm">
+          <a-icon type="setting"/>
+          设置当前应用
+        </a-menu-item>
       </a-menu>
       <a-button size="small" :style="{background: theme.background }">
         应用
@@ -35,7 +39,7 @@
       </a-button>
     </a-dropdown>
     <a-button size="small" :style="{background: theme.background }" @click="comingSoon('插件管理')">插件</a-button>
-    <a-button size="small" :style="{background: theme.background }" @click="comingSoon('设置管理')">设置</a-button>
+    <!--<a-button size="small" :style="{background: theme.background }" @click="comingSoon('设置管理')">设置</a-button>-->
     <a-button size="small" :style="{background: theme.background }" @click="saveFile">保存</a-button>
     <a-button size="small" :style="{background: theme.background }" @click="preview"
               :disabled="!(this.ideStore.editingFile && this.ideStore.editingFile.id)">预览
@@ -86,6 +90,9 @@
 
       showProjectForm() {
         this.$gl.bus.$emit('gl-ide.designer.showProjectForm')
+      },
+      showCurrentProjectForm(){
+        this.$gl.bus.$emit('gl-ide.designer.showCurrentProjectForm')
       },
       showTemplateProjectForm() {
         this.$gl.bus.$emit('gl-ide.designer.showTemplateProjectForm')
