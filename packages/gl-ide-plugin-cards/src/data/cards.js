@@ -36,10 +36,17 @@ export default {
       },
       // 该组件的输出参数定义元数据
       outParams: [{
-        group: '行记录（currentRow）',
+        group: '查询条件',
+        type: Object,
+        // 在设计配置页面中展示，选择参数
+        name: 'field', title: 'title', path: 'query.mix.properties',
+        // 在运行时获取参数值
+        dataCtx: 'ctxLoader().currentQuery'
+      }, {
+        group: '行记录（currentRowX）',
         type: Object,
         name: 'dataIndex', title: 'title', path: 'table.columns',
-        dataCtx: 'currentRow'
+        dataCtx: 'ctxLoader().currentRow'
       }],
       methods: [{code: 'refresh', title: '刷新', description: '刷新列表'}],
     }

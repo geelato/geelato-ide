@@ -16,7 +16,7 @@
 </template>
 
 <script>
-  import utils from "../../utils";
+  import utils from "../../../runtime/utils";
 
   export default {
     name: "gl-ide-plugin-sidebar-fields",

@@ -1,3 +1,5 @@
+import utils from '../utils.js'
+
 export default class OpenModalHandler {
 
   constructor($root) {
@@ -20,8 +22,9 @@ export default class OpenModalHandler {
       action.params.paramMapping.forEach(param => {
         params[param.target.cardItemGid] = params[param.target.cardItemGid] || {}
         // 传过来的数据data一般来说是用gid作为key的，也有可能用name作为key
-        let targetGid = param.target.gid.substring(param.target.gid.lastIndexOf('.')+1)
-        params[param.target.cardItemGid][targetGid] = data[param.src.gid] || data[param.src.name]
+        let targetGid = param.target.gid.substring(param.target.gid.lastIndexOf('.') + 1)
+        let srcData = utils.eval('$ctx.' + param.src.dataCtx, ctx)
+        params[param.target.cardItemGid][targetGid] = srcData[param.src.gid] || srcData[param.src.name]
       })
     }
     console.log('geelato > runtime > OpenModalHandler.js > doAction() > parse paramMapping and get param:', params)

@@ -173,7 +173,7 @@
                   {{getControlType(fieldConfig.control).title}}项：
                 </td>
                 <td class="gl-table-cell">
-                  <gl-data-source :dataItems="fieldConfig.data" :dsKey="fieldConfig.ds" :dsMap="opts.ds"
+                  <gl-data-source :dataItems="fieldConfig.data" :dsKey="fieldConfig.dsName" :dsMap="opts.ds"
                                   @update="onDataSourceUpdate"></gl-data-source>
                 </td>
               </tr>
@@ -279,7 +279,7 @@
             required: false
           },
           data: [],
-          ds: ''
+          dsName: ''
         },
         freshFlag: true,
         currentEntityColumns: [],
@@ -352,8 +352,8 @@
           // item.props.defaultActiveIndex = item.props.defaultActiveIndex || 0
           this.$set(item.props, 'defaultActiveIndex', item.props.defaultActiveIndex || 0)
         }
-        if (item.ds === undefined) {
-          this.$set(item, 'ds', '')
+        if (item.dsName === undefined) {
+          this.$set(item, 'dsName', '')
         }
 
         // 对于无实体的，从当前表单已配置的实体中，默认选择第一项
@@ -450,8 +450,8 @@
       },
       onDataSourceUpdate({dsItem, dsKey, dsMap}) {
         console.log('gl-ide-plugin-form-designer > Settings > onDataSourceUpdate() > dsItem, dsKey, dsMap:', dsItem, dsKey, dsMap)
-        this.$set(this.fieldConfig, 'ds', dsKey)
-        this.$set(this.opts, 'ds', dsMap)
+        this.$set(this.fieldConfig, 'dsName', dsKey)
+        this.$set(this.opts, 'dsName', dsMap)
       }
     }
 

@@ -58,20 +58,23 @@
                       <td class="gl-table-cell">
                         <a-select v-model="paramMappingItem.target.gid" style="width: 100%"
                                   @change="onChangeInParam($event,paramMappingItem)">
-                          <a-select-opt-group v-for="optionData in inParamSelection"
-                                              :label="optionData.title" :key="optionData.gid">
+                          <a-select-opt-group v-for="(optionData,optionDataIndex) in inParamSelection"
+                                              :label="optionData.title" :key="optionData.gid+'_'+optionDataIndex">
                             <template v-if="optionData.items">
-                              <a-select-opt-group v-for="subOptionData in optionData.items"
-                                                  :label="subOptionData.title" :key="subOptionData.gid"
+                              <a-select-opt-group v-for="(subOptionData,subOptionDataIndex) in optionData.items"
+                                                  :label="subOptionData.title"
+                                                  :key="subOptionData.gid+'_'+subOptionDataIndex"
                                                   style="padding-left: 1em">
-                                <a-select-option v-for="inParam in subOptionData.inParams" :key="inParam.gid"
+                                <a-select-option v-for="inParam in subOptionData.inParams"
+                                                 :key="subOptionData.gid+'.'+inParam.gid"
                                                  :value="subOptionData.gid+'.'+inParam.gid">
                                   {{inParam.name+'-'+inParam.title}}
                                 </a-select-option>
                               </a-select-opt-group>
                             </template>
                             <template v-else>
-                              <a-select-option v-for="inParam in optionData.inParams" :key="inParam.gid"
+                              <a-select-option v-for="(inParam,inParamIndex) in optionData.inParams"
+                                               :key="inParam.gid+'_'+inParamIndex"
                                                :value="optionData.gid+'.'+inParam.gid">
                                 {{inParam.name+'-'+inParam.title}}
                               </a-select-option>
@@ -87,9 +90,10 @@
                       <td class="gl-table-cell">
                         <a-select v-model="paramMappingItem.src.gid" style="width: 100%"
                                   @change="onChangeOutParam($event,paramMappingItem)">
-                          <a-select-opt-group v-for="optionData in outParamSelection"
-                                              :label="optionData.title" :key="optionData.gid">
-                            <a-select-option v-for="outParam in optionData.outParams" :key="outParam.gid"
+                          <a-select-opt-group v-for="(optionData,optionDataIndex) in outParamSelection"
+                                              :label="optionData.title" :key="optionData.gid+'_'+optionDataIndex">
+                            <a-select-option v-for="(outParam,outParamIndex) in optionData.outParams"
+                                             :key="outParam.gid+'_'+outParamIndex"
                                              :value="outParam.gid">{{outParam.name+'-'+outParam.title}}
                             </a-select-option>
                           </a-select-opt-group>
@@ -193,7 +197,7 @@
 <script>
 
   import ideConfig from '../../../../gl-ide/src/data/ideSelectItems.js'
-  import utils from '../../../../utils.js'
+  import utils from '../../../../../runtime/utils.js'
   import cardsDefined from '../../../../gl-ide-plugin-cards/src/data/cards.js'
 
   export default {
@@ -449,6 +453,7 @@
             if (foundOutParam !== undefined) {
               currentParam.src.name = foundOutParam.name
               currentParam.src.title = foundOutParam.title
+              currentParam.src.dataCtx = foundOutParam.dataCtx
               return
             }
           }

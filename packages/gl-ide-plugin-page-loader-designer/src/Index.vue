@@ -83,7 +83,7 @@
 </template>
 
 <script>
-  import utils from '../../utils.js'
+  import utils from '../../../runtime/utils.js'
   import pageLoaderConfig from '../../gl-ide-plugin-cards/src/data/page_loader'
 
   export default {

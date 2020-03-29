@@ -8,15 +8,15 @@
           <a-icon type="border" />
           从空白创建应用
         </a-menu-item>
-        <a-menu-item size="small" key="3" style="font-size: 12px" @click="showTemplateProjectForm">
+        <a-menu-item size="small" key="2" style="font-size: 12px" @click="showTemplateProjectForm">
           <a-icon type="appstore"/>
           从模板库创建应用
         </a-menu-item>
-        <a-menu-item size="small" key="2" style="font-size: 12px" @click="showProjectList">
+        <a-menu-item size="small" key="3" style="font-size: 12px" @click="showProjectList">
           <a-icon type="appstore"/>
           打开已创建应用
         </a-menu-item>
-        <a-menu-item size="small" key="2" style="font-size: 12px" @click="showCurrentProjectForm">
+        <a-menu-item size="small" key="4" style="font-size: 12px" @click="showCurrentProjectForm">
           <a-icon type="setting"/>
           设置当前应用
         </a-menu-item>

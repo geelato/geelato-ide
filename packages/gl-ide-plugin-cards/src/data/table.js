@@ -1,4 +1,4 @@
-import utils from '../../../utils'
+import utils from '../../../../runtime/utils'
 export default {
   title: '示例信息',
   entity: 'platform_demo_entity',

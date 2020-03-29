@@ -221,7 +221,7 @@
             <tr class="gl-table-row">
               <td colspan="3">
                 <a-button size="small" block
-                          @click="config.table.columns.push([{gid:$gl.utils.uuid(8),title:'',dataIndex:''}])"
+                          @click="config.table.columns.push({gid:$gl.utils.uuid(8),title:'',dataIndex:''})"
                           style="line-height: 1.499em">
                   <a-icon type="plus" size="small"/>
                   添加结果列

@@ -16,7 +16,7 @@
 
 <script>
   import cards from './data/cards.js'
-  import utils from "../../utils";
+  import utils from "../../../runtime/utils";
   import events from '../../gl-ide-plugin-layout/src/events'
 
   export default {

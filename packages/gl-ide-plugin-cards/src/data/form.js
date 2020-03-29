@@ -1,4 +1,4 @@
-import utils from '../../../utils'
+import utils from '../../../../runtime/utils'
 
 export default {
   type: 'object',
