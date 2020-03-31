@@ -25,7 +25,7 @@ export default {
       control: 'select',
       title: '类型',
       // 若数据是动态生产成，可配置ds，基于ds加载的数据最终会设置到data中
-      data: [{text: '默认', value: '0'}, {text: '类型一', value: '1'}, {text: '类型二', value: '2'}
+      data: [{text: '默认', value: 0}, {text: '类型一', value: 1}, {text: '类型二', value: 2}
       ],
       props: {
         // defaultValue: '0'

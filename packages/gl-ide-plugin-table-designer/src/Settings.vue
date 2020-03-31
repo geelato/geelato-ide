@@ -60,7 +60,13 @@
                 每页默认展示多少行：
               </td>
               <td class="gl-table-cell">
-                <a-input-number v-model="config.table.pageSize" style="width: 5em"></a-input-number>
+                <!--<a-input-number v-model="config.table.pageSize" style="width: 5em"></a-input-number>-->
+                <a-radio-group v-model="config.table.pageSize" size="small">
+                  <a-radio-button :value="10">10</a-radio-button>
+                  <a-radio-button :value="20">20</a-radio-button>
+                  <a-radio-button :value="30">30</a-radio-button>
+                  <a-radio-button :value="40">40</a-radio-button>
+                </a-radio-group>
               </td>
             </tr>
             <!--<tr class="gl-table-row">-->

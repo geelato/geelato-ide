@@ -216,7 +216,7 @@
             // {id:'',title: '列表',icon: 'table',component: 'GlTable',bind: {opts: table, query: {}},
             //   meta: {
             //     component: 'GlIdePluginTableDesigner',
-            //       title: '列表编辑器',
+            //       title: '列表设计器',
             //       objectTree: [{title: '查询栏', path: 'query.mix.properties'}, {title: '工具栏', path: 'toolbar.actions'}]
             //   }
             // }

@@ -16,7 +16,7 @@ export default {
     meta: {
       component: 'GlTable',
       designer: 'GlIdePluginTableDesigner',
-      title: '列表编辑器',
+      title: '列表设计器',
       objectTree: [
         {
           title: '查询栏',
