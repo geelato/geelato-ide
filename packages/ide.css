@@ -111,22 +111,16 @@
     color: #515151;
 }
 
-.iconfont.icon-file-primary {
-    color: #2185d0;
+i.gl-menuItem:before {
+    content: "M"
+    /*content: "\e895"*/
+    /*color: #2185d0;*/
 }
 
-i[rel="iconfont icon-file"] {
-    color: #515151 !important;
+i[rel="iconfont icon-file"]:before {
+    content: "\e67d" !important;
+    /*color: #515151 !important;*/
 }
-
-i[rel="iconfont icon-file-primary"] {
-    color: #2185d0 !important;
-}
-
-/*.icon-file-primary:after {*/
-    /*content: "√";*/
-/*}*/
-
 
 /**************************************
  * ide preview

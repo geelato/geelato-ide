@@ -12,7 +12,7 @@ const plugin = {
   file: {
     title: '数据模型',
     type: 'GlDataMeta',
-    icon: 'iconfont icon-file-primary',
+    icon: 'iconfont icon-file',
     description: '实体元数据管理、数据库同步管理',
     toolbar: [],
     stagePanels: [{

@@ -13,7 +13,7 @@ const plugin = {
   file: {
     title: '页面',
     type: 'GlPageLayout',
-    icon: 'iconfont icon-file-primary',
+    icon: 'iconfont icon-file',
     description: '可组合的高级页面',
     toolbar: [],
     stagePanels: [{

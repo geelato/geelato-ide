@@ -38,7 +38,7 @@
           icon: '',
           flag: ''
         }]
-        that.$gl.api.query('platform_tree_node', 'id,parent,text,type,icon,flag', {treeId: project.id}).then(function (res) {
+        that.$gl.api.query('platform_tree_node', 'id,parent,text,type,icon,flag data', {treeId: project.id}).then(function (res) {
           console.log('gl-ide-plugin-project-tree > watch() > project.id > res:', res)
           that.newTree(treeData.concat(res.data))
         })
@@ -174,9 +174,18 @@
                   },
                   action: function (data) {
                     // let node = $.jstree.reference(data.reference).get_node(data.reference)
-                    nodeItem.flag = isMenuItem(nodeItem) ? '' : 'menuItem'
-                    nodeItem.icon = nodeItem.icon === 'iconfont icon-file' ? 'iconfont icon-file-primary' : 'iconfont icon-file'
+                    console.log('>>>>>', $('#' + nodeItem.li_attr.id + '_anchor'))
+                    $('#' + nodeItem.li_attr.id + '_anchor').children('i').removeClass('gl-menuItem')
+                    let isMenuNode = isMenuItem(nodeItem)
+                    nodeItem.flag = isMenuNode ? '' : 'menuItem'
+                    nodeItem.icon = isMenuNode ? 'iconfont icon-file' : 'iconfont icon-file gl-menuItem'
+                    nodeItem.data = isMenuNode ? '' : 'gl-menuItem'
+                    // $tree.jstree(true).refresh_node(nodeItem)
                     console.log('asMenuItem>', data, nodeItem)
+                    // console.log('type:', $tree.jstree(true).get_type(nodeItem))
+                    // $tree.jstree(true).set_type(nodeItem, isMenuNode ? '' : 'gl-menuItem')
+                    // $tree.jstree(true).set_icon(nodeItem, isMenuNode ? 'iconfont icon-file' : 'iconfont icon-file gl-menuItem')
+
                     // $tree.jstree(true).rename_node(nodeItem, isMenuItem(nodeItem) ? nodeItem.text)
                     that.updateNode(nodeItem)
 
@@ -221,7 +230,7 @@
           for (let type in that.fileTypes) {
             let selector = '.' + that.fileTypes[type].icon.split(' ').join('.').replace(/\s+/g, '')
             let data = $.jstree.reference($tree).get_node($node.find(selector))
-            console.log('..........data>', $node, selector, data)
+            console.log('getFileNodeData> $node,selector,type,data', $node, selector, type, data)
             if (data.type) {
               return data
             }
@@ -234,10 +243,12 @@
         }
 
         // 如果是已加入发布应用菜单项，则从发布应用菜单项移除
-        function isMenuItem(item) {
-          // 拿不到flag数据，用icon来作判断
-          // return item.flag === 'menuItem'
-          return item.icon === 'iconfont icon-file-primary'
+        function isMenuItem(nodeItem) {
+          console.log('isMenuItem item:', nodeItem)
+          // return nodeItem.data === 'menuItem'
+          return nodeItem.icon === 'iconfont icon-file gl-menuItem'
+          // return $('#' + nodeItem.li_attr.id + '_anchor').children('i').hasClass('gl-menuItem')
+
         }
 
         function createIconLabel(label, typeName, title) {
@@ -411,5 +422,4 @@
   }
 </script>
 <style scoped>
-
 </style>
