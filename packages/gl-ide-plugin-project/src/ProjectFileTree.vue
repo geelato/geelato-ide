@@ -164,7 +164,7 @@
                   }
                 },
                 asMenuItem: {
-                  label: createIconLabel(isMenuItem(nodeItem) ? '设为非菜单项' : '设为菜单项', 'edit', '若为菜单项，则在最终发布的应用菜单中进行展示'),
+                  label: createIconLabel(isMenuItem(nodeItem) ? '设为非菜单项（普通页面）' : '设为菜单项（菜单页面）', 'edit', '若为菜单项，则在最终发布的应用菜单中进行展示'),
                   _disabled: function (data) {
                     let node = $.jstree.reference(data.reference).get_node(data.reference)
                     if (node.type === 'root') {
