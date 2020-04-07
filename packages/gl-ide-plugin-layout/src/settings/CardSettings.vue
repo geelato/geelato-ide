@@ -42,7 +42,7 @@
 
       <div class="gl-title">
         <a-icon type="setting"/>
-        数据
+        标题
       </div>
       <table class="gl-table">
         <tr class="gl-table-row" v-for="(cardItem,cardItemIndex) in card.items" :key="cardItemIndex">
@@ -51,6 +51,25 @@
           </td>
           <td class="gl-table-cell">
             <a-input v-model="cardItem.title" style="width: 98%"/>
+          </td>
+        </tr>
+      </table>
+      <div class="gl-title" v-if="card.displayMode==='Tabs'">
+        <a-icon type="setting"/>
+        标签页（Tabs）设置
+      </div>
+      <table class="gl-table" v-if="card.displayMode==='Tabs'">
+        <tr class="gl-table-row">
+          <td class="gl-table-cell gl-table-cell-sub-label">
+            显示位置：
+          </td>
+          <td class="gl-table-cell">
+            <a-radio-group v-model="card.opts.tabPosition" size="small">
+              <a-radio-button value="top">上</a-radio-button>
+              <a-radio-button value="bottom">下</a-radio-button>
+              <a-radio-button value="left">左</a-radio-button>
+              <a-radio-button value="right">右</a-radio-button>
+            </a-radio-group>
           </td>
         </tr>
       </table>

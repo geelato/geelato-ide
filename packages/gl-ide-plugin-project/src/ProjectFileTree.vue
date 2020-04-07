@@ -285,8 +285,8 @@
                 icon: type.icon,
                 type: typeName,
                 treeId: that.project.id,
-                // 新增的节点默认都当作应用的菜单
-                flag: 'menuItem'
+                // 新增的节点默认不是应用的菜单menuItem
+                flag: ''
               }
               that.$gl.api.save('platform_tree_node', treeNode, '节点保存成功').then(function (res) {
                 console.log('gl-ide-plugin-project-tree> newTree() > createNode() > save node res:', res)
