@@ -126,7 +126,7 @@
       gutter: {
         type: Number,
         default() {
-          return 8
+          return 0
         }
       }
     },
