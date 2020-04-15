@@ -1,65 +1,141 @@
 <template>
   <div class="gl-ide-plugin-form-designer-sidebar">
-    <a-tabs defaultActiveKey="1" :size="size" :style="{'min-height':`${height}px`,'max-height':`${height}px`}">
-      <a-tab-pane key="1">
-      <span slot="tab">
+    <div  :style="{'min-height':`${height}px`,'max-height':`${height}px`}">
+      <div class="toolbar-item-header">
+        <a-icon type="layout"/>
+        布局
+      </div>
+      <div class="gl-ide-layout-sidebar" style="padding: 0 8px">
+        <gl-draggable
+            v-model="rows"
+            handle=".gl-dnd-row-handle"
+            :group="{ name: 'layoutItems', pull: 'clone', put: false }"
+            ghost-class="ghost"
+            :sort="false"
+            @change="onChange"
+            @choose="onChoose"
+            :clone="clone"
+        >
+          <a-row :gutter="gutter" v-for="(row,rowIndex) in rows" :key="rowIndex" :title="row.title"
+                 class="gl-dnd-row-handle">
+            <a-col v-for="(col,colIndex) in row.cols" :key="colIndex" :span="col.span" style="padding-left: 0px; padding-right: 0px;">
+              <div style="min-height: 2em">{{parseInt(col.span/24*100)}}%</div>
+            </a-col>
+          </a-row>
+        </gl-draggable>
+      </div>
+
+      <div class="toolbar-item-header">
         <a-icon type="edit"/>
         字段
-      </span>
-        <div :style="tabPanelStyle">
-          <div class="toolbar-item-header">
-            通用字段
+      </div>
+      <div style="padding: 8px">
+        <gl-draggable
+            v-model="toolbar.controls"
+            handle=".gl-dnd-control-handle"
+            :group="{ name: 'field', pull: 'clone', put: false }"
+            ghost-class="ghost"
+            :sort="false"
+            @start="drag=true"
+            @end="drag=false"
+            @choose="onChoose"
+            :clone="cloneControl"
+        >
+          <div class="item toolbar-item gl-dnd-control-handle" v-for="controlItem in toolbar.controls"
+               :data-control="controlItem.control">
+            <a-icon :type="controlItem.icon"/>
+            <div class="content" readonly>
+              {{controlItem.title}}
+            </div>
           </div>
-          <div style="padding: 8px">
-            <gl-draggable
-                v-model="toolbar.controls"
-                handle=".gl-dnd-control-handle"
-                :group="{ name: 'field', pull: 'clone', put: false }"
-                ghost-class="ghost"
-                :sort="false"
-                @start="drag=true"
-                @end="drag=false"
-                @choose="onChoose"
-                :clone="cloneControl"
-            >
-              <div class="item toolbar-item gl-dnd-control-handle" v-for="controlItem in toolbar.controls"
-                   :data-control="controlItem.control">
-                <a-icon :type="controlItem.icon"/>
-                <div class="content" readonly>
-                  {{controlItem.title}}
-                </div>
-              </div>
-            </gl-draggable>
-          </div>
-        </div>
-      </a-tab-pane>
-      <a-tab-pane key="2">
-      <span slot="tab">
-        <a-icon type="layout"/>
-        表单布局
-      </span>
-        <div class="gl-ide-layout-sidebar" :style="tabPanelStyle" style="padding: 0 8px">
-          <a-alert message="选择并拖放到右边界面" type="info" closeText="关闭" class="gl-card-gutter"/>
-          <gl-draggable
-              v-model="rows"
-              handle=".gl-dnd-row-handle"
-              :group="{ name: 'layoutItems', pull: 'clone', put: false }"
-              ghost-class="ghost"
-              :sort="false"
-              @change="onChange"
-              @choose="onChoose"
-              :clone="clone"
-          >
-            <a-row :gutter="gutter" v-for="(row,rowIndex) in rows" :key="rowIndex" :title="row.title"
-                   class="gl-dnd-row-handle">
-              <a-col v-for="(col,colIndex) in row.cols" :key="colIndex" :span="col.span" style="padding-left: 0px; padding-right: 0px;">
-                <div style="min-height: 2em">{{parseInt(col.span/24*100)}}%</div>
-              </a-col>
-            </a-row>
-          </gl-draggable>
-        </div>
-      </a-tab-pane>
-    </a-tabs>
+        </gl-draggable>
+      </div>
+    </div>
+
+    <!--<a-tabs defaultActiveKey="1" :size="size" :style="{'min-height':`${height}px`,'max-height':`${height}px`}">-->
+      <!--<a-tab-pane key="1">-->
+      <!--<span slot="tab">-->
+        <!--页面布局与控件-->
+      <!--</span>-->
+        <!--<div :style="tabPanelStyle">-->
+          <!--<div class="toolbar-item-header">-->
+            <!--<a-icon type="layout"/>-->
+            <!--布局-->
+          <!--</div>-->
+          <!--<div class="gl-ide-layout-sidebar" style="padding: 0 8px">-->
+            <!--<gl-draggable-->
+                <!--v-model="rows"-->
+                <!--handle=".gl-dnd-row-handle"-->
+                <!--:group="{ name: 'layoutItems', pull: 'clone', put: false }"-->
+                <!--ghost-class="ghost"-->
+                <!--:sort="false"-->
+                <!--@change="onChange"-->
+                <!--@choose="onChoose"-->
+                <!--:clone="clone"-->
+            <!--&gt;-->
+              <!--<a-row :gutter="gutter" v-for="(row,rowIndex) in rows" :key="rowIndex" :title="row.title"-->
+                     <!--class="gl-dnd-row-handle">-->
+                <!--<a-col v-for="(col,colIndex) in row.cols" :key="colIndex" :span="col.span" style="padding-left: 0px; padding-right: 0px;">-->
+                  <!--<div style="min-height: 2em">{{parseInt(col.span/24*100)}}%</div>-->
+                <!--</a-col>-->
+              <!--</a-row>-->
+            <!--</gl-draggable>-->
+          <!--</div>-->
+
+          <!--<div class="toolbar-item-header">-->
+            <!--<a-icon type="edit"/>-->
+            <!--字段-->
+          <!--</div>-->
+          <!--<div style="padding: 8px">-->
+            <!--<gl-draggable-->
+                <!--v-model="toolbar.controls"-->
+                <!--handle=".gl-dnd-control-handle"-->
+                <!--:group="{ name: 'field', pull: 'clone', put: false }"-->
+                <!--ghost-class="ghost"-->
+                <!--:sort="false"-->
+                <!--@start="drag=true"-->
+                <!--@end="drag=false"-->
+                <!--@choose="onChoose"-->
+                <!--:clone="cloneControl"-->
+            <!--&gt;-->
+              <!--<div class="item toolbar-item gl-dnd-control-handle" v-for="controlItem in toolbar.controls"-->
+                   <!--:data-control="controlItem.control">-->
+                <!--<a-icon :type="controlItem.icon"/>-->
+                <!--<div class="content" readonly>-->
+                  <!--{{controlItem.title}}-->
+                <!--</div>-->
+              <!--</div>-->
+            <!--</gl-draggable>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</a-tab-pane>-->
+      <!--<a-tab-pane key="2">-->
+      <!--<span slot="tab">-->
+        <!--<a-icon type="layout"/>-->
+        <!--表单布局-->
+      <!--</span>-->
+        <!--<div class="gl-ide-layout-sidebar" :style="tabPanelStyle" style="padding: 0 8px">-->
+          <!--<a-alert message="选择并拖放到右边界面" type="info" closeText="关闭" class="gl-card-gutter"/>-->
+          <!--<gl-draggable-->
+              <!--v-model="rows"-->
+              <!--handle=".gl-dnd-row-handle"-->
+              <!--:group="{ name: 'layoutItems', pull: 'clone', put: false }"-->
+              <!--ghost-class="ghost"-->
+              <!--:sort="false"-->
+              <!--@change="onChange"-->
+              <!--@choose="onChoose"-->
+              <!--:clone="clone"-->
+          <!--&gt;-->
+            <!--<a-row :gutter="gutter" v-for="(row,rowIndex) in rows" :key="rowIndex" :title="row.title"-->
+                   <!--class="gl-dnd-row-handle">-->
+              <!--<a-col v-for="(col,colIndex) in row.cols" :key="colIndex" :span="col.span" style="padding-left: 0px; padding-right: 0px;">-->
+                <!--<div style="min-height: 2em">{{parseInt(col.span/24*100)}}%</div>-->
+              <!--</a-col>-->
+            <!--</a-row>-->
+          <!--</gl-draggable>-->
+        <!--</div>-->
+      <!--</a-tab-pane>-->
+    <!--</a-tabs>-->
   </div>
 </template>
 
@@ -190,7 +266,7 @@
   }
 
   .toolbar-item-header {
-    padding-left: 1em;
+    padding: 1em 1em 0.5em 1em;
   }
 
   .toolbar-item .content {

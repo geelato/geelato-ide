@@ -30,7 +30,10 @@ Vue.use(Antd)
 Vue.use(geelatoAui, auiOptions)
 Vue.use(geelatoIde)
 Vue.use(GlPage)
-
+// const IconFont = Icon.createFromIconfontCN({
+//   scriptUrl: '//at.alicdn.com/t/font_1332397_qazjx541tnl.js',
+// });
+// Vue.component('IconFont', IconFont)
 
 // 2. 定义路由
 const routes = [

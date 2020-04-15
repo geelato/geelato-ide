@@ -3,7 +3,7 @@
     <a-alert message="选择并拖放到右边界面" type="info" closeText="关闭" class="gl-card-gutter"/>
     <gl-draggable :list="items" handle=".gl-dnd-handle" :group="{ name: 'card', pull: 'clone', put: false }"
                   :sort="false" :clone="customClone">
-      <div class="gl-dnd-handle" style="width: 100%;cursor: move" v-for="(item,index) in items" :key="index">
+      <div class="g-card gl-dnd-handle"  v-for="(item,index) in items" :key="index">
         <div class="gl-card-header">
           <a-icon :type="item.icon"/>
           {{item.title}}
@@ -45,6 +45,11 @@
 </script>
 
 <style scoped>
+  .gl-card{
+    /*width: 48%;*/
+    display: inline-block;
+    cursor: move
+  }
   .gl-card-header {
     padding: 0 0.5em;
     min-height: 2em;

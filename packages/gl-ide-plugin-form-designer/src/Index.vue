@@ -150,9 +150,11 @@
     display: inline-block;
   }
 
-  .gl-ide-plugin-form-designer .gl-dnd-form-row-handle-target:hover {
+  .gl-ide-plugin-form-designer .gl-dnd-form-row-handle-target:hover,.gl-ide-plugin-form-designer .sortable-ghost {
     /*box-shadow: 0 0 1px #000 inset;*/
-    box-shadow: 0 0 4px #6b6b6b;
+    /*#6b6b6b*/
+    border: 1px solid #2185d0;
+    box-shadow: 0px 0px 6px #2185d0;
   }
 
   .gl-ide-plugin-form-designer .gl-dnd-form-col-wrapper {
@@ -216,5 +218,8 @@
   /*z-index: 999;*/
   /*!*background: transparent;*!*/
   /*background-color: rgba(211, 0, 10, 0.1);*/
+  /*}*/
+  /*.gl-ide-plugin-form-designer .sortable-ghost {*/
+    /*background-color: red;*/
   /*}*/
 </style>

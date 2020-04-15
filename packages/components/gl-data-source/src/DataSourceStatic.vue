@@ -10,6 +10,9 @@
         @end="drag=false"
     >
       <div v-for="(item,index) in items" :key="index" class="gl-select-item gl-dnd-select-handle">
+        <!--<span>-->
+          <!--<input type="radio" name="defaultIndex"/>-->
+        <!--</span>-->
         <span>
           <input v-model="item.text" style="width: 6em" placeholder="选项内容"/>
         </span>

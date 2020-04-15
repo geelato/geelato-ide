@@ -13,15 +13,15 @@
     >
       <a-row v-for="(row,rowIndex) in rowItems" :gutter="row.gutter||gutter" :key="row.gid"
              class="gl-dnd-form-row-handle-target">
-        <a-col v-for="(col,colIndex) in row.cols" :span="col.span" :offset="col.offset" :key="colIndex" style="">
+        <a-col v-for="(col,colIndex) in row.cols" :span="col.span" :offset="col.offset" :key="colIndex">
           <!--col.items为最后一级。未支持嵌套rows的场景，即不支持col.rows-->
           <a-row v-for="(item,itemIndex) in col.items" :key="itemIndex"
                  class="col">
-            <a-col :span="item.fieldSpan.label" class="label">
+            <a-col :span="item.fieldSpan.label" class="label" @click="openCol($event,row,col,colIndex)">
               <gl-label v-if="item.fields[0]&&item.fields[0].field" :label="getProperty(item.fields[0].field).title"
                         :property="getProperty(item.fields[0].field)"></gl-label>
             </a-col>
-            <a-col :span="item.fieldSpan.control" class="control">
+            <a-col :span="item.fieldSpan.control" class="control" @click="openCol($event,row,col,colIndex)">
               <div class="gl-dnd-form-col-toolbar">
                 <!--<a-icon type="swap" style="color: #f5222d" title="移动字段" class="gl-dnd-control-handle"/>-->
                 <a-icon type="delete" theme="twoTone" twoToneColor="#f5222d"
@@ -39,12 +39,14 @@
                   @choose="onControlChoose($event,item)"
                   class="gl-dnd-form-col-wrapper"
               >
-                <gl-control v-if="fieldItem.field" class="gl-dnd-control-handle "
-                            v-for="(fieldItem,fieldItemIndex) in item.fields"
-                            :ref="getProperty(fieldItem.field).gid" :form="form"
-                            :property="getProperty(fieldItem.field)"
-                            :key="fieldItemIndex"
-                ></gl-control>
+                <!--<transition-group>-->
+                  <gl-control v-if="fieldItem.field" class="gl-dnd-control-handle "
+                              v-for="(fieldItem,fieldItemIndex) in item.fields"
+                              :ref="getProperty(fieldItem.field).gid" :form="form"
+                              :property="getProperty(fieldItem.field)"
+                              :key="fieldItemIndex"
+                  ></gl-control>
+                <!--</transition-group>-->
               </gl-draggable>
             </a-col>
           </a-row>
@@ -229,6 +231,11 @@
       },
       onControlChoose(e, fieldItems) {
         console.log('gl-ide-plugin-layout > stage > onControlChoose: ', e)
+        if (e.stopPropagation) {
+          e.stopPropagation()
+          console.log('e.stopPropagation()>')
+        }
+
         let item = this.getCurrentControlItem(e, fieldItems)
         this.$gl.bus.$emit('gl-ide-plugin-form-designer.stage.fieldSelect', this.getProperty(item.field), this.getBindEntityNames())
       },
@@ -243,14 +250,27 @@
           },
           onCancel() {
             item.fields.forEach((fieldItem) => {
-              let gid = that.getProperty(fieldItem.field).gid
-              console.log('gl-ide-plugin-form-designer > stage > removeControl() > 删除字段：', fieldItem, fieldItem.field, gid)
-              delete that.properties[gid]
+              let property = that.getProperty(fieldItem.field)
+              if (property) {
+                let gid = property.gid
+                console.log('gl-ide-plugin-form-designer > stage > removeControl() > 删除字段：', fieldItem, fieldItem.field, gid)
+                delete that.properties[gid]
+              }
             })
             item.fields.splice(0, item.fields.length)
             console.log('gl-ide-plugin-form-designer > stage > removeControl() > item：', item, col, row)
           },
         });
+      },
+      openCol($event, row, col, colIndex) {
+        console.log('$event:', $event, $event.srcElement.className, 'row:', row, 'col:', col, 'colIndex:', colIndex)
+        // 只有点周单元格时才触发
+        let className = $event.srcElement.className
+        if (typeof className.indexOf === "function") {
+          if (className === '' || className.indexOf('ant-col') !== -1 || className.indexOf('gl-control gl-dnd-control-handle sortable-chosen') !== -1 || className.indexOf('gl-dnd-form-col-wrapper') !== -1) {
+            this.$gl.bus.$emit('gl-ide-plugin-form-designer.stage.colSelect', row, col, colIndex)
+          }
+        }
       },
       getCurrentControlItem(e, fieldItems) {
         // console.log('getCurrentControlItem>', e, fieldItems)

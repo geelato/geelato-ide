@@ -73,6 +73,72 @@
       </a-tab-pane>
       <a-tab-pane key="2">
       <span slot="tab">
+        <a-icon type="profile"/>
+        单元格
+      </span>
+        <div :style="tabPanelStyle">
+          <div class="gl-title">
+            <a-icon type="setting"/>
+            外观
+          </div>
+          <table class="gl-table">
+            <tr class="gl-table-row">
+              <td class="gl-table-cell gl-table-cell-sub-label">
+                背景色：
+              </td>
+              <td class="gl-table-cell">
+                <a-radio-group :value="1" size="small">
+                  <a-radio-button :value="1">默认</a-radio-button>
+                </a-radio-group>
+              </td>
+            </tr>
+          </table>
+
+          <div class="gl-title">
+            <a-icon type="setting"/>
+            布局
+          </div>
+          <table class="gl-table">
+            <tr class="gl-table-row">
+              <td class="gl-table-cell gl-table-cell-sub-label">
+                所在行布局：
+              </td>
+              <!--:tipFormatter="(item)=>item+1"-->
+              <td class="gl-table-cell">
+                <a-slider
+                    range
+                    :marks="marks"
+                    :min="0"
+                    :max="24"
+                    :step="1"
+                    v-model="rowLayoutSliderValue"
+                    @change="onRowLayoutChange"
+                    @afterChange="onAfterRowLayoutChange"
+                />
+              </td>
+            </tr>
+            <tr class="gl-table-row">
+              <td class="gl-table-cell gl-table-cell-sub-label">
+                单元格布局：
+              </td>
+              <td class="gl-table-cell">
+                <a-slider
+                    range
+                    :marks="marks"
+                    :min="0"
+                    :max="24"
+                    :step="1"
+                    v-model="colLayoutSliderValue"
+                    @change="onColLayoutChange"
+                    @afterChange="onAfterColLayoutChange"
+                />
+              </td>
+            </tr>
+          </table>
+        </div>
+      </a-tab-pane>
+      <a-tab-pane key="3">
+      <span slot="tab">
         <a-icon type="edit"/>
         字段
       </span>
@@ -284,10 +350,16 @@
         freshFlag: true,
         currentEntityColumns: [],
         toSelectEntityNames: [],
+        currentRowLayout: {},
+        currentColLayout: {},
         // 用于设计
         controlTypes: controlTypes,
         refreshFlag: true,
-        cacheEntityMeta: {}
+        cacheEntityMeta: {},
+        rowLayoutSliderValue: [],
+        colLayoutSliderValue: [],
+        marks: {0: '0', 8: '8', 16: '16', 24: '24'}
+
       }
     },
     watch: {
@@ -299,10 +371,11 @@
     created() {
       // 侦听舞台字段的选择（包括添加）事件
       this.$gl.bus.$on('gl-ide-plugin-form-designer.stage.fieldSelect', this.onFieldSelect)
+      this.$gl.bus.$on('gl-ide-plugin-form-designer.stage.colSelect', this.onColSelect)
     },
     destroyed() {
-
       this.$gl.bus.$off('gl-ide-plugin-form-designer.stage.fieldSelect', this.onFieldSelect)
+      this.$gl.bus.$off('gl-ide-plugin-form-designer.stage.colSelect', this.onColSelect)
     },
     methods: {
       forceFresh() {
@@ -328,7 +401,7 @@
        * @param bindEntityNames 当前已绑定的实体，格式：{}
        */
       onFieldSelect(item, bindEntityNames) {
-        // this.activeTabKey = '2'
+        this.activeTabKey = '3'
         for (let key in bindEntityNames) {
           this.addToSelectEntityNames({key: key, value: bindEntityNames[key]})
         }
@@ -371,6 +444,56 @@
           this.freshFlag = true
         })
         console.log(JSON.stringify(item))
+      },
+      /**
+       * 选中单元格
+       * @param row
+       * @param col
+       * @param colIndex
+       */
+      onColSelect(row, col, colIndex) {
+        let that = this
+        this.activeTabKey = '2'
+        this.currentColLayout = col
+        that.colLayoutSliderValue.splice(0, that.colLayoutSliderValue.length)
+        that.colLayoutSliderValue.push(col.items[0].fieldSpan.label)
+        that.colLayoutSliderValue.push(col.items[0].fieldSpan.control + col.items[0].fieldSpan.label)
+        this.onRowSelect(row)
+      },
+      onRowSelect(row) {
+        let that = this
+        this.activeTabKey = '2'
+        this.currentRowLayout = row
+        that.rowLayoutSliderValue.splice(0, that.rowLayoutSliderValue.length)
+        let lastSpan = 0
+        row.cols.forEach(colItem => {
+          console.log(colItem, colItem.span, lastSpan)
+          that.rowLayoutSliderValue.push(colItem.span + lastSpan)
+          lastSpan = that.rowLayoutSliderValue[that.rowLayoutSliderValue.length - 1]
+        })
+      },
+      onRowLayoutChange() {
+        console.log('before')
+      },
+      onAfterRowLayoutChange() {
+        console.log('after')
+        let that = this
+        let lastValue = 0
+        that.rowLayoutSliderValue.forEach((sliderItemValue, index) => {
+          that.currentRowLayout.cols[index].span = sliderItemValue - lastValue
+          lastValue = sliderItemValue
+        })
+        console.log(that.currentRowLayout)
+      },
+      onColLayoutChange() {
+        console.log('before')
+      },
+      onAfterColLayoutChange() {
+        let that = this
+        console.log('after col', that.colLayoutSliderValue)
+        this.$set(that.currentColLayout.items[0].fieldSpan, 'label', that.colLayoutSliderValue[0])
+        this.$set(that.currentColLayout.items[0].fieldSpan, 'control', that.colLayoutSliderValue[1] - that.colLayoutSliderValue[0])
+        console.log(that.currentColLayout)
       },
       getControlType(control) {
         return this.controlTypes.find(function (controlType) {
