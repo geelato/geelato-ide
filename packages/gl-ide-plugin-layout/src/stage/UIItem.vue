@@ -2,6 +2,7 @@
   <div>
     <gl-draggable
         :list="rowItems"
+        animation="700"
         handle=".gl-dnd-row-handle"
         group='layoutItems'
         :sort="true"
@@ -40,6 +41,7 @@
           <template v-else>
             <gl-draggable
                 :list="col.items"
+                animation="700"
                 handle=".gl-dnd-col-handle"
                 group='card'
                 :sort="true"

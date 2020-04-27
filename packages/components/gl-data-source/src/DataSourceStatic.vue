@@ -2,6 +2,7 @@
   <div>
     <gl-draggable
         v-model="items"
+        animation="700"
         handle=".gl-dnd-select-handle"
         :group="{ name: 'select', pull: 'clone', put: true }"
         ghost-class="ghost"

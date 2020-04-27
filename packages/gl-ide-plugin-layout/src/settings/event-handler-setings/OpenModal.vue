@@ -42,6 +42,7 @@
           <table class="gl-table">
             <gl-draggable
                 :list="modalInfo.paramMapping"
+                animation="700"
                 handle=".gl-dnd-param-handle"
                 group='columns'
                 :sort="true"

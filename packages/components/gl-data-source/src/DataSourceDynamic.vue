@@ -59,7 +59,7 @@
         <!--过滤：-->
       <!--</td>-->
       <td class="gl-table-cell">
-        <div> 过滤：</div>
+        <div> 加载数据过滤：</div>
         <table class="gl-table">
           <tr>
             <th>参数</th>
@@ -68,6 +68,7 @@
           </tr>
           <gl-draggable
               :list="dsItem.params"
+              animation="700"
               handle=".gl-dnd-action-row-handle"
               :group="{ name: 'queryProperties',  put: true }"
               :sort="true"
@@ -105,9 +106,9 @@
         <!--初始：-->
       <!--</td>-->
       <td class="gl-table-cell">
-        <div> 初始：</div>
+        <!--<div> 初始：</div>-->
         <a-switch v-model="dsItem.lazy"></a-switch>
-        <span>初始加载</span>
+        <span>&nbsp;初始时加载数据</span>
       </td>
     </tr>
     <tr class="gl-table-row">

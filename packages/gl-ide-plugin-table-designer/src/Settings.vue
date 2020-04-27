@@ -96,6 +96,7 @@
             </tr>
             <gl-draggable
                 :list="config.table.columns"
+                animation="700"
                 handle=".gl-dnd-action-row-handle"
                 group='columns'
                 :sort="true"
@@ -283,6 +284,7 @@
             </tr>
             <gl-draggable
                 :list="config.query.mix.properties"
+                animation="700"
                 handle=".gl-dnd-action-row-handle"
                 :group="{ name: 'queryProperties',  put: true }"
                 :sort="true"
@@ -401,6 +403,7 @@
             </tr>
             <gl-draggable
                 :list="config.toolbar.actions"
+                animation="700"
                 handle=".gl-dnd-action-row-handle"
                 group='toolbarActions'
                 :sort="true"
@@ -451,6 +454,7 @@
             </thead>
             <gl-draggable
                 :list="config.table.rowAction.actions"
+                animation="700"
                 handle=".gl-dnd-action-row-handle"
                 group='rowActions'
                 :sort="true"
