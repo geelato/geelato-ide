@@ -5,15 +5,19 @@
         <a-col :span="11">
           <div class="line">
             <div slot="title">
-              <span>对控件&nbsp;&nbsp;</span>
+              <span @click="log()">对控件&nbsp;&nbsp;</span>
               <span style="background-color: #ffca11">{{currentControl.title}}</span>
               <span>&nbsp;&nbsp;进行设置。</span>
+              <a-button type="link" title="添加场景" @click="addCase()" style="float: right">
+                <a-icon type="plus-circle"/>
+                场景
+              </a-button>
             </div>
             <div class="line" v-for="(action,actionIndex) in currentActions" :key="actionIndex">
               <div>
                 <span>当&nbsp;&nbsp;</span>
                 <span>
-                  <a-select :defaultValue="action.on" style="width: 200px"
+                  <a-select v-model="action.on" style="width: 200px"
                             @change="handleChange($event,action,actionIndex)">
                     <a-select-opt-group label="鼠标">
                        <a-select-option value="click">单击</a-select-option>
@@ -35,8 +39,12 @@
                   </a-select>
                 </span>
                 <span>&nbsp;&nbsp;且满足</span><a @click="onSetCondition">条件<span>（未设置）</span></a><span>时</span>
-                <span @click="action.do.push({handler:'',fn:'',params:{}})">
-                  <a-button type="link" title="触发动作"><a-icon type="plus-circle"/></a-button>
+                <span style="float: right">
+                  <a-button type="link" title="触发动作" @click="action.do.push({handler:'',fn:'',params:{}})"><a-icon
+                      type="plus-circle"/>动作</a-button>
+                  <a-button type="link" title="删除场景" class="remove" style="color: red"
+                            @click="removeCase(actionIndex)"><a-icon
+                      type="close-circle"/>场景</a-button>
                 </span>
               </div>
               <div class="line event-action" v-for="(doItem,doItemIndex) in action.do"
@@ -147,6 +155,18 @@
       }
     },
     methods: {
+      // scene
+      addCase() {
+        this.currentActions.push({
+          on: '',
+          if: '',
+          do: [],
+          ctx: 'this'
+        })
+      },
+      removeCase(actionIndex) {
+        this.currentActions.splice(actionIndex, 1)
+      },
       handleChange(e, action, actionIndex) {
         console.log(e, action, actionIndex)
       },
@@ -186,6 +206,9 @@
         return !!localComponents[name]
       },
       showDetail() {
+      },
+      log() {
+        console.log('log>', this)
       }
     }
   }
@@ -203,7 +226,7 @@
     display: none;
   }
 
-  .event-action:hover .remove {
+  .event-action:hover .remove, .line:hover .remove {
     display: inline-block;
   }
 

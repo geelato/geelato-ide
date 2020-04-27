@@ -2,6 +2,7 @@
   <div>
     <div class="gl-form-header"></div>
     <gl-draggable
+        animation="700"
         :list="rowItems"
         handle=".gl-dnd-form-row-handle"
         group='layoutItems'
@@ -11,57 +12,72 @@
         @clone="onRowClone"
         @change="onRowChange"
     >
-      <a-row v-for="(row,rowIndex) in rowItems" :gutter="row.gutter||gutter" :key="row.gid"
-             class="gl-dnd-form-row-handle-target">
-        <a-col v-for="(col,colIndex) in row.cols" :span="col.span" :offset="col.offset" :key="colIndex">
-          <!--col.items为最后一级。未支持嵌套rows的场景，即不支持col.rows-->
-          <a-row v-for="(item,itemIndex) in col.items" :key="itemIndex"
-                 class="col">
-            <a-col :span="item.fieldSpan.label" class="label" @click="openCol($event,row,col,colIndex)">
-              <gl-label v-if="item.fields[0]&&item.fields[0].field" :label="getProperty(item.fields[0].field).title"
-                        :property="getProperty(item.fields[0].field)"></gl-label>
-            </a-col>
-            <a-col :span="item.fieldSpan.control" class="control" @click="openCol($event,row,col,colIndex)">
-              <div class="gl-dnd-form-col-toolbar">
-                <!--<a-icon type="swap" style="color: #f5222d" title="移动字段" class="gl-dnd-control-handle"/>-->
-                <a-icon type="delete" theme="twoTone" twoToneColor="#f5222d"
-                        @click="removeControl(item,col,row,itemIndex,colIndex,rowIndex)" title="删除字段"/>
-              </div>
-              <!--<div class="form-control-mask gl-dnd-control-handle">&nbsp;</div>-->
-              <gl-draggable
-                  :list="item.fields"
-                  handle=".gl-dnd-control-handle"
-                  group='field'
-                  :sort="false"
-                  @add="onAddControl($event,item)"
-                  @end="onRowEndControl($event,item)"
-                  @change="onControlChange($event,item)"
-                  @choose="onControlChoose($event,item)"
-                  class="gl-dnd-form-col-wrapper"
-              >
-                <!--<transition-group>-->
-                  <gl-control v-if="fieldItem.field" class="gl-dnd-control-handle "
-                              v-for="(fieldItem,fieldItemIndex) in item.fields"
-                              :ref="getProperty(fieldItem.field).gid" :form="form"
-                              :property="getProperty(fieldItem.field)"
-                              :key="fieldItemIndex"
-                  ></gl-control>
-                <!--</transition-group>-->
-              </gl-draggable>
-            </a-col>
-          </a-row>
-        </a-col>
-        <div class="gl-dnd-form-row-toolbar">
-          <div class="icons-list">
-            <a-icon type="swap" style="color: #f5222d" title="移动行" class="gl-dnd-form-row-handle"/>
-            <a-icon type="close-circle" theme="twoTone" twoToneColor="#f5222d" style="margin-left: 0.1em"
-                    @click="removeRow(rowIndex)"
-                    title="删除行"/>
+      <div v-for="(row,rowIndex) in rowItems" class="gl-dnd-form-row-wrapper">
+        <div class="gl-dnd-form-row-handle-wrapper">
+          <div title="移动行" class="gl-dnd-form-row-handle">
+            <a-icon type="build" theme="twoTone"/>
           </div>
         </div>
-      </a-row>
-      <div v-if="!rowItems||rowItems.length===0" style="text-align: center;padding-top: 1em">
-        从左边【布局】栏目中拖动布局行列到该区域，再从【组件】栏目拖动组件到布局行列中。
+        <a-row :gutter="row.gutter||gutter" :key="row.gid"
+               class="gl-dnd-form-row-handle-target">
+          <a-col v-for="(col,colIndex) in row.cols" :span="col.span" :offset="col.offset" :key="colIndex">
+            <!--col.items为最后一级。未支持嵌套rows的场景，即不支持col.rows-->
+            <a-row v-for="(item,itemIndex) in col.items" :key="itemIndex"
+                   class="col">
+              <a-col :span="item.fieldSpan.label" class="label" style="cursor: pointer"
+                     @click="openCol($event,row,col,colIndex)" title="设置单元格布局">
+                <gl-label v-if="item.fields[0]&&item.fields[0].field" :label="getProperty(item.fields[0].field).title"
+                          :property="getProperty(item.fields[0].field)"></gl-label>
+              </a-col>
+              <a-col :span="item.fieldSpan.control" class="control">
+                <div class="gl-dnd-form-col-toolbar">
+                  <!--<a-icon type="swap" style="color: #f5222d" title="移动字段" class="gl-dnd-control-handle"/>-->
+                  <a-icon type="delete" theme="twoTone" twoToneColor="#f5222d"
+                          @click="removeControlCol(item,col,row,itemIndex,colIndex,rowIndex)" title="清空单元格内容"/>
+                </div>
+                <gl-draggable
+                    :list="item.fields"
+                    animation="700"
+                    handle=".gl-dnd-control-handle"
+                    group='field'
+                    :sort="false"
+                    @add="onAddControl($event,item)"
+                    @end="onRowEndControl($event,item)"
+                    @change="onControlChange($event,item)"
+                    class="gl-dnd-form-col-wrapper"
+                >
+                  <!--@choose="onControlChoose($event,item)"-->
+                  <div v-if="fieldItem.field"
+                       v-for="(fieldItem,fieldItemIndex) in item.fields" class="gl-dnd-control-wrapper">
+                    <div class="gl-dnd-control-handle-wrapper">
+                      <div title="拖动控件" class="gl-dnd-control-handle">
+                        <a-icon type="build" theme="twoTone"/>
+                      </div>
+                      <div title="设置控件" @click="onControlSetting(fieldItem)" style="margin-left: 1px;">
+                        <a-icon type="setting" theme="twoTone"/>
+                      </div>
+                    </div>
+                    <gl-control :ref="getProperty(fieldItem.field).gid" :form="form"
+                                :property="getProperty(fieldItem.field)"
+                                :key="fieldItemIndex"
+                    ></gl-control>
+                  </div>
+                </gl-draggable>
+              </a-col>
+            </a-row>
+          </a-col>
+          <div class="gl-dnd-form-row-toolbar">
+            <div class="icons-list">
+              <!--<a-icon type="swap" style="color: #f5222d" title="移动行" class="gl-dnd-form-row-handle"/>-->
+              <a-icon type="close-circle" theme="twoTone" twoToneColor="#f5222d" style="margin-left: 0.1em"
+                      @click="removeRow(rowIndex)"
+                      title="删除行"/>
+            </div>
+          </div>
+        </a-row>
+        <div v-if="!rowItems||rowItems.length===0" style="text-align: center;padding-top: 1em">
+          从左边【布局】栏目中拖动布局行列到该区域，再从【组件】栏目拖动组件到布局行列中。
+        </div>
       </div>
     </gl-draggable>
     <div class="gl-form-toolbar" v-show="toolbar.show" style="text-align: center">
@@ -231,18 +247,17 @@
       },
       onControlChoose(e, fieldItems) {
         console.log('gl-ide-plugin-layout > stage > onControlChoose: ', e)
-        if (e.stopPropagation) {
-          e.stopPropagation()
-          console.log('e.stopPropagation()>')
-        }
-
         let item = this.getCurrentControlItem(e, fieldItems)
         this.$gl.bus.$emit('gl-ide-plugin-form-designer.stage.fieldSelect', this.getProperty(item.field), this.getBindEntityNames())
       },
-      removeControl(item, col, row) {
+      onControlSetting(fieldItem) {
+        console.log('gl-ide-plugin-layout > stage > onControlSetting >fieldItem: ', fieldItem)
+        this.$gl.bus.$emit('gl-ide-plugin-form-designer.stage.fieldSelect', this.getProperty(fieldItem.field), this.getBindEntityNames())
+      },
+      removeControlCol(item, col, row) {
         let that = this
         that.$confirm({
-          title: '是否删除该字段?',
+          title: '是否清空该单元格内容?',
           cancelText: '是',
           okText: '否',
           content: '',
@@ -253,12 +268,12 @@
               let property = that.getProperty(fieldItem.field)
               if (property) {
                 let gid = property.gid
-                console.log('gl-ide-plugin-form-designer > stage > removeControl() > 删除字段：', fieldItem, fieldItem.field, gid)
+                console.log('gl-ide-plugin-form-designer > stage > removeControlCol() > 清空单元格内容：', fieldItem, fieldItem.field, gid)
                 delete that.properties[gid]
               }
             })
             item.fields.splice(0, item.fields.length)
-            console.log('gl-ide-plugin-form-designer > stage > removeControl() > item：', item, col, row)
+            console.log('gl-ide-plugin-form-designer > stage > removeControlCol() > item：', item, col, row)
           },
         });
       },
@@ -336,6 +351,12 @@
           return str
         }
       },
+      stopPropagation($event) {
+        console.log('stopPropagation > $event', $event)
+        $event.stopPropagation()
+        $event.preventDefault()
+        return false
+      }
     }
   }
 </script>

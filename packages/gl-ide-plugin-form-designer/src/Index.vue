@@ -130,7 +130,7 @@
 
   .gl-ide-plugin-form-designer .gl-dnd-form-row-toolbar {
     position: absolute;
-    right: -3.25em;
+    right: -2.25em;
     display: none;
     font-size: 1em;
     line-height: 2.4em;
@@ -150,7 +150,7 @@
     display: inline-block;
   }
 
-  .gl-ide-plugin-form-designer .gl-dnd-form-row-handle-target:hover,.gl-ide-plugin-form-designer .sortable-ghost {
+  .gl-ide-plugin-form-designer .gl-dnd-form-row-handle-target:hover, .gl-ide-plugin-form-designer .sortable-ghost {
     /*box-shadow: 0 0 1px #000 inset;*/
     /*#6b6b6b*/
     border: 1px solid #2185d0;
@@ -169,7 +169,12 @@
     z-index: 1000;
   }
 
-  .gl-ide-plugin-form-designer .control:hover .gl-dnd-form-col-toolbar {
+  .gl-ide-plugin-form-designer .gl-dnd-form-col-toolbar.left {
+    left: 0.5em;
+    right: auto;
+  }
+
+  .gl-ide-plugin-form-designer .control:hover .gl-dnd-form-col-toolbar, .gl-ide-plugin-form-designer .control:hover .gl-dnd-form-col-toolbar.left {
     display: inline-block;
   }
 
@@ -208,6 +213,35 @@
     cursor: move;
   }
 
+  .gl-dnd-control-handle {
+    cursor: pointer;
+  }
+
+  .gl-dnd-control-handle-wrapper, .gl-dnd-form-row-handle-wrapper {
+    position: absolute;
+    float: left;
+    display: none;
+    font-size: 1.5em;
+    z-index: 100;
+    cursor: pointer;
+  }
+
+  .gl-dnd-form-row-handle-wrapper {
+    padding: 0.1em;
+    font-size: 1.625em;
+  }
+
+  .gl-dnd-control-handle-wrapper > div, .gl-dnd-form-row-handle-wrapper > div {
+    display: inline-block;
+    padding: 0 0.3em;
+    border: solid 1px deepskyblue;
+    background-color: #91d5ff;
+  }
+
+  .gl-dnd-control-wrapper:hover .gl-dnd-control-handle-wrapper, .gl-dnd-form-row-wrapper:hover .gl-dnd-form-row-handle-wrapper {
+    display: inline-block;
+  }
+
   /*.gl-ide-plugin-form-designer .form-control-mask {*/
   /*position: absolute;*/
   /*top: 0px;*/
@@ -220,6 +254,6 @@
   /*background-color: rgba(211, 0, 10, 0.1);*/
   /*}*/
   /*.gl-ide-plugin-form-designer .sortable-ghost {*/
-    /*background-color: red;*/
+  /*background-color: red;*/
   /*}*/
 </style>

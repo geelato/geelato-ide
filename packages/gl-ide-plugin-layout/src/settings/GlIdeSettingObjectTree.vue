@@ -7,8 +7,8 @@
     <a-tree
         showIcon
         :treeData="ideStore.editingFile.objectTree"
-        @select="this.onSelect"
-        @check="this.onCheck"
+        @select="onSelect"
+        @check="onCheck"
         :defaultExpandAll=true
     >
 
@@ -79,7 +79,7 @@
     },
     data() {
       return {
-        modalWidth: (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) * .70,
+        modalWidth: (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) * .80,
         modalVisible: false,
         currentComponent: {},
         currentControl: {
