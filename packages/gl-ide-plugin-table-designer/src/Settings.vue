@@ -136,7 +136,7 @@
                             <a-icon type="delete" theme="twoTone" twoToneColor="#eb2f96"/>
                           </a-button>
                           <a-button class="gl-mini-btn gl-dnd-action-row-handle">
-                            <a-icon type="swap"/>
+                            <a-icon type="drag"/>
                           </a-button>
                         </td>
                       </tr>
@@ -323,7 +323,7 @@
                             <a-icon type="eye-invisible"/>
                           </a-button>
                           <a-button class="gl-mini-btn gl-dnd-action-row-handle">
-                            <a-icon type="swap"/>
+                            <a-icon type="drag"/>
                           </a-button>
                           <a-button class="gl-mini-btn"
                                     @click="$gl.utils.remove(config.query.mix.properties,propertyIndex)">
@@ -427,7 +427,7 @@
                     <a-icon type="delete" theme="twoTone" twoToneColor="#eb2f96"/>
                   </a-button>
                   <a-button class="gl-mini-btn gl-dnd-action-row-handle">
-                    <a-icon type="swap"/>
+                    <a-icon type="drag"/>
                   </a-button>
                 </td>
               </tr>
@@ -471,7 +471,7 @@
                     <a-icon type="delete" theme="twoTone" twoToneColor="#eb2f96"/>
                   </a-button>
                   <a-button class="gl-mini-btn gl-dnd-action-row-handle">
-                    <a-icon type="swap"/>
+                    <a-icon type="drag"/>
                   </a-button>
                 </td>
               </tr>

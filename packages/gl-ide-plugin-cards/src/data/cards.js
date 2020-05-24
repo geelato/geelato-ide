@@ -1,5 +1,6 @@
 import form from './form.js'
 import table from './table.js'
+import tree from './tree.js'
 import header from './header.js'
 import pageLoader from './page_loader.js'
 
@@ -81,6 +82,52 @@ export default {
       show: true,
       bind: {opts: pageLoader, params: {}},
       meta: {component: 'GlPage', designer: 'GlIdePluginPageLoaderDesigner', title: '设置', modalWidthPercent: .5}
+    },
+    {
+      title: '树',
+      icon: 'cluster',
+      component: 'GlTree',
+      img: '',
+      description: '',
+      show: true,
+      bind: {opts: tree, params: {}},
+      meta: {
+        component: 'GlTree',
+        designer: 'GlIdePluginTreeDesigner',
+        title: '树设计器',
+        objectTree: [
+          {
+            title: '树节点',
+            path: 'nodeAction.actions'
+          }, {
+            title: '右键菜单项',
+            path: 'menuAction.actions'
+          }],
+        // 该组件输入参数定义元数据
+        inParam: {
+          // path: 'query.mix.properties',
+          // name: 'field',
+          // title: 'title'
+        },
+        // 该组件的输出参数定义元数据
+        outParams: [
+        //   {
+          //   group: '查询条件',
+          //   type: Object,
+          //   // 在设计配置页面中展示，选择参数
+          //   name: 'field', title: 'title', path: 'query.mix.properties',
+          //   // 在运行时获取参数值
+          //   dataCtx: 'ctxLoader().currentQuery'
+          // }, {
+          //   group: '行记录（currentRowX）',
+          //   type: Object,
+          //   name: 'dataIndex', title: 'title', path: 'table.columns',
+          //   dataCtx: 'ctxLoader().currentRow'
+          // }
+        ],
+        methods: [{code: 'refresh', title: '刷新', description: '刷新树'}],
+        modalWidthPercent: .8
+      }
     },
     // {
     //   title: '工具条',

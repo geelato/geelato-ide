@@ -186,7 +186,7 @@
                   绑定数据：
                 </td>
                 <td class="gl-table-cell">
-                  <div style="line-height: 2em;margin-left: 0.5em">先选择实体：</div>
+                  <div class="gl-title-sub">先选择实体：</div>
                   <!--<a-input-search placeholder="选择并绑定实体" v-model="fieldConfig.entity" @search="openSelectEntityList"-->
                   <!--readOnly>-->
                   <!--<a-button type="primary" slot="enterButton">-->
@@ -210,7 +210,7 @@
                       {{entityItem.value}}
                     </a-select-option>
                   </a-select>
-                  <div style="line-height: 2em;margin-left: 0.5em">再绑定字段：</div>
+                  <div class="gl-title-sub">再绑定字段：</div>
                   <!--:style="{color:!containField()?'':'red'}"-->
                   <a-select v-model="fieldConfig.field" :allowClear="true" style="min-width: 99%" v-if="refreshFlag"
                             @change="forceFresh">
@@ -221,7 +221,8 @@
                   </a-select>
                   <div style="margin: 0.2em">
                     <a-switch v-model="fieldConfig.isServerSaveIgnore"></a-switch>
-                    保存时是否排除该字段
+                    <!--保存时是否排除该字段-->
+                    仅加载数据有效，不做保存
                   </div>
                 </td>
               </tr>
@@ -574,7 +575,7 @@
       onDataSourceUpdate({dsItem, dsKey, dsMap}) {
         console.log('gl-ide-plugin-form-designer > Settings > onDataSourceUpdate() > dsItem, dsKey, dsMap:', dsItem, dsKey, dsMap)
         this.$set(this.fieldConfig, 'dsName', dsKey)
-        this.$set(this.opts, 'dsName', dsMap)
+        this.$set(this.opts, 'ds', dsMap)
       }
     }
 

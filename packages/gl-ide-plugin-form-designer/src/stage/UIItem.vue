@@ -15,7 +15,7 @@
       <div v-for="(row,rowIndex) in rowItems" class="gl-dnd-form-row-wrapper">
         <div class="gl-dnd-form-row-handle-wrapper">
           <div title="移动行" class="gl-dnd-form-row-handle">
-            <a-icon type="build" theme="twoTone"/>
+            <a-icon type="drag" style="color: #1890ff"/>
           </div>
         </div>
         <a-row :gutter="row.gutter||gutter" :key="row.gid"
@@ -31,7 +31,7 @@
               </a-col>
               <a-col :span="item.fieldSpan.control" class="control">
                 <div class="gl-dnd-form-col-toolbar">
-                  <!--<a-icon type="swap" style="color: #f5222d" title="移动字段" class="gl-dnd-control-handle"/>-->
+                  <!--<a-icon type="drag" style="color: #f5222d" title="移动字段" class="gl-dnd-control-handle"/>-->
                   <a-icon type="delete" theme="twoTone" twoToneColor="#f5222d"
                           @click="removeControlCol(item,col,row,itemIndex,colIndex,rowIndex)" title="清空单元格内容"/>
                 </div>
@@ -51,7 +51,7 @@
                        v-for="(fieldItem,fieldItemIndex) in item.fields" class="gl-dnd-control-wrapper">
                     <div class="gl-dnd-control-handle-wrapper">
                       <div title="拖动控件" class="gl-dnd-control-handle">
-                        <a-icon type="build" theme="twoTone"/>
+                        <a-icon type="drag" style="color: #1890ff"/>
                       </div>
                       <div title="设置控件" @click="onControlSetting(fieldItem)" style="margin-left: 1px;">
                         <a-icon type="setting" theme="twoTone"/>
@@ -68,7 +68,7 @@
           </a-col>
           <div class="gl-dnd-form-row-toolbar">
             <div class="icons-list">
-              <!--<a-icon type="swap" style="color: #f5222d" title="移动行" class="gl-dnd-form-row-handle"/>-->
+              <!--<a-icon type="drag" style="color: #f5222d" title="移动行" class="gl-dnd-form-row-handle"/>-->
               <a-icon type="close-circle" theme="twoTone" twoToneColor="#f5222d" style="margin-left: 0.1em"
                       @click="removeRow(rowIndex)"
                       title="删除行"/>

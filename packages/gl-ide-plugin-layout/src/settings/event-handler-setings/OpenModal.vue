@@ -108,7 +108,7 @@
                     <a-icon type="delete" theme="twoTone" twoToneColor="#eb2f96"/>
                   </a-button>
                   <a-button class="gl-mini-btn gl-dnd-param-handle">
-                    <a-icon type="swap"/>
+                    <a-icon type="drag"/>
                   </a-button>
                 </td>
               </tr>

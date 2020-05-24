@@ -8,6 +8,7 @@ import GlIdePluginLayout from './gl-ide-plugin-layout/index'
 import GlIdePluginHeaderDesigner from './gl-ide-plugin-header-designer/index'
 import GlIdePluginFormDesigner from './gl-ide-plugin-form-designer/index'
 import GlIdePluginTableDesigner from './gl-ide-plugin-table-designer/index'
+import GlIdePluginTreeDesigner from './gl-ide-plugin-tree-designer/index'
 import GlIdePluginPageLoaderDesigner from './gl-ide-plugin-page-loader-designer/index'
 import GlIdePluginProject from './gl-ide-plugin-project/index'
 import GlIdePluginCards from './gl-ide-plugin-cards/index'
@@ -55,6 +56,7 @@ const install = function (Vue, options) {
   ide.use(GlIdePluginHeaderDesigner)
   ide.use(GlIdePluginFormDesigner)
   ide.use(GlIdePluginTableDesigner)
+  ide.use(GlIdePluginTreeDesigner)
   ide.use(GlIdePluginPageLoaderDesigner)
   ide.use(GlIdePluginCards)
   // ide.use(GlIdePluginFields)

@@ -7,10 +7,14 @@
       </a-radio-group>
     </div>
     <div v-if="dataSourceType==='dynamic'&&dsItem.entity">
-      <gl-data-source-dynamic :dsItem="dsItem" @updateEntity="onUpdateEntity"></gl-data-source-dynamic>
+      <gl-data-source-dynamic :dsItem="dsItem" :controlConfigMeta="controlConfigMeta" @updateEntity="onUpdateEntity"
+                              :dataAlias="dataAlias"></gl-data-source-dynamic>
     </div>
     <div v-else-if="dataSourceType==='static'">
-      <gl-data-source-static :dataItems="dataItems"></gl-data-source-static>
+      <gl-data-source-static v-if="dsType==='select'" :dataItems="dataItems"
+                             :dataAlias="dataAlias"></gl-data-source-static>
+      <gl-data-source-static-tree-node v-else-if="dsType==='treeNode'" :dataItems="dataItems"
+                                       :dataAlias="dataAlias"></gl-data-source-static-tree-node>
     </div>
   </div>
 </template>
@@ -18,10 +22,11 @@
 <script>
   import GlDataSourceDynamic from './DataSourceDynamic'
   import GlDataSourceStatic from './DataSourceStatic'
+  import GlDataSourceStaticTreeNode from './DataSourceStaticTreeNode'
 
   export default {
     name: "GlDataSource",
-    components: {GlDataSourceStatic, GlDataSourceDynamic},
+    components: {GlDataSourceStatic, GlDataSourceStaticTreeNode, GlDataSourceDynamic},
     props: {
       /**
        * 动态数据源名称
@@ -40,6 +45,23 @@
        */
       dataItems: {
         type: Array
+      },
+      dataAlias: {
+        type: Object,
+        default() {
+          return {text: 'text', value: 'value'}
+        }
+      },
+      // 仅对于动态数据源有效，用于指定需配置哪些查询字段
+      controlConfigMeta: {
+        type: Array
+      },
+      // 数据源类型，默认为下拉数据源select，另可为treeNode
+      dsType: {
+        type: String,
+        default() {
+          return 'select'
+        }
       }
     },
     data() {
@@ -63,16 +85,16 @@
           this.dataSourceType = 'dynamic'
           let ds = this.dsMap[this.dsKey]
           // kv to array
-          let params = []
-          for (let key in ds.params) {
-            params.push({key: key, value: ds.params[key]})
-          }
+          // let params = []
+          // for (let key in ds.params) {
+          //   params.push({key: key, value: ds.params[key]})
+          // }
           this.dsItem = {
             entity: ds.entity,
             lazy: ds.lazy,
             fields: ds.fields,
             resultMapping: ds.resultMapping,
-            params: params,
+            params: ds.params,
             description: ds.description
           }
         } else {
@@ -92,7 +114,7 @@
               // provinceCode: 'gs:$ctx.form.province'
               // }
             ],
-            description: '这是一个下拉列表数据源，带参数'
+            description: ''
           }
         }
         this.onChange()
@@ -106,14 +128,14 @@
       onChange() {
         // 从配置数据结构转成源码数据结构
         // array to kv
-        let params = {}
-        this.dsItem.params.forEach(param => params[param.key] = param.value)
+        // let params = {}
+        // this.dsItem.params.forEach(param => params[param.key] = param.value)
         let updatedDsItem = {
           entity: this.dsItem.entity,
           lazy: this.dsItem.lazy,
           fields: this.dsItem.fields,
           resultMapping: this.dsItem.resultMapping,
-          params: params,
+          params: this.dsItem.params,
           description: this.dsItem.description
         }
 

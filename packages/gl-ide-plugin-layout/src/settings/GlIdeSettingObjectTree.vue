@@ -21,6 +21,7 @@
       <a-icon slot="bars" type="bars"/>
       <a-icon slot="link" type="link"/>
       <a-icon slot="folder" type="folder"/>
+      <a-icon slot="cluster" type="cluster"/>
     </a-tree>
     <a-modal v-if="modalVisible" class="gl-card-designer" title="事件配置" centered :width=modalWidth v-model="modalVisible"
              @ok="() => modalVisible = false" @cancel="onCloseModal" okText="保存" cancelText="取消"

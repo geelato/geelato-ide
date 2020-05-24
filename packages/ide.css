@@ -35,6 +35,10 @@
  * 各组件的专用设置页面面板的样式
    应用于：gl-ide-plugin-table-designer、gl-ide-plugin-form-designer等
  *************************************/
+.gl-dnd-handle {
+    cursor: move;
+}
+
 .gl-ide-plugin-x-designer-settings .ant-tabs-tab {
     padding-right: 5px !important;
     padding-left: 8px !important;
@@ -53,6 +57,16 @@
 .gl-ide-plugin-x-designer-settings .gl-title > i {
     margin: 0.5em
 }
+
+.gl-ide-plugin-x-designer-settings .gl-title-sub {
+    margin: 0.5em 0;
+    font-weight: bold;
+}
+
+.gl-ide-plugin-x-designer-settings .gl-title-sub:before {
+    content: '#';
+}
+
 
 .gl-ide-plugin-x-designer-settings .gl-mini-btn {
     padding-right: 8px !important;

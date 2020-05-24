@@ -1,37 +1,12 @@
 <template>
   <div>
-    <gl-draggable
-        v-model="items"
-        animation="700"
-        handle=".gl-dnd-select-handle"
-        :group="{ name: 'select', pull: 'clone', put: true }"
-        ghost-class="ghost"
-        :sort="true"
-        @start="drag=true"
-        @end="drag=false"
-    >
-      <div v-for="(item,index) in items" :key="index" class="gl-select-item gl-dnd-select-handle">
-        <!--<span>-->
-        <!--<input type="radio" name="defaultIndex"/>-->
-        <!--</span>-->
-        <span>
-          <input v-model="item[dataAlias.text]" style="width: 6em" placeholder="选项内容"/>
-        </span>
-        <!--<span>-->
-        <!--<input v-model="item.value" style="width: 4em" placeholder="选项值"/>-->
-        <!--</span>-->
-        <span>
-          <a-input-number v-model="item[dataAlias.value]" style="width: 4em" placeholder="选项值"/>
-        </span>
-        <span class="icons-list">
-          <a-icon type="plus" @click="add(item,index)"/>
-          <a-icon type="minus" @click="remove(item,index)"/>
-          <a-icon type="drag" class=""/>
-        </span>
-      </div>
-    </gl-draggable>
-    <!--<a-switch :checked="dataType==='number'" @click='changeType'/>-->
-    <!--是否数值类型-->
+    <div v-for="(item,index) in items" :key="index">
+      <div class="gl-title-sub"> 节点名称：</div>
+      <input v-model="item[dataAlias.text]" style="width: 100%" placeholder="输入节点名称"/>
+      <div class="gl-title-sub"> 节点Key：</div>
+      {{item[dataAlias.value]}}
+      <!--<a-input placeholder="选项值" :aria-readonly="true"/>-->
+    </div>
   </div>
 </template>
 

@@ -1,6 +1,17 @@
 <template>
   <div :size="size" :style="stageStyle">
-    <gl-table ref="table" :opts="config" :params="{}"></gl-table>
+    <a-tabs defaultActiveKey="1" :size="size" :style="{'min-height':`${height}px`,'max-height':`${height}px`}">
+      <!--*******************************************************************************-->
+      <!--******************************* 1、树 ****************************************-->
+      <!--*******************************************************************************-->
+      <a-tab-pane key="1">
+      <span slot="tab">
+        <a-icon type="eye"/>
+        预览
+      </span>
+        <gl-tree ref="tree" :opts="config"></gl-tree>
+      </a-tab-pane>
+    </a-tabs>
   </div>
 </template>
 
@@ -8,7 +19,7 @@
   import mixin from '../../mixin-designer'
 
   export default {
-    name: "GlIdePluginTableDesignerStage",
+    name: "GlIdePluginTreeDesignerStage",
     components: {},
     mixins: [mixin],
     props: {

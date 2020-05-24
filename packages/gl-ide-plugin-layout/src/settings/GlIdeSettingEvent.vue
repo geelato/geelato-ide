@@ -40,11 +40,11 @@
                 </span>
                 <span>&nbsp;&nbsp;且满足</span><a @click="onSetCondition">条件<span>（未设置）</span></a><span>时</span>
                 <span style="float: right">
-                  <a-button type="link" title="触发动作" @click="action.do.push({handler:'',fn:'',params:{}})"><a-icon
-                      type="plus-circle"/>动作</a-button>
                   <a-button type="link" title="删除场景" class="remove" style="color: red"
                             @click="removeCase(actionIndex)"><a-icon
                       type="close-circle"/>场景</a-button>
+                  <a-button type="link" title="触发动作" @click="action.do.push({handler:'',fn:'',params:{}})"><a-icon
+                      type="plus-circle"/>动作</a-button>
                 </span>
               </div>
               <div class="line event-action" v-for="(doItem,doItemIndex) in action.do"

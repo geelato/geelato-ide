@@ -366,11 +366,11 @@ utils.remove = function (items, index, confirmMsg) {
  * @returns {Array}
  */
 utils.listToTree = function (data, pid, mapping) {
-  let tree = [];
-  let temp;
+  let tree = []
+  let temp
   for (let i = 0; i < data.length; i++) {
     if (data[i].pid == pid) {
-      let obj = data[i];
+      let obj = data[i]
       temp = utils.listToTree(data, data[i].id);
       if (temp.length > 0) {
         obj.children = temp;
@@ -378,7 +378,7 @@ utils.listToTree = function (data, pid, mapping) {
       tree.push(obj);
     }
   }
-  return tree;
+  return tree
 }
 
 /**
@@ -389,8 +389,8 @@ utils.listToTree = function (data, pid, mapping) {
  * @returns {Array}
  */
 utils.listToAntTree = function (data, pid, isLeafSelectableOnly) {
-  let tree = [];
-  let temp;
+  let tree = []
+  let temp
   for (let i = 0; i < data.length; i++) {
     if (data[i].parent == pid) {
       let obj = {
@@ -398,37 +398,37 @@ utils.listToAntTree = function (data, pid, isLeafSelectableOnly) {
         key: data[i].id,
         value: data[i].id
       }
-      temp = utils.listToAntTree(data, data[i].id, isLeafSelectableOnly);
+      temp = utils.listToAntTree(data, data[i].id, isLeafSelectableOnly)
       if (isLeafSelectableOnly && data[i].icon === 'iconfont icon-folder') {
         obj.selectable = false
       }
       if (temp.length > 0) {
         obj.children = temp
       }
-      tree.push(obj);
+      tree.push(obj)
     }
   }
-  return tree;
+  return tree
 }
 
 // utils.listToTree = function (data, pid, mapping) {
-//   let tree = [];
-//   let temp;
+//   let tree = []
+//   let temp
 //   for (let i = 0; i < data.length; i++) {
 //     if (data[i].pid == pid) {
 //       let obj = data[i];
 //       temp = utils.listToTree(data, data[i].id);
 //       if (temp.length > 0) {
-//         obj.children = temp;
+//         obj.children = temp
 //       }
-//       tree.push(obj);
+//       tree.push(obj)
 //     }
 //   }
-//   return tree;
+//   return tree
 // }
 
 utils.sleep = function (time) {
-  return new Promise((resolve) => setTimeout(resolve, time));
+  return new Promise((resolve) => setTimeout(resolve, time))
 }
 
 // utils.CryptoJS = CryptoJS

@@ -170,13 +170,13 @@
         console.log('geelato > runtime > gl-page > Index.vue > resizeIframe() > iframeWin:', this.iframeDocument.documentElement)
 
         try {
-          let bHeight = this.iframeDocument.body.scrollHeight;
-          let dHeight = this.iframeDocument.documentElement.scrollHeight;
+          let bHeight = this.iframeDocument.body.scrollHeight
+          let dHeight = this.iframeDocument.documentElement.scrollHeight
           console.log('geelato > runtime > gl-page > Index.vue > resizeIframe() > bHeight,:', bHeight, dHeight)
 
-          let height = Math.min(bHeight, dHeight);
-          // iframe.style.height = height + 50 + 'px';
-          // console.log('geelato > runtime > gl-page > Index.vue > resizeIframe() iframe.height:', iframe.height);
+          let height = Math.min(bHeight, dHeight)
+          // iframe.style.height = height + 50 + 'px'
+          // console.log('geelato > runtime > gl-page > Index.vue > resizeIframe() iframe.height:', iframe.height)
 
           // if (this.opts.sizeMode === 'auto') {
           //   this.iframeStyle = {

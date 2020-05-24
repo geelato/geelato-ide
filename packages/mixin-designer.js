@@ -28,6 +28,13 @@ export default {
           'overflow-y': "auto"
         }
       }
+    },
+    stageStyle: {
+      padding: '2em',
+      // "{'min-height':`${height}px`,'max-height':`${height}px`}"
+      'min-height': window.innerHeight * .84 + `px`,
+      'max-height': window.innerHeight * .84 + `px`,
+      'overflow-y': 'scroll'
     }
   }
 }

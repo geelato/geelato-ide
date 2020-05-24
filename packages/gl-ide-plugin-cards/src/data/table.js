@@ -18,7 +18,7 @@ export default {
           cop: 'contains',
           control: 'input',
           lop: 'and',
-          props: {placeholder: '姓名', defaultValue: ''}
+          props: {placeholder: '名称', defaultValue: ''}
         },
         {
           field: 'type',

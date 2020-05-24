@@ -10,10 +10,11 @@
           添加
         </div>
       </div>
-      <a-select-option v-for="entityItem in toSelectEntityNames" :key="entityItem.value"
-                       :value="entityItem.value"
-                       :title="entityItem.text">
-        {{entityItem.value}}
+      {{dataAlias}}
+      <a-select-option v-for="entityItem in toSelectEntityNames" :key="entityItem[dataAlias.value]"
+                       :value="entityItem[dataAlias.value]"
+                       :title="entityItem[dataAlias.text]">
+        {{entityItem[dataAlias.value]}}
       </a-select-option>
     </a-select>
     <!--<div style="line-height: 2em;margin-left: 0.5em">再绑定字段：</div>-->
@@ -41,7 +42,8 @@
       }
     },
     props: {
-      autoLoadFieldMeta: {
+      // 是否初始化时加载字段元数据，默认为false
+      loadFieldMetaWhenMounted: {
         type: Boolean,
         default() {
           false
@@ -56,6 +58,12 @@
         default() {
           []
         }
+      },
+      dataAlias: {
+        type: Object,
+        default() {
+          return {text: 'text', value: 'value'}
+        }
       }
     },
     data() {
@@ -65,7 +73,10 @@
       }
     },
     mounted() {
-      console.log('gl-data-source > GlDataSourceDynamicSelectEntity > mounted() > toSelectEntityNames:', this.toSelectEntityNames)
+      console.log('gl-data-source > GlDataSourceDynamicSelectEntity > mounted() > toSelectEntityNames:', this.toSelectEntityNames, this.loadFieldMetaWhenMounted)
+      if (this.loadFieldMetaWhenMounted) {
+        this.loadFieldMetaByEntityName(this.entityName)
+      }
     },
     // destroyed() {
     //   this.$emit('update', {})
