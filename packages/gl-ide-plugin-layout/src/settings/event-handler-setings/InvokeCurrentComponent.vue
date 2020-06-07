@@ -44,8 +44,7 @@
 </template>
 
 <script>
-  import glTableApi from './api/gl-table'
-  import glFormApi from './api/gl-form'
+  import componentsMeta from '../../../../gl-ide-plugin-cards/src/componentsMeta'
 
   export default {
     props: {
@@ -61,7 +60,7 @@
     },
     data() {
       return {
-        api: {},
+        meta: {},
         fn: {
           name: '',
           params: []
@@ -69,8 +68,7 @@
       }
     },
     created() {
-      this.api.GlTable = glTableApi
-      this.api.GlForm = glFormApi
+      this.meta = componentsMeta
     },
     mounted() {
       if (this.params && this.params.InvokeCurrentComponent && this.params.InvokeCurrentComponent.fn) {
@@ -79,7 +77,7 @@
     },
     methods: {
       getApi() {
-        return this.api[this.designComponentName]
+        return this.meta[this.designComponentName]
       },
       handleChange(methodName, fn) {
         console.log('handleChange()>', methodName, fn, this.designComponentName)

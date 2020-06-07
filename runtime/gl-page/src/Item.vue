@@ -28,17 +28,21 @@
                 <!--v-show="colItem.show"-->
                 <component :ref="colItem.id" :is="$globalVue.component(colItem.component)"
                            :gid="colItem.id" v-bind="colItem.bind" :params="params"
-                           @doAction="$emit('doAction',$event)"></component>
+                           @doAction="$emit('doAction',$event)"
+                           v-show="colItem.isShow===undefined||colItem.isShow"
+                           @display="(display)=>{$set(colItem,'isShow',display.isShow)}"></component>
               </a-tab-pane>
             </a-tabs>
           </template>
           <template v-else-if="col.displayMode==='Collapse'">
             <!-- 卡片内的组件渲染 --采用Collapse方式  -->
             <a-collapse :defaultActiveKey="col.opts?col.opts.defaultActiveKey||0:0">
-              <a-collapse-panel :forceRender="true" v-for="(colItem,colItemIndex) in col.items" :header="colItem.title" :key="colItemIndex">
-                  <component :ref="colItem.id" :is="$globalVue.component(colItem.component)"
-                             :gid="colItem.id" v-bind="colItem.bind" :params="params"
-                             @doAction="$emit('doAction',$event)"></component>
+              <a-collapse-panel :forceRender="true" v-for="(colItem,colItemIndex) in col.items" :header="colItem.title"
+                                :key="colItemIndex">
+                <component :ref="colItem.id" :is="$globalVue.component(colItem.component)"
+                           :gid="colItem.id" v-bind="colItem.bind" :params="params"
+                           @doAction="$emit('doAction',$event)" v-show="colItem.isShow===undefined||colItem.isShow"
+                           @display="(display)=>{$set(colItem,'isShow',display.isShow)}"></component>
               </a-collapse-panel>
             </a-collapse>
           </template>
@@ -50,7 +54,8 @@
               <!--<textarea :value="JSON.stringify(params[colItem.id])" style="width: 100%"></textarea>-->
               <component :ref="colItem.id" :is="$globalVue.component(colItem.component)"
                          :gid="colItem.id" v-bind="colItem.bind" :params="params[colItem.id]"
-                         @doAction="$emit('doAction',$event)"></component>
+                         @doAction="$emit('doAction',$event)" v-show="colItem.isShow===undefined||colItem.isShow"
+                         @display="(display)=>{$set(colItem,'isShow',display.isShow)}"></component>
             </div>
           </template>
         </template>
@@ -109,10 +114,10 @@
         rowItems: this.rows,
         colItems: [],
         // {id:component}
-        colCards: {}
+        colCards: {},
+        componentsDisplay: {}
       }
     },
-    computed: {},
     mounted() {
       this.editingFileParser = new EditingFileParser().init(this.$root)
       this.initComponentRefs()
@@ -309,7 +314,18 @@
             col.items.splice(index, 1)
           }
         })
-      }
+      },
+      // onChangeDisplay(id, data) {
+      //   this.$set(this.componentsDisplay, id, data.isShow)
+      //   console.log('gl-ide-plugin-layout > stage > onChangeDisplay > data:', id, data)
+      // },
+      // isShow(id) {
+      //   if (!this.componentsDisplay[id]) {
+      //     return true
+      //   } else {
+      //     return this.componentsDisplay[id]
+      //   }
+      // }
     }
   }
 </script>

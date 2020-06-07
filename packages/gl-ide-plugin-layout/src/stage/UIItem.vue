@@ -287,7 +287,8 @@
             slots: {
               icon: item.icon,
             },
-            children: []
+            children: [],
+            _component: ''
           }
           that.treeNodes.push(node)
         }
@@ -298,6 +299,7 @@
         let cardComponent = that.componentRefs[item.id]
         console.log('gl-ide > gl-ide-plugin-layout > UIItem > generateObjectTreeNodeAndBindEvent() > item.id,cardComponent:', item.id, cardComponent, that.componentRefs)
         if (cardComponent && cardComponent.meta && cardComponent.meta.objectTree) {
+          node._component = cardComponent.meta.component
           cardComponent.meta.objectTree.forEach((treeNodeObject) => {
             // treeNodeObject: {title:xx,path:xx.yy.zz}
             let group = groups.find(group => group.key === treeNodeObject.path)

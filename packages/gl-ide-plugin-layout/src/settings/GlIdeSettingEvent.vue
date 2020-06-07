@@ -72,6 +72,7 @@
             <p>
               <component :is="currentDetailComponentName" v-bind="currentDoItem"
                          :designComponentName="currentComponent.meta.component"
+                         :objectTree="ideStore.editingFile.objectTree"
                          @update="(params)=>currentDoItem.params = params"></component>
             </p>
           </a-card>
@@ -88,7 +89,8 @@
   import ScriptBlock from './event-handler-setings/ScriptBlock'
   import SetVars from './event-handler-setings/SetVars'
   import OpenModal from './event-handler-setings/OpenModal'
-  import InvokeCurrentComponent from './event-handler-setings/InvokeCurrentComponent/InvokeCurrentComponent'
+  import InvokeCurrentComponent from './event-handler-setings/InvokeCurrentComponent'
+  import InvokeComponent from './event-handler-setings/InvokeComponent'
   import ShowMessage from './event-handler-setings/ShowMessage'
   import ShowAndHide from './event-handler-setings/ShowAndHide'
   import ReadAndWrite from './event-handler-setings/ReadAndWrite'
@@ -103,6 +105,7 @@
     ShowAndHide,
     ReadAndWrite,
     InvokeCurrentComponent,
+    InvokeComponent,
     Empty
   }
 

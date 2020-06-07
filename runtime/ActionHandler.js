@@ -1,4 +1,5 @@
 import InvokeCurrentComponentHandler from './handler/InvokeCurrentComponentHandler'
+import InvokeComponentHandler from './handler/InvokeComponentHandler'
 import OpenModalHandler from './handler/OpenModalHandler'
 import ShowMessageHandler from './handler/ShowMessageHandler'
 
@@ -10,6 +11,7 @@ export default class ActionHandler {
 
     this.handlers = {
       InvokeCurrentComponentHandler: new InvokeCurrentComponentHandler(this.$root),
+      InvokeComponentHandler: new InvokeComponentHandler(this.$root),
       OpenModalHandler: new OpenModalHandler(this.$root),
       ShowMessageHandler: new ShowMessageHandler(this.$root)
     }
