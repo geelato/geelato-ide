@@ -146,7 +146,7 @@ export default {
       // 在运行时获取参数值
       dataCtx: 'ctxLoader().currentQuery'
     }, {
-      group: '行记录（currentRowX）',
+      group: '行记录（currentRow）',
       type: Object,
       name: 'dataIndex', title: 'title', path: 'table.columns',
       dataCtx: 'ctxLoader().currentRow'

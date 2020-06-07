@@ -1,6 +1,6 @@
 <template>
   <div class="gl-designer-properties" v-if="ideStore.refreshToggleFlag">
-    <a-tabs :activeKey="activeTabKey" @change="(key)=>{activeTabKey=key}" size="small" class="gl-compact"
+    <a-tabs :activeKey="activeTabKey" @change="onChangeTabs" size="small" class="gl-compact"
             v-if="ideStore.editingFile&&ideStore.editingFile.type">
       <a-tab-pane v-for="(panel,index) in ideStore.settingPanels" :tab="panel.title" :key="index"
                   :style="{padding:`${panelPadding}px`}">
@@ -50,6 +50,14 @@
         Object.assign(this.setting.config, value)
         console.log('gl-ide > Settings > onUpdate > value:', value)
         console.log('gl-ide > Settings > onUpdate > this.setting:', this.setting)
+      },
+      onChangeTabs(key) {
+        this.activeTabKey = key
+        // console.log('this.$refs:', this.$refs, key)
+        // let ref = this.$refs['panel' + key][0]
+        // if (typeof ref.reset === "function") {
+        //   ref.reset()
+        // }
       }
     }
   }

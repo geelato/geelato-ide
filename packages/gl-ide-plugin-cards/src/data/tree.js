@@ -82,38 +82,6 @@ export default {
         'entity': 'platform_user'
       }
     },
-    'ds2': {
-      'platform_dev_db_connect': {
-        'lazy': false,
-        'resultMapping': {'title': 'dbName', 'key': 'id'},
-        'fields': 'dbName,id',
-        'params': [],
-        'entity': 'platform_dev_db_connect'
-      },
-      'platform_dev_table': {
-        'lazy': false,
-        'resultMapping': {'title': 'tableName', 'key': 'id'},
-        'fields': 'tableName,id',
-        'params': [{name: 'connectId', value: '$ctx.$parent.key'}],
-        'order': 'tableName|+',
-        'entity': 'platform_dev_table'
-      },
-      'platform_dev_column': {
-        'lazy': false,
-        'resultMapping': {'title': 'name', 'key': 'id'},
-        'fields': 'name,id',
-        'params': [{name: 'tableId', value: '$ctx.key'}],
-        'order': 'name|+',
-        'entity': 'platform_dev_column'
-      },
-      'platform_user': {
-        'lazy': false,
-        'resultMapping': {'title': 'name', 'key': 'id'},
-        'fields': 'name,id',
-        'params': [],
-        'entity': 'platform_user'
-      }
-    },
     showLine: true,
     showIcon: false,
     checkable: false,
@@ -156,7 +124,7 @@ export default {
       ],
     },
     nodeAction: {
-      actions: [{gid: 'SEIDKQE9', control: 'link', title: '节点按钮'}]
+      actions: [{gid: 'SEIDKQE9', control: 'link', title: '树节点按钮'}]
     }
   },
   meta: {
@@ -187,7 +155,7 @@ export default {
       //   // 在运行时获取参数值
       //   dataCtx: 'ctxLoader().currentQuery'
       // }, {
-      //   group: '行记录（currentRowX）',
+      //   group: '行记录（currentRow）',
       //   type: Object,
       //   name: 'dataIndex', title: 'title', path: 'table.columns',
       //   dataCtx: 'ctxLoader().currentRow'

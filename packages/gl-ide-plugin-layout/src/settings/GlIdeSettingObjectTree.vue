@@ -1,3 +1,6 @@
+<!--
+  对象树，用户配置绑定事件
+-->
 <template>
   <div>
     <span style="padding-left: 2.4em">
@@ -208,8 +211,7 @@
       },
       onCheck(checkedKeys, info) {
         console.log('onCheck', checkedKeys, info);
-      },
-
+      }
     },
   }
 </script>

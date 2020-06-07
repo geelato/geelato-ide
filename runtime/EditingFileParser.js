@@ -206,6 +206,11 @@ export default class EditingFileParser {
     }
   }
 
+  /**
+   *  将设计时源码格式，转成保存到数据库的格式
+   * @param editingFile
+   * @return
+   * */
   convertSourceToSave(editingFile) {
     let sourceContent = {
       component: {},

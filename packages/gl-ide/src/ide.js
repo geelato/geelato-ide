@@ -5,6 +5,10 @@ const files = []
 const fileTypes = {}
 const panels = []
 const history = {}
+// 设计时辅助设置
+const assist = {
+  showComponentId: false
+}
 let GlobalVue
 // let editingFile = {
 //   type: 'GlPageLayout',
@@ -24,7 +28,8 @@ let store = {
   },
   editingCardItem: {},
   stagePanels: [],
-  settingPanels: []
+  settingPanels: [],
+  assist: JSON.parse(JSON.stringify(assist))
 }
 
 /**
@@ -35,6 +40,7 @@ function resetStore() {
   GlobalVue.set(store, 'settingPanels', [])
   GlobalVue.set(store, 'editingFile', {})
   GlobalVue.set(store, 'editingCardItem', {})
+  GlobalVue.set(store, 'assist', JSON.parse(JSON.stringify(assist)))
 }
 
 function checkPlugin() {

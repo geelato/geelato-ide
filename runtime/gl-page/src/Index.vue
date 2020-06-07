@@ -198,6 +198,70 @@
   }
 </script>
 
-<style scoped>
+<style>
+  .gl-ide-preview .gl-ide-layout-stage .gl-dnd-row-handle {
+    border: 0px solid #f0f0f0;
+    margin-bottom: 0.1em;
+    cursor: move;
+  }
 
+  .gl-ide-preview .gl-ide-layout-stage .gl-dnd-row-handle.sortable-chosen {
+    background-color: rgb(107, 209, 255);
+  }
+
+  /*.gl-ide-preview .gl-dnd-col-wrapper {*/
+  /*min-height: 2em;*/
+  /*}*/
+
+  .gl-ide-preview .gl-dnd-row-toolbar {
+    position: absolute;
+    right: -0.5em;
+    display: none;
+  }
+
+  .gl-ide-preview .gl-dnd-row-toolbar i {
+    font-size: 1.5em;
+    line-height: 1.5em;
+    cursor: pointer;
+  }
+
+  .gl-ide-preview .gl-dnd-row-handle:hover .gl-dnd-row-toolbar {
+    display: inline-block;
+  }
+
+  .gl-ide-preview .gl-dnd-col-toolbar {
+    padding: 0 1em;
+    line-height: 2em;
+    height: 2em;
+    background-color: #e5e5e5
+  }
+
+  .gl-ide-preview .gl-dnd-col-toolbar button {
+    background-color: #e5e5e5;
+    border-color: #e5e5e5
+  }
+
+  /*.gl-ide-layout-stage .gl-dnd-row-handle > div {*/
+  /*!*padding: 0 1px !important;*!*/
+  /*}*/
+
+  /*.gl-ide-layout-stage .gl-dnd-row-handle:hover > div > div {*/
+  /*!*background-color: rgba(255, 202, 17, 0.7);*!*/
+  /*}*/
+
+  .gl-ide-preview .gl-ide-layout-stage .gl-dnd-row-handle:hover {
+    /*box-shadow: 0 0 1px #000 inset;*/
+    box-shadow: 0 0 4px #ffca11;
+  }
+
+  .gl-ide-preview .gl-ide-layout-stage .gl-dnd-row-handle > div > div {
+    background-color: rgba(161, 222, 255, 0.35);
+    /*text-align: center;*/
+  }
+
+  .gl-ide-preview .gl-ide-layout-stage .gl-dnd-row-handle > div > div:hover {
+    /*background-color: rgba(211, 211, 211, 0.3);*/
+    background-color: rgba(255, 202, 17, 0.35);
+    /*border: 1px dotted #a5a5a5;*/
+  }
 </style>

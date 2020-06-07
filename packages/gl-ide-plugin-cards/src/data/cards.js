@@ -44,7 +44,7 @@ export default {
       description: '',
       show: true,
       bind: {opts: tree.opts, params: {}},
-      meta: tree.opts
+      meta: tree.meta
     },
     // {
     //   title: '工具条',
@@ -63,7 +63,7 @@ export default {
       img: '',
       description: '',
       show: true,
-      bind: header,
+      bind: {opts: header.opts, params: {}},
       meta: header.meta
     }],
 }

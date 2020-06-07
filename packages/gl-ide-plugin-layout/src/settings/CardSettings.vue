@@ -40,14 +40,14 @@
         </tr>
       </table>
 
-      <div class="gl-title">
+      <div class="gl-title" v-if="card.items&&card.items.length>0">
         <a-icon type="setting"/>
         标题
       </div>
       <table class="gl-table">
         <tr class="gl-table-row" v-for="(cardItem,cardItemIndex) in card.items" :key="cardItemIndex">
           <td class="gl-table-cell gl-table-cell-sub-label">
-            标题-{{cardItemIndex}}：
+            标题({{cardItemIndex+1}})：
           </td>
           <td class="gl-table-cell">
             <a-input v-model="cardItem.title" style="width: 98%"/>
@@ -73,6 +73,21 @@
           </td>
         </tr>
       </table>
+      <!--===============设计辅助========================-->
+      <div class="gl-title">
+        <a-icon type="setting"/>
+        设计辅助
+      </div>
+      <table class="gl-table">
+        <tr class="gl-table-row">
+          <td class="gl-table-cell gl-table-cell-sub-label">
+            显示组件ID：
+          </td>
+          <td class="gl-table-cell">
+            <a-switch v-model="$ide.store.assist.showComponentId"></a-switch>
+          </td>
+        </tr>
+      </table>
     </div>
     <a-alert v-else
              message="未选择卡片"
@@ -90,6 +105,9 @@
     name: "GlIdePluginLayoutCardSettings",
     components: {},
     props: {
+      ideStore: {
+        type: Object
+      },
       config: {
         type: Object
       }

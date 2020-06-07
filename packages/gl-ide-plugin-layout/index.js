@@ -76,7 +76,7 @@ const plugin = {
     ]
   },
   sidebar: {
-    title: '布局',
+    title: '布局卡片',
     icon:'layout',
     component: Sidebar
   }
