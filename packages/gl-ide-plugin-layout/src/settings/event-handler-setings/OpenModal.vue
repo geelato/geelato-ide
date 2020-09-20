@@ -77,7 +77,7 @@
                               <a-select-option v-for="(inParam,inParamIndex) in optionData.inParams"
                                                :key="inParam.gid+'_'+inParamIndex"
                                                :value="optionData.gid+'.'+inParam.gid">
-                                {{inParam.name+'-'+inParam.title}}
+                                {{inParam.title+' ('+inParam.name+')'}}
                               </a-select-option>
                             </template>
                           </a-select-opt-group>
@@ -95,7 +95,7 @@
                                               :label="optionData.title" :key="optionData.gid+'_'+optionDataIndex">
                             <a-select-option v-for="(outParam,outParamIndex) in optionData.outParams"
                                              :key="outParam.gid+'_'+outParamIndex"
-                                             :value="outParam.gid">{{outParam.name+'-'+outParam.title}}
+                                             :value="outParam.gid">{{outParam.title+' ('+outParam.name+')'}}
                             </a-select-option>
                           </a-select-opt-group>
                         </a-select>
@@ -200,8 +200,10 @@
   import ideConfig from '../../../../gl-ide/src/data/ideSelectItems.js'
   import utils from '../../../../../runtime/utils.js'
   import cardsDefined from '../../../../gl-ide-plugin-cards/src/data/cards.js'
+  import mixin from './common/mixin'
 
   export default {
+    mixins: [mixin],
     props: {
       params: {
         type: Object,
@@ -214,9 +216,6 @@
             paramMapping: []
           }
         }
-      },
-      designComponentName: {
-        type: String
       }
     },
     data() {
@@ -364,7 +363,14 @@
               console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > loadAndParseSourcePage() > get cardDefined:', cardDefined, ' by componentName:', cardItem.component)
               console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > loadAndParseSourcePage() > the cardDefined.meta.outParams:', cardDefined.meta.outParams)
               cardDefined.meta.outParams.forEach(outParamItem => {
-                let outParams = utils.eval('$ctx.' + outParamItem.path, cardItem.bind.opts)
+                // 输出参数元数据定义
+                let outParams = {}
+                // 如果outParamItem定义了meta，则优先于path，以meta中定义的元数据为准
+                if (outParamItem.meta) {
+                  outParams = outParamItem.meta
+                } else {
+                  outParams = utils.eval('$ctx.' + outParamItem.path, cardItem.bind.opts)
+                }
                 let newOutParams = []
                 for (let index in outParams) {
                   let outParam = outParams[index]
@@ -383,7 +389,7 @@
                 that.outParamSelection.push({
                   gid: cardItem.id,
                   component: cardItem.component,
-                  title: cardItem.bind.opts.title + '-' + outParamItem.group,
+                  title: outParamItem.group + (cardItem.bind.opts.title ? ' (' + cardItem.bind.opts.title + ')' : ''),
                   outParams: newOutParams
                 })
 

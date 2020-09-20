@@ -12,6 +12,14 @@
         </div>
       </div>
     </gl-draggable>
+    <div class="gl-segment-signs">
+      <div class="gl-segment-sign">
+
+      </div>
+      <div class="gl-segment-sign">
+
+      </div>
+    </div>
   </div>
 </template>
 
@@ -80,5 +88,12 @@
   .gl-card-body i {
     font-size: 3em;
     color: #6b6b6b;
+  }
+
+  .gl-segment-sign {
+    min-height: 6em;
+    width: 48%;
+    border: 1px solid #d1d1d1;
+    background-color: #f0f0f0;
   }
 </style>

@@ -11,50 +11,16 @@
         @clone="onClone"
         @change="onRowChange"
     >
-      <a-row v-for="(row,rowIndex) in rowItems" :gutter="row.gutter||gutter" :key="rowIndex" class="gl-dnd-row"
-             :class="{'gl-selected':currentSelectObjectUid===row.uid}">
-
-        <div class="gl-dnd-row-toolbar">
-          <!--<div style="display:inline" @click="showBreadcrumbs=true">&gt;</div>-->
-          <div style="display:inline" title="拖动卡片" class="gl-dnd-row-handle">
-            <a-icon type="table"/>
-            行
-          </div>&nbsp;
-          <div style="display:inline-block;float: right">
-            <a-button size="small" @click="onRowDelete(rowIndex)" title="删除行" type="danger">
-              <a-icon type="delete"></a-icon>
+      <a-row v-for="(row,rowIndex) in rowItems" :gutter="row.gutter||gutter" :key="rowIndex" class="gl-dnd-row-handle">
+        <a-col v-for="(col,colIndex) in row.cols" :span="col.span" :offset="col.offset" :key="colIndex"
+               class="gl-dnd-col">
+          <div class="gl-dnd-card-toolbar" style="background-color: rgba(114,218,255,0)">
+            <a-button type="primary" size="small" @click="onCardSetting(col,colIndex)"
+                      title="卡片设置" style=" border-radius: 8px;width: 7em">
+              <a-icon type="setting" theme="filled"/>
+              <span>卡片设置</span>
             </a-button>
           </div>
-        </div>
-        <a-col v-for="(col,colIndex) in row.cols" :span="col.span" :offset="col.offset" :key="colIndex"
-               class="gl-dnd-col"
-               :class="{'gl-selected':currentSelectObjectUid===col.uid}">
-
-          <!--<div class="gl-dnd-col-breadcrumbs" v-if="showBreadcrumbs">-->
-          <!--<div class="crumbs" @click="showBreadcrumbs=false">行</div>-->
-          <!--<div class="crumbs-link">&gt;</div>-->
-          <!--<div class="crumbs gl-dnd-col-handle" @click="showBreadcrumbs=false">-->
-          <!--卡片-->
-          <!--</div>&nbsp;-->
-          <!--</div>-->
-
-          <div class="gl-dnd-col-toolbar">
-            <!--<div style="display:inline" @click="showBreadcrumbs=true">&gt;</div>-->
-            <div style="display:inline" title="拖动卡片" class="gl-dnd-col-handle">
-              <a-icon type="border"/>
-              卡片（单元格）
-            </div>&nbsp;
-            <div style="display:inline-block;float: right">
-              <!--<a-button size="small" @click="onCardSetting(col,colIndex)"-->
-              <!--title="卡片设置">-->
-              <!--<a-icon type="layout" theme="filled"/>-->
-              <!--</a-button>-->
-              <a-button size="small" @click="onColDelete(col,colItem,colItemIndex)" type="danger" title="删除该卡片（单元格）">
-                <a-icon type="delete"></a-icon>
-              </a-button>
-            </div>
-          </div>
-
           <template v-if="col.card">
             <a-card :title="getCardConfig(col.card).title" style="margin-top: 8px">
               <!--<component :ref="col.card" :is="getCardComponent(col.card)"-->
@@ -76,46 +42,18 @@
             <gl-draggable
                 :list="col.items"
                 animation="700"
-                handle=".gl-dnd-col-item-handle"
+                handle=".gl-dnd-col-handle"
                 group='card'
                 :sort="true"
                 @add="onAddCol($event,col)"
                 @change="onColChange"
+                @choose="onColChoose"
                 class="gl-dnd-col-wrapper"
             >
-              <!--@choose="onColChoose"  gl-dnd-col-handle-->
-              <div v-for="(colItem,colItemIndex) in col.items" :key="colItem.id"
-                   class="gl-col-item-wrapper"
-                   style="padding-top: 0.1em;position: relative"
-                   :class="{'gl-selected':currentSelectObjectUid===colItem.id}">
-                <div class="gl-dnd-col-item-hover-title">
-                  <div style="text-align: left;display:inline" class="gl-dnd-col-item-handle">
-                    <a-icon :type="colItem.icon"/>
-                    {{colItem.title}}{{$ide.store.assist.showComponentId?'-'+colItem.id:''}}
-                  </div>&nbsp;
-                </div>
-                <div class="gl-dnd-col-item-breadcrumbs" v-if="showBreadcrumbs">
-                  <div class="crumbs" @click="onSelectObject(row.uid)">行</div>
-                  <div class="crumbs-link">
-                    <a-icon type="minus" :rotate="-45"/>
-                  </div>
-                  <div class="crumbs" @click="onSelectObject(col.uid);onCardSetting(col,colIndex)">
-                    <a-icon type="border"></a-icon>
-                    卡片
-                  </div>
-                  <div class="crumbs-link">
-                    <a-icon type="minus" :rotate="-45"/>
-                  </div>
-                  <div class="crumbs gl-dnd-col-item-handle" @click="showBreadcrumbs=false" title="拖动卡片">
-                    <a-icon :type="colItem.icon"/>
-                    {{colItem.title}}{{$ide.store.assist.showComponentId?'-'+colItem.id:''}}
-                  </div>&nbsp;
-                </div>
-                <div class="gl-dnd-col-item-toolbar" v-if="!showBreadcrumbs">
-                  <div style="display:inline;margin: 0 1em 0 0;cursor: pointer" @click="showBreadcrumbs=true">
-                    <a-icon type="double-left"/>
-                  </div>
-                  <div style="display:inline" title="拖动卡片" class="gl-dnd-col-item-handle">
+              <div v-for="(colItem,colItemIndex) in col.items" :key="colItem.id" class="gl-dnd-col-handle"
+                   style="padding-top: 0.1em">
+                <div class="gl-dnd-col-toolbar">
+                  <div style="text-align: left;display:inline" title="拖动卡片">
                     <a-icon :type="colItem.icon"/>
                     {{colItem.title}}{{$ide.store.assist.showComponentId?'-'+colItem.id:''}}
                   </div>&nbsp;
@@ -124,38 +62,25 @@
                     <!--title="刷新">-->
                     <!--<a-icon type="reload"/>-->
                     <!--</a-button>-->
-                    <!--<a-button size="small"-->
-                    <!--title="卡片设置">-->
-                    <!--<a-icon type="layout" theme="filled"/>-->
-                    <!--&lt;!&ndash;<span>卡片设置</span>&ndash;&gt;-->
-                    <!--</a-button>-->
                     <a-button size="small" @click="onCardOpen(col,colItem,colItemIndex)"
-                              title="组件设置">
+                              title="设置">
                       <a-icon type="setting" theme="filled"/>
                     </a-button>
-                    <a-button size="small" v-if="colItem.show!==false" @click="colItem.show=false" title="隐藏该组件内容">
+                    <a-button size="small" v-if="colItem.show!==false" @click="colItem.show=false" title="隐藏该卡片内容">
                       <a-icon type="eye-invisible"/>
                     </a-button>
-                    <a-button size="small" v-if="colItem.show===false" @click="colItem.show=true" title="展示该组件内容">
+                    <a-button size="small" v-if="colItem.show===false" @click="colItem.show=true" title="展示该卡片内容">
                       <a-icon type="eye"/>
                     </a-button>
-                    <a-button size="small" @click="onColDelete(col,colItem,colItemIndex)" type="danger" title="删除该组件">
+                    <a-button size="small" @click="onColDelete(col,colItem,colItemIndex)" type="danger" title="删除该卡片">
                       <a-icon type="delete"></a-icon>
                     </a-button>
                   </div>
                 </div>
                 <!--class="gl-dnd-col-handle"-->
-                <div class="gl-component-wrapper"
-                     @click="onSelectObject(colItem.id)">
-                  <!--{{row.id}}{{row.uid}}-->
-                  <component :ref="colItem.id" v-show="colItem.show" :is="$globalVue.component(colItem.component)"
-                             v-bind="colItem.bind"></component>
-                  <div v-if="!colItem.show" style="text-align: center;font-size: 3em">
-                    <a-icon :type="colItem.icon" @click="colItem.show=true" title="点击展示该组件内容"/>
-                  </div>
-                </div>
+                <component :ref="colItem.id" v-show="colItem.show" :is="$globalVue.component(colItem.component)"
+                           v-bind="colItem.bind"></component>
               </div>
-              <div :class="{'gl-dnd-placeholder':col.items.length===0}"></div>
               <div v-if="rowItems.length===1&&(!col.items||col.items.length===0)"
                    style="text-align: center;padding-top:.2em">
                 从左边【组件】栏目拖动组件到此。
@@ -163,9 +88,9 @@
             </gl-draggable>
           </template>
         </a-col>
-        <!--<div class="gl-dnd-row-toolbar" @click="onRowDelete(rowIndex)" title="删除行">-->
-        <!--<a-icon type="close-circle" theme="twoTone" twoToneColor="#f5222d"/>-->
-        <!--</div>-->
+        <div class="gl-dnd-row-toolbar" @click="onRowDelete(rowIndex)" title="删除行">
+          <a-icon type="close-circle" theme="twoTone" twoToneColor="#f5222d"/>
+        </div>
       </a-row>
       <div v-if="!rowItems||rowItems.length===0" style="text-align: center;padding-top: 1em">
         从左边【布局】栏目中拖动布局行列到该区域，再从【组件】栏目拖动组件到布局行列中。
@@ -246,9 +171,7 @@
         colItems: [],
         // {id:component}
         colCards: {},
-        currentCardId: '',
-        currentSelectObjectUid: '',
-        showBreadcrumbs: false
+        currentCardId: ''
       }
     },
     computed: {
@@ -290,7 +213,6 @@
           return;
         }
         that.rows.filter((row) => !!row.cols).forEach((row) => {
-          row.uid = that.$gl.utils.uuid(8)
           row.cols.filter((col) => !!col.items).forEach((col) => {
             // ==========item为卡片内一个组件的配置信息，例如下方所示
             // {id:'',title: '列表',icon: 'table',component: 'GlTable',bind: {opts: table, query: {}},
@@ -304,8 +226,6 @@
             col.items.forEach((item) => {
               that.generateObjectTreeNodeAndBindEvent(item)
             })
-
-            col.uid = that.$gl.utils.uuid(8)
           })
         })
         console.log('gl-ide > gl-ide-plugin-layout-item> generateTreeData() > componentRefs:', this.componentRefs)
@@ -538,7 +458,6 @@
         console.log('gl-ide-plugin-layout > UIItem > onClone: ', e)
       },
       onAddCol: function (e, col) {
-        col.uid = this.$gl.utils.uuid(8)
         console.log('gl-ide-plugin-layout > UIItem > onAddCol() > event.newIndex: ', e.newIndex)
         console.log('gl-ide-plugin-layout > UIItem > onAddCol() > items: ', col.items)
         let item = col.items[col.items.length === e.newIndex && e.newIndex > 0 ? e.newIndex - 1 : e.newIndex]
@@ -587,12 +506,7 @@
         this.$nextTick(() => {
           item.show = !item.show
         })
-      },
-      onSelectObject(uid) {
-        console.log('uid>', uid)
-        this.currentSelectObjectUid = uid
-        this.showBreadcrumbs = false
-      },
+      }
     }
   }
 </script>

@@ -8,6 +8,7 @@ function resolve(dir) {
 }
 
 module.exports = {
+  runtimeCompiler: true,
   // 修改 src 为 examples
   pages: {
     index: {
@@ -34,7 +35,6 @@ module.exports = {
   chainWebpack: config => {
     config.resolve.alias
       .set('@', resolve('examples'))
-
 
     // packages和examples目录需要加入编译
     config.module

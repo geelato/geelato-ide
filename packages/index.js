@@ -15,6 +15,10 @@ import GlIdePluginCards from './gl-ide-plugin-cards/index'
 // import GlIdePluginFields from './gl-ide-plugin-fields/index'
 import GlIdePluginDataMeta from './gl-ide-plugin-data-meta/index'
 import GlPage from '../runtime/gl-page/index'
+import GlTemplate from '../runtime/gl-template/index'
+import GlSegment from '../runtime/gl-segment/index'
+import GlText from '../runtime/gl-text/index'
+
 import GlDataSource from './components/gl-data-source/index'
 
 // import GlIdePluginStructure from './gl-ide-plugin-structure/index'
@@ -38,6 +42,9 @@ const components = [
   Verte,
   GlIde,
   GlPage,
+  GlTemplate,
+  GlSegment,
+  GlText,
   GlDataSource
 ]
 

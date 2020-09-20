@@ -65,5 +65,15 @@ export default {
       show: true,
       bind: {opts: header.opts, params: {}},
       meta: header.meta
+    },
+    {
+      title: '模板',
+      icon: 'code',
+      component: 'GlSegment',
+      img: '',
+      description: '',
+      show: true,
+      bind: {opts: header.opts, params: {}},
+      meta: header.meta
     }],
 }

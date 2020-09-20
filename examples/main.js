@@ -13,6 +13,7 @@ import './../packages/ide.css'
 
 import Ide from './components/Ide'
 import Preview from './components/Preview'
+import SegmentMaker from './components/SegmentMaker'
 import GlPage from '../runtime/gl-page/index.js'
 
 
@@ -39,6 +40,7 @@ Vue.use(GlPage)
 const routes = [
   {path: '/', redirect: '/ide'},
   {path: '/ide', component: Ide},
+  {path: '/segmentMaker', component: SegmentMaker},
   {path: '/preview/:pageId', component: Preview}
 ]
 

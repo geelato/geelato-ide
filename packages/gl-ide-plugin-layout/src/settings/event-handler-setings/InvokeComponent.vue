@@ -37,15 +37,15 @@
               </td>
             </tr>
           </table>
-          <div style="margin: 0.5em;width: 100%" v-else>
-            无
+          <div style="width: 100%" v-else>
+            <gl-param-mapping></gl-param-mapping>
           </div>
         </td>
       </tr>
       <tr>
         <td class="gl-table-cell label" style="width: 20%">说明</td>
         <td class="gl-table-cell" style="padding: 0.5em">
-          {{fn.description}}
+          {{fn.description||'无'}}
         </td>
       </tr>
       </tbody>
@@ -55,8 +55,12 @@
 
 <script>
   import componentsMeta from '../../../../gl-ide-plugin-cards/src/componentsMeta'
+  import GlParamMapping from './common/ParamMapping'
+  import mixin from './common/mixin'
 
   export default {
+    components: {GlParamMapping},
+    mixins: [mixin],
     props: {
       objectTree: {
         type: Array,

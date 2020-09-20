@@ -5,6 +5,8 @@ import StageSrc from './src/stage/Src'
 import events from './src/events'
 import GlIdeSettingObjectTree from './src/settings/GlIdeSettingObjectTree'
 import GlIdePluginLayoutCardSettings from './src/settings/CardSettings'
+import GlIdePluginLayoutSegmentSettings from './src/settings/SegmentSettings'
+
 // import formData from "../gl-ide-plugin-file-combination/src/formData";
 
 const plugin = {
@@ -56,13 +58,13 @@ const plugin = {
     ],
     settingPanels: [
       {
-        title: '页面信息',
+        title: '页面',
         component: 'GlIdeSettingFileInfo',
         opts: {},
         params: {}
       },
       {
-        title: '对象树',
+        title: '交互',
         component: 'GlIdeSettingObjectTree',
         opts: {},
         params: {}
@@ -70,6 +72,12 @@ const plugin = {
       {
         title: '卡片',
         component: 'GlIdePluginLayoutCardSettings',
+        opts: {},
+        params: {}
+      },
+      {
+        title: '元素',
+        component: 'GlIdePluginLayoutSegmentSettings',
         opts: {},
         params: {}
       }
@@ -89,6 +97,7 @@ export default {
     Vue.component(StageSrc.name, StageSrc)
     Vue.component(GlIdeSettingObjectTree.name, GlIdeSettingObjectTree)
     Vue.component(GlIdePluginLayoutCardSettings.name, GlIdePluginLayoutCardSettings)
+    Vue.component(GlIdePluginLayoutSegmentSettings.name, GlIdePluginLayoutSegmentSettings)
   },
   config: plugin,
   events: events

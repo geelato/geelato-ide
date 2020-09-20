@@ -89,6 +89,14 @@ export default {
       name: 'field',
       title: 'title'
     },
+    outParams: [{
+      group: '表单',
+      type: Object,
+      // 在设计配置页面中展示，选择参数
+      name: 'field', title: 'title', path: 'properties',
+      // 在运行时获取参数值
+      dataCtx: 'ctxLoader()'
+    }],
     // 组件的接收参数
     props: [
       {name: 'params', description: '输入查询条件数据，如{id:1}'}
@@ -111,8 +119,8 @@ export default {
         description: '保存表单信息'
       },
       {
-        name: 'refresh',
-        title: '刷新',
+        name: 'reset',
+        title: '重置',
         // 当前方法的输入参数
         params: [
           //   {

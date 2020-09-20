@@ -63,8 +63,12 @@
   }
 </script>
 
-<style scoped>
-  .ant-tabs-bar {
+<style>
+  /*.ant-tabs-bar {*/
+    /*margin: 0;*/
+  /*}*/
+
+  .gl-designer-properties .ant-tabs-nav .ant-tabs-tab {
     margin: 0;
   }
 </style>
