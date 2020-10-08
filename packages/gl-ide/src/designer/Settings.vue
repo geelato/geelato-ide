@@ -10,7 +10,7 @@
       </a-tab-pane>
     </a-tabs>
     <div v-else style="text-align: center;margin-top: 12em">
-      未选择文件，双击左边文件打开。
+      请双击左边“应用结构”下的文件
     </div>
   </div>
 </template>

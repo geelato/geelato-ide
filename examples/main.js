@@ -14,7 +14,7 @@ import './../packages/ide.css'
 import Ide from './components/Ide'
 import Preview from './components/Preview'
 import SegmentMaker from './components/SegmentMaker'
-import GlPage from '../runtime/gl-page/index.js'
+import GlPage from '../runtime/components/gl-page/index.js'
 
 
 Vue.config.productionTip = false

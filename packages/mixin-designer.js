@@ -18,6 +18,17 @@ export default {
         return window.innerHeight * .84
       }
     },
+    panelStyle: {
+      type: Object,
+      default() {
+        return {
+          'height': '100%',
+          'min-height': window.innerHeight * .84 + 'px',
+          'max-height': window.innerHeight * .84 + 'px',
+          'overflow-y': "auto"
+        }
+      }
+    },
     tabPanelStyle: {
       type: Object,
       default() {

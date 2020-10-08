@@ -4,6 +4,13 @@
   <div class="gl-ide-plugin-x-designer-settings">
     <div class="gl-title">
       <a-icon type="setting"/>
+      模板元素
+    </div>
+    <div>
+      ss
+    </div>
+    <div class="gl-title">
+      <a-icon type="setting"/>
       边矩(px)
     </div>
     <div style="background-color: rgb(64, 64, 64);margin: 24px">

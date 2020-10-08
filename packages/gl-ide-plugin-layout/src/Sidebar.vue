@@ -1,6 +1,6 @@
 <template>
   <div class="gl-ide-layout-sidebar" :style="{width:`${layout.width-30}px`}">
-    <a-alert message="选择并拖放到右边界面" type="info" closeText="关闭" class="gl-card-gutter"/>
+    <!--<a-alert message="选择并拖放到右边界面" type="info" closeText="关闭" class="gl-card-gutter"/>-->
     <gl-draggable
         v-model="rows"
         handle=".gl-dnd-row-handle"
@@ -119,15 +119,28 @@
       },
       clone() {
         return JSON.parse(JSON.stringify(this.rows[this.chooseIndex]))
+      },
+      arrayGroupBy(array, groupKey) {
+        let groups = {}
+        array.forEach(function (item) {
+          groups[groupKey] = groups[groupKey] || []
+          groups[groupKey].push(item)
+        });
+        // return Object.values(groups);
+        let groupAry = []
+        for (let key in groups) {
+          groupAry.push({group: key, items: groups[key]})
+        }
+        return groupAry
       }
     }
   }
 </script>
 
 <style>
-  .gl-placeholder {
-    /*background-color: #d8d8d8;*/
-  }
+  /*.gl-placeholder {*/
+  /*!*background-color: #d8d8d8;*!*/
+  /*}*/
 
   .gl-ide-layout-sidebar .gl-dnd-row-handle {
     min-height: 2em;

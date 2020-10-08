@@ -1,5 +1,5 @@
 <template>
-  <div class="gl-segment-maker">
+  <div class="gl-segment-maker gl-compact" style="display: grid;grid-template-columns: 3fr 2fr;grid-template-areas: 'a b' 'a c'">
     <div class="item" style="grid-area: a;background-color: #e0e0e0">
       <div id="srcContainer" ref="srcContainer" :style="{height:layout.height}"></div>
     </div>
@@ -89,7 +89,7 @@
           height: '600px'
         },
         message: '',
-        json: {segment: {items: []}},
+        json: {},
         codeCopyJson: '',
         codeCopyFormatJson: ''
       }
@@ -143,11 +143,14 @@
           }
 
           let MyComponent = Vue.extend({
-            template: '<div>'+that.codeCopyString+'</div>'
+            template: '<div>' + that.codeCopyString + '</div>'
           })
           let component = new MyComponent().$mount();
           document.getElementById('uiContainer').appendChild(component.$el);
-          that.parseSrcToJson()
+
+          // let segment = this.$refs.html.getElementsByClassName('gl-segment')
+          that.json = that.parseElementToVNode(that.$refs.html.childNodes[0], that)
+
           that.updateJson()
         });
         //编辑器随窗口自适应
@@ -155,33 +158,32 @@
           // reset();
         })
       },
-      parseSrcToJson() {
-        let that = this
-        this.json = {
-          segment: {
-            style: {},
-            class: '',
-            items: []
+      parseElementToVNode(node, that) {
+        let tag = {attrs: {}}
+        // console.log('node:', node.attributes)
+        tag.name = node.nodeName
+        tag.style = that.styleConvert(node.style ? node.style.cssText : '')
+        tag.class = that.classConvert(node.className)
+        for (let index in node.attributes) {
+          let attribute = node.attributes[index]
+          if (['class', 'style'].indexOf(attribute.nodeName) === -1) {
+            tag.attrs[attribute.nodeName] = attribute.nodeValue
           }
         }
-        let divs = this.$refs.html.getElementsByClassName('gl-segment')
-        if (divs.length === 1) {
-          let segment = divs[0]
-          that.json.segment.style = that.styleConvert(segment.style.cssText)
-          that.json.segment.class = that.classConvert(segment.className)
-          for (let i = 0; i < segment.childNodes.length; i++) {
-            let node = segment.childNodes[i]
-            if (node.nodeName === 'DIV' && node.style.cssText) {
-              this.json.segment.items.push({
-                type: 'div',
-                style: that.styleConvert(node.style.cssText),
-                class: that.classConvert(node.className)
-              })
-            }
+        tag.items = []
+        tag.innerHTML = tag.innerHTML || ''
+        for (let i = 0; i < node.childNodes.length; i++) {
+          if (node.childNodes[i].nodeName === '#text') {
+            tag.innerHTML += node.childNodes[i].wholeText
+          } else if (node.childNodes[i].nodeName === 'svg') {
+            tag.innerHTML += node.childNodes[i].outerHTML
+          } else if (node.childNodes[i].nodeName === '#comment') {
+            tag.innerHTML += ''
+          } else {
+            tag.items.push(that.parseElementToVNode(node.childNodes[i], that))
           }
-        } else {
-          this.message = '有且只有一个div的类为gl-segment'
         }
+        return tag
       },
       updateJson() {
         let that = this
@@ -212,33 +214,44 @@
       },
 
       styleConvert(cssText) {
+        if (!cssText) {
+          return {}
+        }
         let style = {}
         let ary = cssText.trim().split(';')
         ary.forEach((cssTextSegment) => {
           if (cssTextSegment.trim().length > 0) {
             let styleKV = cssTextSegment.trim().split(':')
-            // todo margin padding
-            style[styleKV[0].trim()] = styleKV[1].trim()
+            let styleKey = styleKV[0].trim()
+            let styleValue = styleKV[1].trim()
+            if (styleKey === 'margin' || styleKey === 'padding') {
+              styleValue.split(' ')
+              // todo margin padding
+              style[styleKey] = styleValue
+            } else {
+              style[styleKey] = styleValue
+            }
           }
         })
         return style
       },
       classConvert(className) {
-        return className
+        // console.log('className>', className)
+        return typeof className === 'string' && className.trim().length > 0 ? className.trim().split(' ') : []
       }
     }
   }
 </script>
 <style>
-  .gl-segment-maker {
-    display: grid;
-    grid-template-columns: 3fr 2fr;
-    /*grid-template-rows: 100% 100%;*/
-    grid-template-areas: 'a b' 'a c'
-  }
+  /*.gl-segment-maker {*/
+    /*display: grid;*/
+    /*grid-template-columns: 3fr 2fr;*/
+    /*!*grid-template-rows: 100% 100%;*!*/
+    /*grid-template-areas: 'a b' 'a c'*/
+  /*}*/
 
-  .gl-segment-maker .item {
-    /*background-color: red;*/
-  }
+  /*.gl-segment-maker .item {*/
+    /*!*background-color: red;*!*/
+  /*}*/
 
 </style>

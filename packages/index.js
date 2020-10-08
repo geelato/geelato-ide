@@ -8,16 +8,18 @@ import GlIdePluginLayout from './gl-ide-plugin-layout/index'
 import GlIdePluginHeaderDesigner from './gl-ide-plugin-header-designer/index'
 import GlIdePluginFormDesigner from './gl-ide-plugin-form-designer/index'
 import GlIdePluginTableDesigner from './gl-ide-plugin-table-designer/index'
+import GlIdePluginSegmentDesigner from './gl-ide-plugin-segment-designer/index'
 import GlIdePluginTreeDesigner from './gl-ide-plugin-tree-designer/index'
 import GlIdePluginPageLoaderDesigner from './gl-ide-plugin-page-loader-designer/index'
 import GlIdePluginProject from './gl-ide-plugin-project/index'
 import GlIdePluginCards from './gl-ide-plugin-cards/index'
 // import GlIdePluginFields from './gl-ide-plugin-fields/index'
 import GlIdePluginDataMeta from './gl-ide-plugin-data-meta/index'
-import GlPage from '../runtime/gl-page/index'
-import GlTemplate from '../runtime/gl-template/index'
-import GlSegment from '../runtime/gl-segment/index'
-import GlText from '../runtime/gl-text/index'
+import GlPage from '../runtime/components/gl-page/index'
+import GlTag from '../runtime/components/gl-tag/index'
+import GlTemplate from '../runtime/components/gl-template/index'
+import GlSegment from '../runtime/components/gl-segment/index'
+import GlText from '../runtime/components/gl-text/index'
 
 import GlDataSource from './components/gl-data-source/index'
 
@@ -42,6 +44,7 @@ const components = [
   Verte,
   GlIde,
   GlPage,
+  GlTag,
   GlTemplate,
   GlSegment,
   GlText,
@@ -63,6 +66,7 @@ const install = function (Vue, options) {
   ide.use(GlIdePluginHeaderDesigner)
   ide.use(GlIdePluginFormDesigner)
   ide.use(GlIdePluginTableDesigner)
+  ide.use(GlIdePluginSegmentDesigner)
   ide.use(GlIdePluginTreeDesigner)
   ide.use(GlIdePluginPageLoaderDesigner)
   ide.use(GlIdePluginCards)

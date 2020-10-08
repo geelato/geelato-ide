@@ -95,7 +95,7 @@
 
   import ideConfig from '../../../../../gl-ide/src/data/ideSelectItems.js'
   import utils from '../../../../../../runtime/utils.js'
-  import cardsDefined from '../../../../../gl-ide-plugin-cards/src/data/cards.js'
+  import cardsDefined from '../../../../../gl-ide-plugin-cards/src/data/index.js'
 
   export default {
     props: {

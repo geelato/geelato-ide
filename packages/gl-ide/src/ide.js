@@ -9,6 +9,15 @@ const history = {}
 const assist = {
   showComponentId: false
 }
+const defaultLayout = {
+  // ide 主界面
+  main: {},
+  // 弹出的设计页面
+  modal: {
+    width: '800px'
+  }
+}
+
 let GlobalVue
 // let editingFile = {
 //   type: 'GlPageLayout',
@@ -29,7 +38,8 @@ let store = {
   editingCardItem: {},
   stagePanels: [],
   settingPanels: [],
-  assist: JSON.parse(JSON.stringify(assist))
+  assist: JSON.parse(JSON.stringify(assist)),
+  layout: JSON.parse(JSON.stringify(defaultLayout))
 }
 
 /**
@@ -41,6 +51,8 @@ function resetStore() {
   GlobalVue.set(store, 'editingFile', {})
   GlobalVue.set(store, 'editingCardItem', {})
   GlobalVue.set(store, 'assist', JSON.parse(JSON.stringify(assist)))
+  GlobalVue.set(store, 'editingCardItem', {})
+  GlobalVue.set(store, 'layout', JSON.parse(JSON.stringify(defaultLayout)))
 }
 
 function checkPlugin() {

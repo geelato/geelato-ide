@@ -67,7 +67,7 @@
 <script>
   import Vue from 'vue'
   // import events from '../events'
-  import EditingFileParser from '../../EditingFileParser'
+  import EditingFileParser from '../../../EditingFileParser'
 
   export default {
     name: 'GlPageItem',
