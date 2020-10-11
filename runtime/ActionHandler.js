@@ -3,7 +3,6 @@ import InvokeComponentHandler from './handler/InvokeComponentHandler'
 import OpenModalHandler from './handler/OpenModalHandler'
 import ShowMessageHandler from './handler/ShowMessageHandler'
 
-
 export default class ActionHandler {
 
   constructor($root) {

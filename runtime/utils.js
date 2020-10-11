@@ -52,7 +52,7 @@ utils.parseUrl = function (url) {
   let path = qIndex !== -1 ? url.substring(0, qIndex) : url
   let mixQuery = {}
   if (qIndex > 0) {
-    let paramAry = url.substring(qIndex + 1).split("\\&")
+    let paramAry = url.substring(qIndex + 1).split('\\&')
     for (let index in paramAry) {
       let param = paramAry[index]
       let segment = utils.trim(param)

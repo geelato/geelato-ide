@@ -18,16 +18,16 @@
         ></gl-page-item>
       </template>
       <!--<template v-else>-->
-        <!--<a-alert v-if="isPageSetted()" message="未指定引用的页面"-->
-                 <!--description="请点击上方的设置图标，进入设置页面。"-->
-                 <!--type="info"-->
-                 <!--showIcon-->
-        <!--/>-->
-        <!--<a-alert v-else message="加载中..."-->
-                 <!--description=""-->
-                 <!--type="info"-->
-                 <!--showIcon-->
-        <!--/>-->
+      <!--<a-alert v-if="isPageSetted()" message="未指定引用的页面"-->
+      <!--description="请点击上方的设置图标，进入设置页面。"-->
+      <!--type="info"-->
+      <!--showIcon-->
+      <!--/>-->
+      <!--<a-alert v-else message="加载中..."-->
+      <!--description=""-->
+      <!--type="info"-->
+      <!--showIcon-->
+      <!--/>-->
       <!--</template>-->
     </template>
   </div>
@@ -98,8 +98,8 @@
       console.log('geelato > runtime > gl-page > Index.vue > mounted() > params: ', this.params)
       console.log('geelato > runtime > gl-page > Index.vue > mounted() > $refs: ', this.$refs)
       if (this.opts.src === 'external') {
-        let iframe = this.$refs.iframe
-        let iframeWin = iframe.contentWindow || iframe.contentDocument
+        const iframe = this.$refs.iframe
+        const iframeWin = iframe.contentWindow || iframe.contentDocument
         this.iframeDocument = iframeWin.document || iframeWin
         console.log('this.$refs.iframe.body.scrollHeight:', [this.iframeDocument.body], this.iframeDocument.body.scrollHeight)
 
@@ -154,7 +154,7 @@
         this.$emit('doAction', data)
       },
       resizeIframe(val) {
-        let iframe = val.path[0]
+        const iframe = val.path[0]
         console.log('this.$refs.iframe>', val)
         // let win = this.$gl.utils.eval('$ctx.contentWindow', iframe)
         // console.log('this.$refs.iframe> win:', win)
@@ -170,11 +170,11 @@
         console.log('geelato > runtime > gl-page > Index.vue > resizeIframe() > iframeWin:', this.iframeDocument.documentElement)
 
         try {
-          let bHeight = this.iframeDocument.body.scrollHeight
-          let dHeight = this.iframeDocument.documentElement.scrollHeight
+          const bHeight = this.iframeDocument.body.scrollHeight
+          const dHeight = this.iframeDocument.documentElement.scrollHeight
           console.log('geelato > runtime > gl-page > Index.vue > resizeIframe() > bHeight,:', bHeight, dHeight)
 
-          let height = Math.min(bHeight, dHeight)
+          const height = Math.min(bHeight, dHeight)
           // iframe.style.height = height + 50 + 'px'
           // console.log('geelato > runtime > gl-page > Index.vue > resizeIframe() iframe.height:', iframe.height)
 
