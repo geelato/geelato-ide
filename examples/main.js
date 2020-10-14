@@ -14,10 +14,24 @@ import './../packages/ide.css'
 import Ide from './components/Ide'
 import Preview from './components/Preview'
 import SegmentMaker from './components/SegmentMaker'
-import GlPage from '../runtime/components/gl-page/index.js'
-
+import geelatoRuntime from '../runtime/index.js'
 
 Vue.config.productionTip = false
+
+// Install and Activate the zh_CN locale.
+// localize('zh_CN', zhCN);
+// // install all rules
+// Object.keys(rules).forEach(rule => {
+//   extend(rule, rules[rule])
+//   console.log('install > vee-validate rule > ', rule)
+// })
+// // 扩展验证功能
+// extend('unique', {
+//   validate(value, args) {
+//     return true
+//   }
+//   // params: ['length']
+// });
 
 let auiOptions = {
   // 修改服务地址，默认为http://localhost:8080/api
@@ -29,8 +43,9 @@ let auiOptions = {
 Vue.use(VueRouter)
 Vue.use(Antd)
 Vue.use(geelatoAui, auiOptions)
+Vue.use(geelatoRuntime)
 Vue.use(geelatoIde)
-Vue.use(GlPage)
+
 // const IconFont = Icon.createFromIconfontCN({
 //   scriptUrl: '//at.alicdn.com/t/font_1332397_qazjx541tnl.js',
 // });

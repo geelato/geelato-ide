@@ -29,10 +29,10 @@ import ide from './gl-ide/src/ide'
 // import geelatoAui from "geelato-ui-ant";
 
 // 导入依赖表单验证
-import VeeValidate from 'vee-validate'
+// import VeeValidate from 'vee-validate'
 //引入中文包，提示信息可以以中文形式显示
-import zh_CN from 'vee-validate/dist/locale/zh_CN'
-import VueI18n from 'vue-i18n'
+// import zhCN from 'vee-validate/dist/locale/zh_CN'
+// import VueI18n from 'vue-i18n'
 // color
 import Verte from 'verte';
 import 'verte/dist/verte.css';
@@ -50,7 +50,6 @@ const components = [
   GlText,
   GlDataSource
 ]
-
 
 // let uiApi = new Api()
 // 定义 install 方法，接收 Vue 作为参数。如果使用 use 注册插件，则所有的组件都将被注册
@@ -74,7 +73,6 @@ const install = function (Vue, options) {
   ide.use(GlIdePluginDataMeta)
 
   Vue.prototype.$ide = Vue.prototype.$ide || ide
-  Vue.prototype.$globalVue = Vue
   console.log('geelato-ide > ide: ', ide)
 
   // 遍历注册全局组件
@@ -85,23 +83,20 @@ const install = function (Vue, options) {
   Vue.component('gl-color-picker', Verte)
 
   // 注册组件库
-  Vue.use(VueI18n)
-  Vue.use(VeeValidate, {
-    i18n: new VueI18n({
-      locale: 'zh_CN',
-    }),
-    i18nRootKey: 'validations',
-    dictionary: {
-      zh_CN
-    },
-    // fixed：The computed property "fields" is already defined in data.
-    errorBagName: 'errorBags',
-    fieldsBagName: 'fieldBags'
-  })
-
+  // Vue.use(VueI18n)
+  // Vue.use(VeeValidate, {
+  //   i18n: new VueI18n({
+  //     locale: 'zh_CN',
+  //   }),
+  //   i18nRootKey: 'validations',
+  //   dictionary: {
+  //     zhCN
+  //   },
+  //   // fixed：The computed property "fields" is already defined in data.
+  //   errorBagName: 'errorBags',
+  //   fieldsBagName: 'fieldBags'
+  // })
   Vue.use(GlIde)
-
-
 }
 
 // 判断是否是直接引入文件

@@ -196,6 +196,30 @@ utils.compileString = function (expression, $ctx) {
   return new Fn('$ctx', 'return "' + expression + '"')($ctx)
 }
 
+// /**
+//  * 直接执行eval，代码检查工具eslintrc，提示有误，改该此方法
+//  * @param expression
+//  * @param $ctx 用于expression的上下文参数
+//  * @param ctxName 指定上下文的参数名，默认为$ctx
+//  * @returns {*}
+//  */
+// utils.eval = function (expression, $ctx, ctxName = '$ctx') {
+//   // console.log('gl-ide > utils > expression: ', expression)
+//   // console.log('gl-ide > utils > $ctx: ', $ctx)
+//   let Fn = Function
+//   let str = utils.trim(expression)
+//   let index = str.indexOf(';')
+//   if (index === -1 || index === str.length - 1) {
+//     // 单语句
+//     return new Fn(ctxName, 'return ' + expression)($ctx)
+//   } else {
+//     // 多语句
+//     let strAry = str.split(';')
+//     let lastStr = strAry.pop();
+//     let preStr = strAry.join(';')
+//     return new Fn(ctxName, preStr + '; return ' + lastStr)($ctx)
+//   }
+// }
 /**
  * 直接执行eval，代码检查工具eslintrc，提示有误，改该此方法
  * @param expression
@@ -204,21 +228,58 @@ utils.compileString = function (expression, $ctx) {
  * @returns {*}
  */
 utils.eval = function (expression, $ctx, ctxName = '$ctx') {
-  // console.log('gl-ide > utils > expression: ', expression)
-  // console.log('gl-ide > utils > $ctx: ', $ctx)
+  // console.log('geelato-ui-ant > utils > expression: ', expression)
+  // console.log('geelato-ui-ant > utils > $ctx: ', $ctx)
+  if (expression.indexOf(ctxName) === -1) {
+    return expression
+  }
+  let $utils = utils
+  let utilsName = '$utils'
   let Fn = Function
   let str = utils.trim(expression)
   let index = str.indexOf(';')
   if (index === -1 || index === str.length - 1) {
     // 单语句
-    return new Fn(ctxName, 'return ' + expression)($ctx)
+    return new Fn(ctxName, utilsName, 'return ' + expression)($ctx, $utils)
   } else {
     // 多语句
     let strAry = str.split(';')
     let lastStr = strAry.pop();
     let preStr = strAry.join(';')
-    return new Fn(ctxName, preStr + '; return ' + lastStr)($ctx)
+    return new Fn(ctxName, utilsName, preStr + '; return ' + lastStr)($ctx, $utils)
   }
+}
+
+/**
+ *  遍历对象各层的键值，并进行变量替换
+ */
+utils.deepConvertValue = function (obj, ctxLoader) {
+  const ctx = typeof ctxLoader === 'function' ? ctxLoader() : ctxLoader
+
+  function replace(toReplaceObj) {
+    let newObj
+    if (toReplaceObj instanceof Array) {
+      newObj = []
+      for (const key in toReplaceObj) {
+        newObj.push(replace(toReplaceObj[key]))
+      }
+    } else if (toReplaceObj instanceof Object) {
+      newObj = {}
+      for (const key in toReplaceObj) {
+        newObj[key] = replace(toReplaceObj[key])
+      }
+    } else if (typeof toReplaceObj === 'string') {
+      console.log('String >', toReplaceObj)
+      newObj = utils.eval(toReplaceObj, ctx)
+    } else {
+      newObj = toReplaceObj
+    }
+    console.log('toReplaceObj >', toReplaceObj instanceof Array, typeof toReplaceObj, '>>', toReplaceObj, newObj, ctx)
+
+    return newObj
+  }
+
+  return replace(obj)
 }
 
 utils.isEmpty = function (str) {
