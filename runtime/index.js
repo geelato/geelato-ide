@@ -21,16 +21,6 @@ component.install = function (Vue) {
     console.log('install rule >', rule)
     extend(rule, rules[rule])
   })
-  // 扩展验证功能
-  extend('unique', {
-    validate(value, args) {
-      console.log('args', args)
-      return `{_field_}不能重复`
-    },
-    params: ['gql']
-  });
-
-
 }
 
 // 默认导出组件
