@@ -181,7 +181,7 @@
       doActionSetting($event, doItem, doItemIndex) {
         this.currentEditingType = 'control'
         let that = this
-        console.log($event, doItem, doItemIndex)
+        console.log('GlIdeSettingEvent > doActionSetting >', $event, doItem, doItemIndex)
         this.currentDoItem = doItem
         this.currentDoItemIndex = doItemIndex
         this.currentDetailComponentName = 'Empty'

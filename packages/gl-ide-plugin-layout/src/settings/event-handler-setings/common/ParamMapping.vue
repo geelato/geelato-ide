@@ -103,11 +103,17 @@
         type: Object,
         default() {
           return {
-            pageId: '',
+            // pageId: '',
             paramMapping: []
           }
         }
       },
+      // params: {
+      //   type: Array,
+      //   default() {
+      //     return []
+      //   }
+      // },
       designComponentName: {
         type: String
       },
@@ -116,7 +122,7 @@
       return {
         modalInfo: {
           gid: this.params.gid || this.$gl.utils.uuid(8),
-          pageId: this.params.pageId,
+          // pageId: this.params.pageId,
           paramMapping: this.params.paramMapping
         },
         treeData: [],
@@ -131,23 +137,26 @@
       };
     },
     watch: {
-      'modalInfo.pageId': {
-        handler(val, oval) {
-          console.log('val:', val, ',oval:', oval)
-          this.loadTargetPage({pageId: val, inParamSelection: this.inParamSelection})
-          this.loadAndParseSourcePage()
-        },
-        immediate: true
-      }
+      // 'modalInfo.pageId': {
+      //   handler(val, oval) {
+      //     console.log('gl-ide-plugin-layout > event-handler-settings > ParamMapping > watch modalInfo.pageId, val:', val, ',oval:', oval)
+      //     this.loadTargetPage({pageId: val, inParamSelection: this.inParamSelection})
+      //     this.loadAndParseSourcePage()
+      //   },
+      //   immediate: true
+      // }
     },
     created() {
       this.loadPageTreeData()
     },
     mounted() {
-      console.log('this.$ide.store.editingFile>', this.$ide.store.editingFile)
+      console.log('gl-ide-plugin-layout > event-handler-settings > ParamMapping > mounted > params>', this.params)
+      console.log('gl-ide-plugin-layout > event-handler-settings > ParamMapping > mounted > this.$ide.store.editingFile>', this.$ide.store.editingFile)
       if (!this.modalInfo.paramMapping || !this.modalInfo.paramMapping.length) {
         this.modalInfo.paramMapping = []
       }
+      this.loadTargetPage({pageId: this.$ide.store.editingFile.id, inParamSelection: this.inParamSelection})
+      this.loadAndParseSourcePage()
     },
     beforeDestroy() {
       console.log('gl-ide-plugin-layout > event-handler-settings > ParamMapping > beforeDestroy() > result of modalInfo:', this.modalInfo)
@@ -170,7 +179,7 @@
       // 基于页面文件树节点id:extendId,或页面id:pageId，加载需要打开页面的配置
       loadTargetPage({extendId, pageId, inParamSelection}) {
         if (!extendId && !pageId) {
-          console.warn('gl-ide-plugin-layout > event-handler-settings > ParamMapping > loadTargetPage() > one of extendId and pageId can not empty,extendId:', extendId, ',pageId:', pageId)
+          console.error('gl-ide-plugin-layout > event-handler-settings > ParamMapping > loadTargetPage() > one of extendId and pageId can not empty,extendId:', extendId, ',pageId:', pageId)
         }
         const that = this
         let condition = {}
@@ -181,9 +190,12 @@
           condition.id = pageId
         }
         that.$gl.api.query('platform_app_page', 'id,type,code,description,sourceContent', condition).then(function (res) {
-          // console.log('gl-ide-plugin-layout > event-handler-settings > ParamMapping > loadTargetPage() > query platform_app_page res:', res)
+          console.log('gl-ide-plugin-layout > event-handler-settings > ParamMapping > loadTargetPage() > query platform_app_page condition:', condition)
+          console.log('gl-ide-plugin-layout > event-handler-settings > ParamMapping > loadTargetPage() > query platform_app_page res:', res)
           if (res.data.length === 0) {
             that.$message.warn('从服务端获取不到该页面配置信息，可能该页面已删除！')
+          } else if (res.data.length > 1) {
+            that.$message.error('从服务端获取到多条页面配置信息，可能查询条件不准确或数据重复！')
           } else {
             that.config = JSON.parse(res.data[0].sourceContent)
             that.parseTargetPage(that.config, inParamSelection)

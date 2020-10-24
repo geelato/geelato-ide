@@ -148,17 +148,33 @@ export default {
     // 该组件的输出参数定义元数据
     outParams: [
       {
-        group: '树右键点击的节点',
+        group: '树节点（左键点击）',
         type: Object,
         // 在设计配置页面中展示，选择参数
+        //       name: 'field', title: 'title', path: 'properties',
         name: 'field',
         title: 'title',
-        path: '',
-        meta: [{gid: 'NODE_KEY', field: 'key', title: '值'},{gid: 'NODE_ICON', field: 'icon', title: '图标'}, {
-          gid: 'NODE_ISLEAF',
+        // path: 'currentClickNodeProperties',
+        meta: [{gid: 'L_NODE_KEY', field: 'key', title: '值'}, {gid: 'L_NODE_ICON', field: 'icon', title: '图标'}, {
+          gid: 'L_NODE_ISLEAF',
           field: 'isLeaf',
           title: '是否叶子节点'
-        }, {gid: 'NODE_TITLE', field: 'title', title: '标题'}],
+        }, {gid: 'L_NODE_TITLE', field: 'title', title: '标题'}],
+        // 在运行时获取参数值
+        dataCtx: 'currentSelectNode'
+      },
+      {
+        group: '树节点（右键点击）',
+        type: Object,
+        // 在设计配置页面中展示，选择参数
+        //       name: 'field', title: 'title', path: 'properties',
+        name: 'field',
+        title: 'title',
+        meta: [{gid: 'R_NODE_KEY', field: 'key', title: '值'}, {gid: 'R_NODE_ICON', field: 'icon', title: '图标'}, {
+          gid: 'R_NODE_ISLEAF',
+          field: 'isLeaf',
+          title: '是否叶子节点'
+        }, {gid: 'R_NODE_TITLE', field: 'title', title: '标题'}],
         // 在运行时获取参数值
         dataCtx: 'currentRightClickNode'
       }

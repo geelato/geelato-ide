@@ -26,20 +26,21 @@
       <tr>
         <td class="gl-table-cell label">参数</td>
         <td class="gl-table-cell">
-          <table style="margin: 2px;width: 100%" v-if="fn.params&&fn.params.length>0">
-            <tr v-for="param in fn.params">
-              <td class="gl-table-cell label" style="width: 30%"><span><a-icon type="info-circle"
-                                                                               :title="param.description"/></span>{{param.title}}
-              </td>
-              <td class="gl-table-cell">
-                <input v-model="param.value" style="min-width: 99%" :placeholder="param.placeholder||param.name"
-                       @change="updateSettings"/>
-              </td>
-            </tr>
-          </table>
-          <div style="width: 100%" v-else>
-            <gl-param-mapping></gl-param-mapping>
-          </div>
+          <!--<table style="margin: 2px;width: 100%" v-if="fn.params&&fn.params.length>0">-->
+          <!--<tr v-for="param in fn.params">-->
+          <!--<td class="gl-table-cell label" style="width: 30%"><span><a-icon type="info-circle"-->
+          <!--:title="param.description"/></span>{{param.title}}-->
+          <!--</td>-->
+          <!--<td class="gl-table-cell">-->
+          <!--<input v-model="param.value" style="min-width: 99%" :placeholder="param.placeholder||param.name"-->
+          <!--@change="updateSettings"/>-->
+          <!--</td>-->
+          <!--</tr>-->
+          <!--</table>-->
+          <!--<div style="width: 100%" v-else>-->
+          <!--b-->
+          <!--</div>-->
+          <gl-param-mapping :params="fn.params" @update="(value)=>{fn.params = value}"></gl-param-mapping>
         </td>
       </tr>
       <tr>
