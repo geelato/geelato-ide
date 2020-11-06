@@ -23,7 +23,10 @@
             <!-- 卡片内的组件渲染 --采用tabs方式  -->
             <a-tabs :defaultActiveKey="col.opts?col.opts.defaultActiveKey||0:0"
                     :tabPosition="col.opts?col.opts.tabPosition:'top'">
-              <a-tab-pane :forceRender="true" v-for="(colItem,colItemIndex) in col.items" :tab="colItem.title"
+              <!-- 只展示非slot的组件 -->
+              <a-tab-pane :forceRender="true"
+                          v-for="(colItem,colItemIndex) in col.items.filter(item=>{ return item.displayMode!=='slot'})"
+                          :tab="colItem.title"
                           :key="colItemIndex">
                 <!--v-show="colItem.show"-->
                 <component :ref="colItem.id" :is="$globalVue.component(colItem.component)"
@@ -32,6 +35,30 @@
                            v-show="colItem.isShow===undefined||colItem.isShow"
                            @display="(display)=>{$set(colItem,'isShow',display.isShow)}"></component>
               </a-tab-pane>
+              <!--<div class="extra-wrapper" slot="tabBarExtraContent">-->
+              <!--<span v-for="extraItem in col.opts.extraItems">-->
+              <!--<gl-control :property="extraItem" :form="{}"></gl-control>-->
+              <!--</span>-->
+              <!--</div>-->
+              <!--<div class="extra-wrapper" slot="tabBarExtraContent"-->
+              <!--v-if="col.opts.slots&&col.opts.slots.length>0&&(currentColItem=getColItemById(col.items,col.opts.slots[0].name))">-->
+              <!--{{col.opts.slots}}-->
+              <!--{{currentColItem}}-->
+              <!--</div>-->
+              <template
+                  v-if="col.opts.slots&&col.opts.slots.length>0&&(currentColItem=getColItemById(col.items,col.opts.slots[0].id))">
+                <component :ref="currentColItem.id"
+                           :is="$globalVue.component(currentColItem.component)"
+                           :gid="currentColItem.id"
+                           v-bind="currentColItem.bind" :params="params"
+                           @doAction="$emit('doAction',$event)"
+                           v-show="currentColItem.isShow===undefined||currentColItem.isShow"
+                           @display="(display)=>{$set(currentColItem,'isShow',display.isShow)}"
+                           slot="tabBarExtraContent" class="extra-wrapper"></component>
+              </template>
+              <!--<gl-toolbar v-if="col.items.find(colItem=>{ return colItem.component==='GlToolbar'})"-->
+              <!--class="extra-wrapper" slot="tabBarExtraContent"-->
+              <!--:opts="{items:col.items.find(colItem=>{ return colItem.component==='GlToolbar'})||[]}"></gl-toolbar>-->
             </a-tabs>
           </template>
           <template v-else-if="col.displayMode==='Collapse'">
@@ -43,6 +70,13 @@
                            :gid="colItem.id" v-bind="colItem.bind" :params="params"
                            @doAction="$emit('doAction',$event)" v-show="colItem.isShow===undefined||colItem.isShow"
                            @display="(display)=>{$set(colItem,'isShow',display.isShow)}"></component>
+                <div class="extra-wrapper" slot="extra" style="margin-top: -.35em">
+                  <a>今日</a>
+                  <a>本周</a>
+                  <a>本月</a>
+                  <a>本年</a>
+                  <a-range-picker :style="{width: '256px'}"/>
+                </div>
               </a-collapse-panel>
             </a-collapse>
           </template>
@@ -115,7 +149,9 @@
         colItems: [],
         // {id:component}
         colCards: {},
-        componentsDisplay: {}
+        componentsDisplay: {},
+        //
+        currentColItem: {}
       }
     },
     mounted() {
@@ -169,11 +205,15 @@
         console.log('gl-ide > gl-ide-plugin-item > generateComponentRef() > item:', item)
         console.log('gl-ide > gl-ide-plugin-item > generateComponentRef() > this.$refs:', this, this.$refs)
         console.log('gl-ide > gl-ide-plugin-item > generateComponentRef() > this.$refs[item.id]:', this.$refs[item.id], ' by item.id:', item.id)
-        this.componentRefs[item.id] = {
-          id: item.id,
-          component: this.$refs[item.id][0],
-          type: item.type,
-          meta: item.meta
+        if (!this.$refs[item.id]) {
+          console.error('组件未渲染，id为:', item.id)
+        } else {
+          this.componentRefs[item.id] = {
+            id: item.id,
+            component: this.$refs[item.id][0],
+            type: item.type,
+            meta: item.meta
+          }
         }
       },
       /**
@@ -326,6 +366,11 @@
       //     return this.componentsDisplay[id]
       //   }
       // }
+      getColItemById(items, id) {
+        return items.find(item => {
+          return item.id === id
+        })
+      }
     }
   }
 </script>

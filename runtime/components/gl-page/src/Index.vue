@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%" ref="xx">
+  <div class="gl-page" style="height: 100%" ref="xx">
     <template v-if="opts.src==='external'">
       <iframe ref="iframe" :src="opts.url" style="border:0" :style="iframeStyle"></iframe>
     </template>
@@ -263,5 +263,10 @@
     /*background-color: rgba(211, 211, 211, 0.3);*/
     background-color: rgba(255, 202, 17, 0.35);
     /*border: 1px dotted #a5a5a5;*/
+  }
+
+  .gl-page .extra-wrapper > * {
+    display: inline-block;
+    margin-right: 1em;
   }
 </style>

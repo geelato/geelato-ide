@@ -1,5 +1,6 @@
 import form from './form.js'
 // import form2 from './form2.js'
+import toolbar from './toolbar.js'
 import table from './table.js'
 import tree from './tree.js'
 import header from './header.js'
@@ -63,16 +64,16 @@ export default {
       bind: {opts: tree.opts, params: {}},
       meta: tree.meta
     },
-    // {
-    //   title: '工具条',
-    //   icon: 'tool',
-    //   component: 'GlToolbar',
-    //   img: '',
-    //   description: '',
-    //   show: true,
-    //   bind: {opts: {}, query: {}},
-    //   meta: {component: 'GlToolbar', designer: 'GlIdePluginToolbarDesigner', title: '工具条设置'}
-    // },
+    {
+      title: '工具条',
+      icon: 'tool',
+      component: 'GlToolbar',
+      img: '',
+      description: '',
+      show: true,
+      bind: {opts: toolbar.opts, params: {}},
+      meta: toolbar.meta
+    },
     {
       group: '组件',
       title: '标题',

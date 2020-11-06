@@ -22,11 +22,14 @@ export default {
     {text: '包括', value: 'contains'}
   ],
   controls: [
-    {text: '文本', icon: '', value: 'input'},
-    {text: '日期', icon: '', value: 'date'},
-    {text: '时间', icon: '', value: 'time'},
-    {text: '复选', icon: '', value: 'checkbox'},
-    {text: '下拉', icon: '', value: 'select'}
+    {text: '文本', icon: 'dash', value: 'input'},
+    {text: '日期', icon: 'calendar', value: 'date'},
+    {text: '时间', icon: 'clock-circle', value: 'time'},
+    {text: '复选', icon: 'check-square', value: 'checkbox'},
+    {text: '下拉', icon: 'down-square', value: 'select'},
+    {text: '标题', icon: 'font-size', value: 'title'},
+    {text: '链接', icon: 'link', value: 'link'},
+    {text: '按钮', icon: 'border', value: 'button'}
   ],
   btnTypes: [
     {text: '主按钮', value: 'primary'},

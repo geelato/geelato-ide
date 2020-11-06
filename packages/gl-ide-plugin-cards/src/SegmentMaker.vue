@@ -166,7 +166,7 @@
       reset(segment) {
 
         let that = this;
-        if (segment) {
+        if (segment && segment.data) {
           this.form.id = segment.data.id
           this.form.title = segment.data.title
           this.form.type = segment.data.type
@@ -178,7 +178,7 @@
         // 清空子元素
         that.$refs.srcContainer.innerHTML = ''
         let options = {
-          value: segment.data.htmlContent || that.codeCopyformatString,
+          value: (segment.data ? segment.data.htmlContent : '') || that.codeCopyformatString,
           language: 'html',
           theme: that.theme
         }
@@ -195,14 +195,17 @@
 
           that.$refs.uiContainer.innerHTML = ''
 
-          let MyComponent = Vue.extend({
-            template: '<div>' + that.codeCopyString + '</div>'
-          })
-          let component = new MyComponent().$mount();
-          document.getElementById('uiContainer').appendChild(component.$el)
-
-          that.json = that.parseElementToVNode(that.$refs.uiContainer.childNodes[0], that)
-          that.updateJson()
+          try {
+            let MyComponent = Vue.extend({
+              template: '<div>' + that.codeCopyString + '</div>'
+            })
+            let component = new MyComponent().$mount();
+            document.getElementById('uiContainer').appendChild(component.$el)
+            that.json = that.parseElementToVNode(that.$refs.uiContainer.childNodes[0], that)
+            that.updateJson()
+          } catch (e) {
+            console.error(e)
+          }
         }
       },
       parseElementToVNode(node, that) {
