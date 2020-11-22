@@ -81,7 +81,7 @@
       </div>
     </gl-draggable>
     <div class="gl-form-toolbar" v-show="toolbar.show" style="text-align: center">
-      <template v-for="(action,index) in toolbar.actions" v-if="action.gid=action.gid||$gl.utils.uuid(8)">
+      <template v-for="(action,index) in toolbar.actions" v-if="action.gid=action.gid||$gl.utils.uuid(16)">
         <a-button :ref="action.gid" :type="action.type||'primary'" :icon="action.icon"
                   :key="index" v-if="action.show===undefined||action.show===''||rungs(action.show)">
           {{action.text||action.title}}
@@ -124,13 +124,13 @@
           return {
             show: true,
             actions: [{
-              gid: this.$gl.utils.uuid(8),
+              gid: this.$gl.utils.uuid(16),
               text: '保存',
               type: 'primary',
               show: '',
               icon: ''
             }, {
-              gid: this.$gl.utils.uuid(8),
+              gid: this.$gl.utils.uuid(16),
               text: '取消',
               type: 'danger',
               show: '',
@@ -165,7 +165,7 @@
     },
     mounted() {
       if (this.toolbar && !this.toolbar.gid) {
-        this.toolbar.gid = this.$gl.utils.uuid(8)
+        this.toolbar.gid = this.$gl.utils.uuid(16)
       }
       // 初始化rowId，若无则初始化id
       this.rowItems.forEach(row => {
@@ -176,7 +176,7 @@
         //     })
         //   })
         // })
-        row.gid = row.gid || this.$gl.utils.uuid(8)
+        row.gid = row.gid || this.$gl.utils.uuid(16)
       })
     },
     methods: {

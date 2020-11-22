@@ -1,5 +1,5 @@
 <template>
-  <div class="gl-ide-plugin-x-designer-settings">
+  <div class="gl-ide-plugin-designer-settings">
     <a-tabs defaultActiveKey="1" :size="size" :style="{'min-height':`${height}px`,'max-height':`${height}px`}">
       <!--*******************************************************************************-->
       <!--******************************* 1、表 ****************************************-->

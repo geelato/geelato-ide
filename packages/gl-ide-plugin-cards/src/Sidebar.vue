@@ -152,6 +152,7 @@
               let dataItem = res.data[i]
               segmentTemplates.push({
                 id: dataItem.id,
+                gid: dataItem.id,
                 group: dataItem.type,
                 title: dataItem.title,
                 icon: '',
@@ -169,8 +170,10 @@
         })
       },
       customClone(item) {
+        // let id = utils.uuid(16)
         let result = {
-          id: utils.uuid(16)
+          // id: id,
+          gid: utils.uuid(16)
         }
         Object.assign(result, item)
         return JSON.parse(JSON.stringify(result))

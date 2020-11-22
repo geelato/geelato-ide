@@ -184,7 +184,7 @@
     <!--<tr class="gl-table-row">-->
     <!--<td colspan="3">-->
     <!--<a-button size="small" block-->
-    <!--@click="modalInfo.actions.push({gid:$gl.utils.uuid(8),title: '操作',icon: 'plus',type: 'primary'});onActionUpdate()"-->
+    <!--@click="modalInfo.actions.push({gid:$gl.utils.uuid(16),title: '操作',icon: 'plus',type: 'primary'});onActionUpdate()"-->
     <!--style="line-height: 1.499em">-->
     <!--<a-icon type="plus" size="small"/>-->
     <!--添加行操作按钮-->
@@ -221,7 +221,7 @@
     data() {
       return {
         modalInfo: {
-          gid: this.params.gid || this.$gl.utils.uuid(8),
+          gid: this.params.gid || this.$gl.utils.uuid(16),
           title: this.params.title,
           width: this.params.width,
           height: this.params.height,
@@ -309,7 +309,7 @@
               // 如果是引用页面cardItem.component为GlPage，需再进一步加载页面进行解析
               if (cardItem.component === 'GlPage') {
                 let option = {
-                  gid: cardItem.id,
+                  gid: cardItem.gid,
                   component: cardItem.component,
                   title: cardItem.title || '引用页面',
                   inParams: [],
@@ -337,7 +337,7 @@
                     console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > parseTargetPage() > push newInParam:', newInParam)
                   }
                   inParamSelection.push({
-                    gid: cardItem.id,
+                    gid: cardItem.gid,
                     component: cardItem.component,
                     title: cardItem.title,
                     inParams: newInParams
@@ -387,7 +387,7 @@
                   }
                 }
                 that.outParamSelection.push({
-                  gid: cardItem.id,
+                  gid: cardItem.gid,
                   component: cardItem.component,
                   title: outParamItem.group + (cardItem.bind.opts.title ? ' (' + cardItem.bind.opts.title + ')' : ''),
                   outParams: newOutParams

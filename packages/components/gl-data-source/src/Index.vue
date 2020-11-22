@@ -143,7 +143,7 @@
         // 在dynamic模式下
         if (this.dataSourceType === 'dynamic') {
           // 无dsKey，则创建一个
-          dsKey = this.dsKey || this.$gl.utils.uuid(8)
+          dsKey = this.dsKey || this.$gl.utils.uuid(16)
           this.$set(this.dsMap, dsKey, updatedDsItem)
           console.log('gl-data-source > Index > onChange() > add dsMap by key:', this.dsKey, ' and result:', this.dsMap)
         } else {

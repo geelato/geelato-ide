@@ -64,19 +64,19 @@ const plugin = {
         params: {}
       },
       {
-        title: '交互',
+        title: '动作',
         component: 'GlIdeSettingObjectTree',
         opts: {},
         params: {}
       },
       {
-        title: '卡片',
+        title: '单元格',
         component: 'GlIdePluginLayoutCardSettings',
         opts: {},
         params: {}
       },
       {
-        title: '元素',
+        title: '组件',
         component: 'GlIdePluginLayoutSegmentSettings',
         opts: {},
         params: {}
@@ -84,7 +84,7 @@ const plugin = {
     ]
   },
   sidebar: {
-    title: '布局卡片',
+    title: '布局',
     icon:'layout',
     component: Sidebar
   }

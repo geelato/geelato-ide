@@ -69,7 +69,7 @@
       },
       createNode() {
         return {
-          gid: this.$gl.utils.uuid(8),
+          gid: this.$gl.utils.uuid(16),
           data: [
             {title: '节点', key: Math.random() * 100000000}
           ],

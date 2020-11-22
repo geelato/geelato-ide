@@ -7,7 +7,6 @@
             <component :ref="cell.card" :is="getCardComponent(cell.card)"
                        :opts="getCardConfig(cell.card).opts"
                        :params="params"
-                       :style="getCardConfig(cell.card).style"
             >
               正在加载...
             </component>
@@ -19,46 +18,80 @@
                         @doAction="$emit('doAction',$event)"></gl-page-item>
         </template>
         <template v-else>
-          <!-- 卡片内的组件渲染 --采用默认方式  -->
-          <div v-for="(cellItem) in cell.items" :key="cellItem.gid" class="gl-cell">
-            <!--组件-->
-            <template v-if="cellItem.component">
+          <!-- 卡片内的组件渲染  -->
+          <template v-if="cell.displayMode==='Tabs'">
+            <!-- 卡片内的组件渲染 --采用tabs方式  -->
+            <a-tabs :defaultActiveKey="cell.opts?cell.opts.defaultActiveKey||0:0"
+                    :tabPosition="cell.opts?cell.opts.tabPosition:'top'">
+              <!-- 只展示非slot的组件 -->
+              <a-tab-pane :forceRender="true"
+                          v-for="(cellItem,colItemIndex) in cell.items.filter(item=>{ return item.displayMode!=='slot'})"
+                          :tab="cellItem.title"
+                          :key="colItemIndex">
+                <!--v-show="cellItem.show"-->
+                <component :ref="cellItem.gid" :is="$globalVue.component(cellItem.component)"
+                           :gid="cellItem.gid" v-bind="cellItem.bind" :params="params"
+                           @doAction="$emit('doAction',$event)"
+                           v-show="cellItem.isShow===undefined||cellItem.isShow"
+                           @display="(display)=>{$set(cellItem,'isShow',display.isShow)}"></component>
+              </a-tab-pane>
+              <!--<div class="extra-wrapper" slot="tabBarExtraContent">-->
+              <!--<span v-for="extraItem in cell.opts.extraItems">-->
+              <!--<gl-control :property="extraItem" :form="{}"></gl-control>-->
+              <!--</span>-->
+              <!--</div>-->
+              <!--<div class="extra-wrapper" slot="tabBarExtraContent"-->
+              <!--v-if="cell.opts.slots&&cell.opts.slots.length>0&&(currentColItem=getColItemById(cell.items,cell.opts.slots[0].name))">-->
+              <!--{{cell.opts.slots}}-->
+              <!--{{currentColItem}}-->
+              <!--</div>-->
+              <template
+                  v-if="cell.opts.slots&&cell.opts.slots.length>0&&(currentColItem=getColItemById(cell.items,cell.opts.slots[0].gid))">
+                <component :ref="currentColItem.gid"
+                           :is="$globalVue.component(currentColItem.component)"
+                           :gid="currentColItem.gid"
+                           v-bind="currentColItem.bind" :params="params"
+                           @doAction="$emit('doAction',$event)"
+                           v-show="currentColItem.isShow===undefined||currentColItem.isShow"
+                           @display="(display)=>{$set(currentColItem,'isShow',display.isShow)}"
+                           slot="tabBarExtraContent" class="extra-wrapper"></component>
+              </template>
+              <!--<gl-toolbar v-if="cell.items.find(cellItem=>{ return cellItem.component==='GlToolbar'})"-->
+              <!--class="extra-wrapper" slot="tabBarExtraContent"-->
+              <!--:opts="{items:cell.items.find(cellItem=>{ return cellItem.component==='GlToolbar'})||[]}"></gl-toolbar>-->
+            </a-tabs>
+          </template>
+          <template v-else-if="cell.displayMode==='Collapse'">
+            <!-- 卡片内的组件渲染 --采用Collapse方式  -->
+            <a-collapse :defaultActiveKey="cell.opts?cell.opts.defaultActiveKey||0:0">
+              <a-collapse-panel :forceRender="true" v-for="(cellItem,colItemIndex) in cell.items" :header="cellItem.title"
+                                :key="colItemIndex">
+                <component :ref="cellItem.gid" :is="$globalVue.component(cellItem.component)"
+                           :gid="cellItem.gid" v-bind="cellItem.bind" :params="params"
+                           @doAction="$emit('doAction',$event)" v-show="cellItem.isShow===undefined||cellItem.isShow"
+                           @display="(display)=>{$set(cellItem,'isShow',display.isShow)}"></component>
+                <div class="extra-wrapper" slot="extra" style="margin-top: -.35em">
+                  <a>今日</a>
+                  <a>本周</a>
+                  <a>本月</a>
+                  <a>本年</a>
+                  <a-range-picker :style="{width: '256px'}"/>
+                </div>
+              </a-collapse-panel>
+            </a-collapse>
+          </template>
+          <template v-else>
+            <!-- 卡片内的组件渲染 --采用默认方式  -->
+            <div v-for="(cellItem) in cell.items" :key="cellItem.gid" class="gl-cell">
+              <!--v-show="cellItem.show"-->
+              <!--<textarea :value="JSON.stringify(cellItem.bind)" style="width: 100%"></textarea>-->
+              <!--<textarea :value="JSON.stringify(params[cellItem.gid])" style="width: 100%"></textarea>-->
               <component :ref="cellItem.gid" :is="$globalVue.component(cellItem.component)"
                          :gid="cellItem.gid" v-bind="cellItem.bind" :params="params[cellItem.gid]"
                          @doAction="$emit('doAction',$event)" v-show="cellItem.isShow===undefined||cellItem.isShow"
-                         @display="(display)=>{$set(cellItem,'isShow',display.isShow)}" :style="cellItem.style"></component>
-            </template>
-            <!--容器-->
-            <template v-else>
-              <template v-if="cellItem.type==='Tabs'">
-                <a-tabs :default-active-key="0" :type="cellItem.opts.type" :size="cellItem.opts.size" :tabPosition="cellItem.opts.tabPosition">
-                  <a-tab-pane :tab="tabItem.title" v-for="(tabItem,tabItemIndex) in cellItem.items"
-                              :key="tabItemIndex">
-                    <div v-for="(panel) in tabItem.items" :key="panel.gid"
-                         style="padding-top: 0.1em;position: relative">
-                      <component :ref="panel.gid" :is="$globalVue.component(panel.component)"
-                                 :gid="panel.gid" v-bind="panel.bind" :params="params[panel.gid]"
-                                 @doAction="$emit('doAction',$event)" v-show="panel.isShow===undefined||panel.isShow"
-                                 @display="(display)=>{$set(panel,'isShow',display.isShow)}" :style="panel.style"></component>
-                    </div>
-                  </a-tab-pane>
-                  <!--插槽 slots-->
-                  <template slot="tabBarExtraContent">
-                    <div v-for="(slot) in cellItem.slots" :key="slot.gid"
-                         style="padding-top: 0.1em;position: relative">
-                      <component :ref="slot.gid" v-show="slot.show" :is="$globalVue.component(slot.component)"
-                                 v-bind="slot.bind" :style="slot.style"></component>
-                      <!--<div v-if="!slot.show" style="text-align: center;font-size: 3em">-->
-                        <!--<a-icon :type="slot.icon" @click="slot.show=true" title="点击展示该组件内容"/>-->
-                      <!--</div>-->
-                    </div>
-                  </template>
-                </a-tabs>
-              </template>
-              <template v-else>未支持的type:{{cellItem.type}}</template>
-            </template>
-
-          </div>
+                         @display="(display)=>{$set(cellItem,'isShow',display.isShow)}"></component>
+            </div>
+          </template>
         </template>
       </a-col>
     </a-row>

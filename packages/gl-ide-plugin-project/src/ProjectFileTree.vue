@@ -313,7 +313,7 @@
           extendId: data.id,
           name: data.text,
           type: data.type,
-          code: data.type + '_' + this.$gl.utils.uuid(8)
+          code: data.type + '_' + this.$gl.utils.uuid(16)
         }, true), this.savePage)
       },
       /**

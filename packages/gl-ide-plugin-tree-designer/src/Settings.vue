@@ -271,7 +271,7 @@
             <tr class="gl-table-row">
               <td colspan="3">
                 <a-button size="small" block
-                          @click="config.menuAction.actions.push({gid:$gl.utils.uuid(8),title:'',title:'操作',icon:''})"
+                          @click="config.menuAction.actions.push({gid:$gl.utils.uuid(16),title:'',title:'操作',icon:''})"
                           style="line-height: 1.499em">
                   <a-icon type="plus" size="small"/>
                   添加菜单项
@@ -346,7 +346,7 @@
         console.log('gl-ide > gl-ide-plugin-tree-designer > Settings > generateGid()')
         const that = this
         that.config.menuAction.actions.forEach(function (col) {
-          col.gid = col.gid || that.$gl.utils.uuid(8)
+          col.gid = col.gid || that.$gl.utils.uuid(16)
         })
       },
       onChange(e) {

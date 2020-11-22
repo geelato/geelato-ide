@@ -29,7 +29,7 @@ export default class EditingFileParser {
         return
       }
       rows.filter((row) => !!row.cols).forEach((row) => {
-        row.cols.filter((col) => !!col.items).forEach((col) => {
+        row.cols.filter((cell) => !!cell.items).forEach((cell) => {
           // ==========item为卡片内一个组件的配置信息，例如下方所示
           // {id:'',title: '列表',icon: 'table',component: 'GlTable',bind: {opts: table, query: {}},
           //   meta: {
@@ -39,7 +39,7 @@ export default class EditingFileParser {
           //   }
           // }
 
-          col.items.forEach((item) => {
+          cell.items.forEach((item) => {
             generateObjectTreeNode(item)
           })
         })
@@ -55,13 +55,13 @@ export default class EditingFileParser {
 
       const that = this
       // 如果已存在treeNodes中，则不添加
-      if (treeNodes.filter((node) => node.key === item.id).length > 0) {
+      if (treeNodes.filter((node) => node.key === item.gid).length > 0) {
         console.warn('gl-ide > EditingFileParser > generateObjectTreeNode() > 已存在treeNodes中，不添加item:', item)
         return
       }
       // 加载每张卡片组件配置cardComponent
-      //  {id: item.id, component: this.$refs[item.id][0], type: item.type, meta: item.meta}
-      const cardComponent = that.componentRefs[item.id]
+      //  {id: item.gid, component: this.$refs[item.gid][0], type: item.type, meta: item.meta}
+      const cardComponent = that.componentRefs[item.gid]
 
       // console.log('gl-ide > EditingFileParser > generateObjectTreeNode() > cardComponent:', cardComponent)
       const groups = []
@@ -80,7 +80,7 @@ export default class EditingFileParser {
                 childrenNodes.push({
                   title: childObj.title + ' [' + childObj.control + ']',
                   // 组件id+组件内的控件id
-                  key: item.id + '_$_' + childObj.gid, // that.$gl.utils.uuid(8),
+                  key: item.gid + '_$_' + childObj.gid, // that.$gl.utils.uuid(8),
                   slots: {
                     icon: 'link'
                   }
@@ -103,7 +103,7 @@ export default class EditingFileParser {
 
       treeNodes.push({
         title: item.title,
-        key: item.id,
+        key: item.gid,
         slots: {
           icon: item.icon
         },
@@ -117,7 +117,7 @@ export default class EditingFileParser {
      */
     // function removeObjectTreeNode(item) {
     //   treeNodes.forEach((node, index) => {
-    //     if (node.key === item.id) {
+    //     if (node.key === item.gid) {
     //       treeNodes.splice(index, 1)
     //     }
     //   })
@@ -139,10 +139,10 @@ export default class EditingFileParser {
 
     // function generateComponentRef(item) {
     //   console.log('gl-ide > EditingFileParser > generateComponentRef() > item:', item)
-    //   console.log('gl-ide > EditingFileParser > generateComponentRef() > this.$refs[item.id]:', this.$refs[item.id])
-    //   editingFile.sourceContent.opts._componentRefs[item.id] = {
-    //     id: item.id,
-    //     component: currentVue.$refs[item.id][0],
+    //   console.log('gl-ide > EditingFileParser > generateComponentRef() > this.$refs[item.gid]:', this.$refs[item.gid])
+    //   editingFile.sourceContent.opts._componentRefs[item.gid] = {
+    //     id: item.gid,
+    //     component: currentVue.$refs[item.gid][0],
     //     type: item.type,
     //     meta: item.meta
     //   }

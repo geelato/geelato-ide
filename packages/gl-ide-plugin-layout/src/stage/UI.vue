@@ -45,7 +45,7 @@
 
 <style>
 
-  .gl-dnd-col {
+  .gl-dnd-cell {
     padding: 0.5em;
   }
 
@@ -57,69 +57,18 @@
     width: 100%;
   }
 
-  .gl-dnd-col:hover > .gl-dnd-card-toolbar {
+  .gl-dnd-cell:hover > .gl-dnd-card-toolbar {
     display: block;
   }
 
-  .gl-ide-layout-stage .gl-dnd-row-handle {
-    /*border: 1px solid #f0f0f0;*/
-    /*margin-bottom: 0.1em;*/
-    /*cursor: move;*/
-  }
-
-  .gl-ide-layout-stage .gl-dnd-col-wrapper {
+  .gl-ide-layout-stage .gl-dnd-wrapper-cell-item {
     min-height: 2em;
   }
 
-  .gl-ide-layout-stage .gl-dnd-col-wrapper:hover {
-    /*background-color: #91d5ff;*/
-    /*background-color: #ffffff;*/
-    /*box-shadow: 0 0 5px #1e62a3;*/
-    /*border: 1px dotted #1e62a3;*/
+  .gl-ide-layout-stage .gl-dnd-panel-wrapper {
+    min-height: 2em;
+    margin-top: -1em;
   }
-
-  /*.gl-ide-layout-stage .gl-dnd-row-handle.sortable-chosen{*/
-  /*background-color: rgb(107, 209, 255);*/
-  /*}*/
-
-  /*.gl-ide-layout-stage .gl-dnd-row-toolbar {*/
-    /*position: absolute;*/
-    /*right: -0.5em;*/
-    /*display: none;*/
-  /*}*/
-
-  /*.gl-ide-layout-stage .gl-dnd-row-toolbar i {*/
-  /*font-size: 1.5em;*/
-  /*line-height: 1.5em;*/
-  /*cursor: pointer;*/
-  /*}*/
-
-  /*.gl-ide-layout-stage .gl-dnd-row-handle:hover .gl-dnd-row-toolbar {*/
-    /*display: inline-block;*/
-  /*}*/
-
-  .gl-ide-layout-stage .gl-dnd-row-handle:hover {
-    /*box-shadow: 0 0 4px #ffca11;*/
-  }
-
-  .gl-ide-layout-stage .gl-dnd-row-handle > div > div {
-    /*background-color: rgba(161, 222, 255, 0.35);*/
-    /*text-align: center;*/
-  }
-
-  .gl-dnd-placeholder{
-    display: block;
-    background-color: rgba(161, 222, 255, 0.35);
-    min-height:2em;
-  }
-
-  /*.gl-ide-layout-stage .gl-dnd-col-item-toolbar, .gl-ide-layout-stage .gl-dnd-col-item-hover-title {*/
-  /*padding: 0 1em;*/
-  /*line-height: 2em;*/
-  /*height: 2em;*/
-  /*background-color: #e5e5e5*/
-  /*}*/
-
 
   .gl-ide-layout-stage .gl-dnd-row-toolbar {
     display: none;
@@ -134,7 +83,7 @@
     height: 2em;
   }
 
-  .gl-dnd-row.gl-selected .gl-dnd-row-toolbar {
+  .gl-dnd-row.gl-selected > .gl-dnd-row-toolbar {
     display: block;
   }
 
@@ -152,8 +101,7 @@
     border: solid 1px #2cc786;
   }
 
-
-  .gl-ide-layout-stage .gl-dnd-col-toolbar {
+  .gl-ide-layout-stage .gl-dnd-cell-toolbar {
     display: none;
     background-color: #b91fbc;
     font-size: 12px;
@@ -167,25 +115,25 @@
     margin-left: -3px;
   }
 
-  .gl-dnd-col.gl-selected .gl-dnd-col-toolbar {
+  .gl-dnd-cell.gl-selected > .gl-dnd-cell-toolbar {
     display: block;
   }
 
-  .gl-ide-layout-stage .gl-dnd-col-toolbar button {
+  .gl-ide-layout-stage .gl-dnd-cell-toolbar button {
     background-color: #b91fbc;
     border-color: #b91fbc;
     color: white;
   }
 
-  .gl-ide-layout-stage .gl-dnd-col-toolbar button:hover {
+  .gl-ide-layout-stage .gl-dnd-cell-toolbar button:hover {
     color: #b91fbc;
   }
 
-  .gl-dnd-col.gl-selected {
+  .gl-dnd-cell.gl-selected {
     border: solid 1px #b91fbc;
   }
 
-  .gl-ide-layout-stage .gl-dnd-col-item-hover-title, .gl-ide-layout-stage .gl-dnd-col-item-breadcrumbs, .gl-ide-layout-stage .gl-dnd-col-item-toolbar {
+  .gl-ide-layout-stage .gl-component-item-hover-title, .gl-ide-layout-stage .gl-component-item-breadcrumbs, .gl-ide-layout-stage .gl-component-item-toolbar {
     display: none;
     background-color: #178df7;
     font-size: 12px;
@@ -198,45 +146,104 @@
     height: 2em;
   }
 
-  .gl-col-item-wrapper.gl-selected .gl-dnd-col-item-breadcrumbs, .gl-col-item-wrapper.gl-selected .gl-dnd-col-item-hover-title, .gl-col-item-wrapper.gl-selected .gl-dnd-col-item-toolbar {
+  .gl-cell-item-wrapper.gl-selected > .gl-component-item-breadcrumbs, .gl-cell-item-wrapper.gl-selected > .gl-component-item-hover-title, .gl-cell-item-wrapper.gl-selected > .gl-component-item-toolbar {
     display: block;
   }
 
-  .gl-ide-layout-stage .gl-col-item-wrapper:hover .gl-dnd-col-item-hover-title {
+  .gl-ide-layout-stage .gl-cell-item-wrapper:hover > .gl-component-item-hover-title, .gl-ide-layout-stage .gl-container-item-wrapper:hover > .gl-component-item-hover-title {
     display: block;
   }
 
-  .gl-dnd-col-item-breadcrumbs .crumbs {
+  .gl-component-item-breadcrumbs .crumbs {
     display: inline-block;
     padding: 0 0.5em;
     cursor: pointer;
   }
 
-  .gl-dnd-col-item-breadcrumbs .crumbs-link {
+  .gl-component-item-breadcrumbs .crumbs-link {
     display: inline-block;
   }
 
-  .gl-dnd-col-item-handle {
+  .gl-dnd-handle-cell-item {
     cursor: move;
   }
 
-  .gl-ide-layout-stage .gl-dnd-col-item-toolbar button {
+  .gl-ide-layout-stage .gl-component-item-toolbar button {
     background-color: #178df7;
     border-color: #178df7;
     color: white;
   }
 
-  .gl-ide-layout-stage .gl-dnd-col-item-toolbar button:hover{
+  .gl-ide-layout-stage .gl-component-item-toolbar button:hover {
     color: #3facff;
+  }
+
+  .gl-container-item-wrapper.gl-selected > .gl-component-item-breadcrumbs, .gl-container-item-wrapper.gl-selected > .gl-component-item-hover-title, .gl-container-item-wrapper.gl-selected > .gl-component-item-toolbar {
+    display: block;
+  }
+
+  .gl-dnd-slot-wrapper {
+    display: inline-block;
+  }
+
+  .gl-slot-item-wrapper {
+    display: inline-block;
+  }
+
+  .gl-slot-item-wrapper.gl-selected > .gl-component-item-breadcrumbs, .gl-slot-item-wrapper.gl-selected > .gl-component-item-hover-title, .gl-slot-item-wrapper.gl-selected > .gl-component-item-toolbar {
+    display: inline-block;
+    top: 3.5em
+  }
+
+  /*.gl-slot-item-wrapper.gl-selected .gl-component-wrapper {*/
+  /*border: solid 1px #178df7;*/
+  /*}*/
+
+  .gl-dnd-slot-placeholder, .gl-dnd-panel-placeholder, .gl-dnd-placeholder {
+    display: block;
+    background-color: rgba(161, 222, 255, 0.35);
+    min-height: 2.4em;
+    line-height: 2.4em;
+    color: #2185d0;
+    font-style: italic;
+    text-align: center;
+    vertical-align: middle;
+
+  }
+
+  .gl-dnd-panel-placeholder {
+    /*min-height: 4em;*/
+  }
+
+  .gl-dnd-slot-placeholder {
+    display: inline-block;
+    min-width: 4em;
+    line-height: 2.4em;
   }
 
   .gl-component-wrapper:hover {
     border: solid 1px #178df7;
   }
 
-  .gl-col-item-wrapper.gl-selected .gl-component-wrapper{
+  .gl-selected > div > .gl-component-hidden-placeholder {
     border: solid 1px #178df7;
   }
 
+  .gl-selected > .gl-component-wrapper {
+    border: solid 1px #178df7;
+  }
 
+  .gl-component-hidden-placeholder {
+    text-align: center;
+    font-size: 3em;
+    background-color: #f0f0f0;
+  }
+
+  .gl-dnd-item-handle {
+    cursor: move;
+  }
+
+  /*.gl-container-wrapper:hover * {*/
+  /*pointer-events: none;*/
+  /*}*/
 </style>

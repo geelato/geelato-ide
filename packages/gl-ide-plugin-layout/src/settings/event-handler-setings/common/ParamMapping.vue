@@ -121,7 +121,7 @@
     data() {
       return {
         modalInfo: {
-          gid: this.params.gid || this.$gl.utils.uuid(8),
+          gid: this.params.gid || this.$gl.utils.uuid(16),
           // pageId: this.params.pageId,
           paramMapping: this.params.paramMapping
         },
@@ -216,7 +216,7 @@
               // 如果是引用页面cardItem.component为GlPage，需再进一步加载页面进行解析
               if (cardItem.component === 'GlPage') {
                 let option = {
-                  gid: cardItem.id,
+                  gid: cardItem.gid,
                   component: cardItem.component,
                   title: cardItem.title || '引用页面',
                   inParams: [],
@@ -244,7 +244,7 @@
                     console.log('gl-ide-plugin-layout > event-handler-settings > ParamMapping > parseTargetPage() > push newInParam:', newInParam)
                   }
                   inParamSelection.push({
-                    gid: cardItem.id,
+                    gid: cardItem.gid,
                     component: cardItem.component,
                     title: cardItem.title,
                     inParams: newInParams
@@ -294,7 +294,7 @@
                   }
                 }
                 that.outParamSelection.push({
-                  gid: cardItem.id,
+                  gid: cardItem.gid,
                   component: cardItem.component,
                   title: outParamItem.group + (cardItem.bind.opts.title ? ' (' + cardItem.bind.opts.title + ')' : ''),
                   outParams: newOutParams

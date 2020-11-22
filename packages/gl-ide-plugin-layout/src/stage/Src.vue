@@ -1,6 +1,6 @@
 <template>
   <div class="gl-ide-layout-stage" style="height: 760px;overflow-x: hidden">
-    <gl-ide-stage-code v-if="refreshFlag" :content="ideStore.editingFile.sourceContent" :opts="{readOnly:true}"
+    <gl-ide-stage-code v-if="refreshFlag" :content="ideStore.editingFile.sourceContent" :opts="{editable:false}"
                        :layout="layout"></gl-ide-stage-code>
   </div>
 </template>

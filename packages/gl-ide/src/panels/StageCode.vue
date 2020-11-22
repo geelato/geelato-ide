@@ -55,7 +55,7 @@
         editorOptions: {
           selectOnLineNumbers: true,
           roundedSelection: false,
-          readOnly: false,        // 只读
+          editable: true,        // 只读
           cursorStyle: 'line',        //光标样式
           glyphMargin: true,  //字形边缘
           useTabStops: false,

@@ -1,6 +1,6 @@
 <template>
   <div style="width:100%;">
-    <div class="gl-ide-plugin-x-designer-settings">
+    <div class="gl-ide-plugin-designer-settings">
       <div v-if="config">
         <div class="gl-title">
           <a-icon type="setting"/>

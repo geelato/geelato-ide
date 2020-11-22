@@ -232,7 +232,7 @@
        * @return {*}
        */
       addProperty(fieldItem) {
-        let gid = this.$gl.utils.uuid(8)
+        let gid = this.$gl.utils.uuid(16)
         fieldItem.field = gid
         let newProperty = {
           field: gid,

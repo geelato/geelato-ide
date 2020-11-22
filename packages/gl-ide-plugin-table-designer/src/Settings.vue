@@ -1,5 +1,5 @@
 <template>
-  <div class="gl-ide-plugin-x-designer-settings">
+  <div class="gl-ide-plugin-designer-settings">
     <a-tabs defaultActiveKey="1" :size="size" :style="{'min-height':`${height}px`,'max-height':`${height}px`}">
       <!--*******************************************************************************-->
       <!--******************************* 1、表 ****************************************-->
@@ -228,7 +228,7 @@
             <tr class="gl-table-row">
               <td colspan="3">
                 <a-button size="small" block
-                          @click="config.table.columns.push({gid:$gl.utils.uuid(8),title:'',dataIndex:''})"
+                          @click="config.table.columns.push({gid:$gl.utils.uuid(16),title:'',dataIndex:''})"
                           style="line-height: 1.499em">
                   <a-icon type="plus" size="small"/>
                   添加结果列
@@ -374,7 +374,7 @@
             <tr class="gl-table-row">
               <td colspan="4">
                 <a-button size="small" block
-                          @click="config.query.mix.properties.push({gid:$gl.utils.uuid(8),field: '',title: '',cop: 'eq',control: 'input',lop: 'and',props: {placeholder: '', defaultValue: ''}},)"
+                          @click="config.query.mix.properties.push({gid:$gl.utils.uuid(16),field: '',title: '',cop: 'eq',control: 'input',lop: 'and',props: {placeholder: '', defaultValue: ''}},)"
                           style="line-height: 1.499em">
                   <a-icon type="plus" size="small"/>
                   添加查询条件
@@ -435,7 +435,7 @@
             <tr class="gl-table-row">
               <td colspan="4">
                 <a-button size="small" block
-                          @click="config.toolbar.actions.push({gid:$gl.utils.uuid(8),control:'button',title: '操作',icon: 'plus',type: 'primary',fn: 'openModal',ctx: 'this',params: {}})"
+                          @click="config.toolbar.actions.push({gid:$gl.utils.uuid(16),control:'button',title: '操作',icon: 'plus',type: 'primary',fn: 'openModal',ctx: 'this',params: {}})"
                           style="line-height: 1.499em">
                   <a-icon type="plus" size="small"/>
                   添加工具栏按钮
@@ -479,7 +479,7 @@
             <tr class="gl-table-row">
               <td colspan="2">
                 <a-button size="small" block
-                          @click="config.table.rowAction.actions.push({gid:$gl.utils.uuid(8),control:'button',title: '操作',icon: 'plus',type: 'primary',fn: 'openModal',ctx: 'this',params: {}})"
+                          @click="config.table.rowAction.actions.push({gid:$gl.utils.uuid(16),control:'button',title: '操作',icon: 'plus',type: 'primary',fn: 'openModal',ctx: 'this',params: {}})"
                           style="line-height: 1.499em">
                   <a-icon type="plus" size="small"/>
                   添加操作栏按钮
@@ -543,18 +543,18 @@
         console.log('gl-ide > gl-ide-plugin-table-designer > Settings > generateGid()')
         const that = this
         that.config.query.mix.properties.forEach(function (property) {
-          property.gid = property.gid || that.$gl.utils.uuid(8)
+          property.gid = property.gid || that.$gl.utils.uuid(16)
           that.$set(property, 'show', property.show === undefined ? true : property.show)
         })
         that.config.table.columns.forEach(function (col) {
-          col.gid = col.gid || that.$gl.utils.uuid(8)
+          col.gid = col.gid || that.$gl.utils.uuid(16)
         })
         that.config.table.rowAction.actions.forEach(function (action) {
-          action.gid = action.gid || that.$gl.utils.uuid(8)
+          action.gid = action.gid || that.$gl.utils.uuid(16)
           console.log('gl-ide > gl-ide-plugin-table-designer > Settings > generateGid() > rowAction: ', action)
         })
         that.config.toolbar.actions.forEach(function (action) {
-          action.gid = action.gid || that.$gl.utils.uuid(8)
+          action.gid = action.gid || that.$gl.utils.uuid(16)
         })
       },
       onChange(needRefreshStage = false, data) {

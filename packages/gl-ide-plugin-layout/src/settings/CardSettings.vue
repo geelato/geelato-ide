@@ -1,5 +1,5 @@
 <template>
-  <div class="gl-ide-plugin-x-designer-settings">
+  <div class="gl-ide-plugin-designer-settings">
     <div v-if="config">
       <div class="gl-title">
         <a-icon type="setting"/>
@@ -21,7 +21,7 @@
             显示边框：
           </td>
           <td class="gl-table-cell">
-            <a-switch v-model="card.showBorder"></a-switch>
+            <a-switch v-model="config.showBorder"></a-switch>
           </td>
         </tr>
         <tr class="gl-table-row">
@@ -29,7 +29,7 @@
             显示模式：
           </td>
           <td class="gl-table-cell">
-            <a-select v-model="card.displayMode" :allowClear="true" style="min-width: 99%">
+            <a-select v-model="config.displayMode" :allowClear="false" style="min-width: 99%">
               <a-select-option v-for="displayModeOption in selectionDisplayMode" :key="displayModeOption.value"
                                :value="displayModeOption.value"
                                :title="displayModeOption.title">
@@ -40,42 +40,150 @@
         </tr>
       </table>
 
-      <div class="gl-title" v-if="card.items&&card.items.length>0">
+      <div class="gl-title" v-if="config.items&&config.items.length>0">
         <a-icon type="setting"/>
-        卡片内组件
+        单元格子项（Items）
       </div>
       <table class="gl-table">
-        <tr class="gl-table-row" v-for="(cardItem,cardItemIndex) in card.items" :key="cardItemIndex">
-          <td class="gl-table-cell gl-table-cell-sub-label">
-            <a-icon :type="cardItem.icon"/>
-            组件({{cardItemIndex+1}})：
-          </td>
-          <td class="gl-table-cell">
-            <a-input v-model="cardItem.title" style="width: 98%">
-              <a-select slot="addonAfter" default-value="asComponent" style="width: 100px"
-                        v-model="cardItem.displayMode" @change="changeCardItemDisplayMode(card,cardItem)">
-                <a-select-option value="slot">
-                  作为插槽
-                </a-select-option>
-                <a-select-option value="component">
-                  作为组件
-                </a-select-option>
-              </a-select>
-            </a-input>
-          </td>
+        <tr class="gl-table-row" style="text-align: center">
+          <th style="width: 6em">
+            项类型
+          </th>
+          <th>
+            标题
+          </th>
+          <th style="width: 3em">
+            操作
+          </th>
         </tr>
+        <gl-draggable
+            :list="config.items"
+            animation="700"
+            handle=".gl-dnd-item-handle"
+            group='rowActions'
+            :sort="true"
+            element="tbody"
+        >
+          <tr class="gl-table-row" v-for="(cellItem,cellItemIndex) in config.items" :key="cellItemIndex">
+            <td colspan="3">
+              <table style="width: 100%;">
+                <tr>
+                  <td class="gl-table-cell" style="width: 6em">
+                    {{cellItem.component?'组件':'容器-'+cellItem.type}}
+                  </td>
+                  <td class="gl-table-cell gl-table-cell-sub-label">
+                    <a-input v-model="cellItem.title" style="width: 98%">
+                    </a-input>
+                  </td>
+                  <td class="gl-table-cell" style="width: 4em">
+                    <a-button class="gl-mini-btn" v-if="currentContainerItemIndex!==cellItemIndex"
+                              @click="currentContainerItemIndex = cellItemIndex" title="显示更多设置">
+                      <a-icon type="setting"/>
+                    </a-button>
+                    <a-button class="gl-mini-btn" v-if="currentContainerItemIndex===cellItemIndex"
+                              @click="currentContainerItemIndex = -1" title="隐藏更多设置">
+                      <a-icon type="eye-invisible"/>
+                    </a-button>
+                    <a-button class="gl-dnd-item-handle gl-mini-btn">
+                      <a-icon type="drag"></a-icon>
+                    </a-button>
+                  </td>
+                </tr>
+                <template v-if="currentContainerItemIndex===cellItemIndex">
+                  <tr v-if="cellItem.type==='Tabs'">
+                    <td colspan="3" style="padding:0.2em;">
+                      <table class="gl-table" style="border: 1px solid">
+                        <tr class="gl-table-row">
+                          <td class="gl-table-cell gl-table-cell-sub-label">
+                            标签标题：
+                          </td>
+                          <td class="gl-table-cell">
+                            <gl-draggable
+                                :list="cellItem.items"
+                                animation="700"
+                                handle=".gl-dnd-item-handle"
+                                group='tabs'
+                                :sort="true"
+                            >
+                              <div v-for="(component,componentIndex) in cellItem.items" :key="componentIndex">
+                                <a-input v-model="component.title">
+                                  <a-icon type="drag" slot="addonAfter" class="gl-dnd-item-handle"></a-icon>
+                                </a-input>
+                              </div>
+                            </gl-draggable>
+                          </td>
+                        </tr>
+                        <tr class="gl-table-row">
+                          <td class="gl-table-cell gl-table-cell-sub-label">
+                            标签位置：
+                          </td>
+                          <td class="gl-table-cell">
+                            <a-radio-group v-model="cellItem.opts.tabPosition" size="small">
+                              <a-radio-button value="top">上</a-radio-button>
+                              <a-radio-button value="bottom">下</a-radio-button>
+                              <a-radio-button value="left">左</a-radio-button>
+                              <a-radio-button value="right">右</a-radio-button>
+                            </a-radio-group>
+                          </td>
+                        </tr>
+                        <tr class="gl-table-row">
+                          <td class="gl-table-cell gl-table-cell-sub-label">
+                            标签类型：
+                          </td>
+                          <td class="gl-table-cell">
+                            <a-radio-group v-model="cellItem.opts.type" size="small">
+                              <a-radio-button value="line">下划线式</a-radio-button>
+                              <a-radio-button value="card">卡片式</a-radio-button>
+                            </a-radio-group>
+                          </td>
+                        </tr>
+                        <tr class="gl-table-row">
+                          <td class="gl-table-cell gl-table-cell-sub-label">
+                            标签大小：
+                          </td>
+                          <td class="gl-table-cell">
+                            <a-radio-group v-model="cellItem.opts.size" size="small">
+                              <a-radio-button value="large">大</a-radio-button>
+                              <a-radio-button value="default">中</a-radio-button>
+                              <a-radio-button value="small">小</a-radio-button>
+                            </a-radio-group>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr v-else-if="cellItem.type==='Collapse'">
+                    <td colspan="3" style="padding:0.2em;">
+                      无更多设置
+                    </td>
+                  </tr>
+                  <tr v-else-if="cellItem.type==='Flow'">
+                    <td colspan="3" style="padding:0.2em;">
+                      无更多设置
+                    </td>
+                  </tr>
+                  <tr v-else>
+                    <td colspan="3" style="padding:0.2em;">
+                      未支持的设置
+                    </td>
+                  </tr>
+                </template>
+              </table>
+            </td>
+          </tr>
+        </gl-draggable>
       </table>
-      <div class="gl-title" v-if="card.displayMode==='Tabs'">
+      <div class="gl-title" v-if="config.displayMode==='Tabs'">
         <a-icon type="setting"/>
         标签页（Tabs）设置
       </div>
-      <table class="gl-table" v-if="card.displayMode==='Tabs'">
+      <table class="gl-table" v-if="config.displayMode==='Tabs'">
         <tr class="gl-table-row">
           <td class="gl-table-cell gl-table-cell-sub-label">
-            显示位置：
+            标签位置：
           </td>
           <td class="gl-table-cell">
-            <a-radio-group v-model="card.opts.tabPosition" size="small">
+            <a-radio-group v-model="config.opts.tabPosition" size="small">
               <a-radio-button value="top">上</a-radio-button>
               <a-radio-button value="bottom">下</a-radio-button>
               <a-radio-button value="left">左</a-radio-button>
@@ -83,54 +191,32 @@
             </a-radio-group>
           </td>
         </tr>
-
         <tr class="gl-table-row">
           <td class="gl-table-cell gl-table-cell-sub-label">
-            扩展插槽：
+            标签页面：
           </td>
           <td class="gl-table-cell">
-            <div v-for="(slot) in card.opts.slots">
-              <a-input style="width: 98%" v-model="slot.name" readonly="true">
-                <a-icon slot="addonBefore" type="api"/>
-                <!--<a-icon slot="addonAfter" type="delete" theme="twoTone" twoToneColor="#eb2f96"-->
-                <!--@click="$gl.utils.remove(card.opts.slots,slotIndex)"/>-->
-              </a-input>
-              <!--<a-button class="gl-mini-btn"-->
-              <!--@click="$gl.utils.remove(card.opts.extraItems,extraItemIndex)">-->
-              <!--<a-icon type="delete" theme="twoTone" twoToneColor="#eb2f96"/>-->
-              <!--</a-button>-->
-            </div>
-            <!--<a-button @click="card.opts.slots.push({name:''})" block>-->
-            <!--添加插槽-->
-            <!--</a-button>-->
+            <a-radio-group v-model="config.opts.tabPosition" size="small">
+              <a-radio-button value="top">上</a-radio-button>
+              <a-radio-button value="bottom">下</a-radio-button>
+              <a-radio-button value="left">左</a-radio-button>
+              <a-radio-button value="right">右</a-radio-button>
+            </a-radio-group>
           </td>
         </tr>
-
-        <!--<tr class="gl-table-row">-->
-        <!--<td class="gl-table-cell gl-table-cell-sub-label">-->
-        <!--操作扩展项：-->
-        <!--</td>-->
-        <!--<td class="gl-table-cell">-->
-        <!--<div v-for="(extraItem,extraItemIndex) in card.opts.extraItems">-->
-        <!--<a-input style="width: 98%" v-model="extraItem.title">-->
-        <!--<a-icon slot="addonBefore" :type="extraItem.icon" title="扩展项类型"/>-->
-        <!--<a-icon slot="addonAfter" type="delete" theme="twoTone" twoToneColor="#eb2f96"-->
-        <!--@click="$gl.utils.remove(card.opts.extraItems,extraItemIndex)"/>-->
-        <!--</a-input>-->
-        <!--</div>-->
-        <!--<div>-->
-        <!--<a-select :allowClear="false" style="min-width: 70%" defaultValue="button" @change="selectControl">-->
-        <!--<a-select-option v-for="control in controls" :key="control.value">-->
-        <!--{{control.text}}-->
-        <!--</a-select-option>-->
-        <!--</a-select>-->
-        <!--<a-button-->
-        <!--@click="addCurrentControlToExtra(card.opts.extraItems)">-->
-        <!--添加-->
-        <!--</a-button>-->
-        <!--</div>-->
-        <!--</td>-->
-        <!--</tr>-->
+        <tr class="gl-table-row">
+          <td class="gl-table-cell gl-table-cell-sub-label">
+            标签插槽：
+          </td>
+          <td class="gl-table-cell">
+            {{config.opts.slots.length===0?' 无':''}}
+            <div v-for="(slot) in config.opts.slots">
+              <a-input style="width: 98%" v-model="slot.name" readonly="true">
+                <a-icon slot="addonBefore" type="api"/>
+              </a-input>
+            </div>
+          </td>
+        </tr>
       </table>
       <!--===============设计辅助========================-->
       <div class="gl-title">
@@ -149,8 +235,8 @@
       </table>
     </div>
     <a-alert v-else
-             message="未选择卡片"
-             description="请将鼠标移动到左边的设计界面上，点击相应的【卡片设置】按钮。"
+             message="未选择单元格"
+             description="请将鼠标移动到左边的设计界面上，点击相应的【单元格设置】按钮。"
              type="info"
              showIcon
     />
@@ -160,8 +246,9 @@
 <script>
   import ideConfig from '../../../gl-ide/src/data/ideSelectItems.js'
 
+  let componentName = 'GlIdePluginLayoutCardSettings'
   export default {
-    name: "GlIdePluginLayoutCardSettings",
+    name: componentName,
     components: {},
     props: {
       ideStore: {
@@ -173,30 +260,17 @@
     },
     data() {
       return {
-        card: {
-          showBorder: this.config && this.config.showBorder,
-          displayMode: this.config && this.config.displayMode || 'Default',
-          // 依据不同的displayMode，opts内容有所不同
-          opts: {extraItems: []},
-          items: this.config && this.config.items
-        },
-        selectionDisplayMode: [{title: '默认(Default)', value: 'Default'}, {title: '标签页(Tabs)', value: 'Tabs'}, {
+        selectionDisplayMode: [{title: '默认平铺(Default)', value: 'Default'}, {title: '标签页(Tabs)', value: 'Tabs'}, {
           title: '折叠面板(Collapse)',
           value: 'Collapse'
         }],
         controls: ideConfig.controls,
         // 当前控件
-        currentControl: {text: '按钮', icon: 'border', value: 'button'}
+        currentControl: {text: '按钮', icon: 'border', value: 'button'},
+        currentContainerItemIndex: 0
       }
     },
-    watch: {
-      card: {
-        handler(val, oval) {
-          this.emit()
-        },
-        deep: true
-      }
-    },
+    watch: {},
     updated() {
       this.reset()
     },
@@ -207,21 +281,25 @@
     created() {
     },
     destroyed() {
-      this.emit()
     },
     methods: {
       reset() {
-        console.log('CardSettings updated config...', this.config)
-        this.$set(this.card, 'opts', this.config && this.config.opts || {})
-        this.$set(this.card.opts, 'tabPosition', this.config.opts.tabPosition || 'top')
-        this.$set(this.card.opts, 'slots', this.config.opts.slots || [])
-        this.$set(this.card.opts, 'extraItems', this.config.opts.extraItems || [])
-        this.$set(this.card, 'showBorder', this.config && this.config.showBorder)
-        this.$set(this.card, 'displayMode', this.config && this.config.displayMode || 'Default')
-        this.$set(this.card, 'items', this.config && this.config.items)
-      },
-      emit() {
-        this.$emit('update', {value: this.card})
+        if (!this.config) {
+          return
+        }
+        if (!this.config.opts) {
+          this.$set(this.config, 'opts', {})
+        }
+        this.$set(this.config.opts, 'tabPosition', this.config.opts.tabPosition || 'top')
+        this.$set(this.config.opts, 'slots', this.config.opts.slots || [])
+        this.$set(this.config.opts, 'extraItems', this.config.opts.extraItems || [])
+        this.$set(this.config, 'showBorder', this.config.showBorder)
+        this.$set(this.config, 'displayMode', this.config.displayMode || 'Default')
+        this.$set(this.config, 'items', this.config.items)
+        for (let i in this.config.items) {
+          let item = this.config.items[i]
+          this.$set(item, 'style', item.style || {float: 'none', width: '100%'})
+        }
       },
       selectControl(value) {
         let foundControl = this.controls.find(control => {
@@ -233,31 +311,22 @@
           icon: foundControl.icon
         }
       },
-      addCurrentControlToExtra(extraItems) {
-        console.log('CardSettings addCurrentControlToExtra...', extraItems)
-        extraItems.push({
-          id: this.$gl.utils.uuid(16),
-          control: this.currentControl.value,
-          title: this.currentControl.text,
-          icon: this.currentControl.icon
-        })
-      },
-      changeCardItemDisplayMode(card, cardItem) {
-        if (cardItem.displayMode === 'slot') {
+      changeCardItemDisplayMode(card, cellItem) {
+        if (cellItem.displayMode === 'slot') {
           // 加入
           let found = card.opts.slots.find(item => {
-            return item.id === cardItem.id
+            return item.gid === cellItem.gid
           })
           if (!found) {
             card.opts.slots.push({
-              name: cardItem.title,
-              id: cardItem.id
+              name: cellItem.title,
+              id: cellItem.gid
             })
           }
         } else {
           // 删除
           card.opts.slots.forEach((item, index) => {
-            if (item.id === cardItem.id) {
+            if (item.gid === cellItem.gid) {
               card.opts.slots.splice(index, 1)
             }
           })

@@ -1,5 +1,5 @@
 <template>
-  <div class="gl-ide-plugin-x-designer-settings">
+  <div class="gl-ide-plugin-designer-settings">
     <a-tabs :activeKey="activeTabKey" @change="(key)=>{activeTabKey=key}" :size="size"
             :style="{'min-height':`${height}px`,'max-height':`${height}px`}">
       <a-tab-pane key="1">
@@ -325,7 +325,7 @@
         // {
         //   show: false,
         //     actions: [{
-        //   gid: this.$gl.utils.uuid(8),
+        //   gid: this.$gl.utils.uuid(16),
         //   text: '保存',
         //   type: 'primary',
         //   fn: 'save',
@@ -467,9 +467,9 @@
         this.currentRowLayout = row
         that.rowLayoutSliderValue.splice(0, that.rowLayoutSliderValue.length)
         let lastSpan = 0
-        row.cols.forEach(colItem => {
-          console.log(colItem, colItem.span, lastSpan)
-          that.rowLayoutSliderValue.push(colItem.span + lastSpan)
+        row.cols.forEach(cellItem => {
+          console.log(cellItem, cellItem.span, lastSpan)
+          that.rowLayoutSliderValue.push(cellItem.span + lastSpan)
           lastSpan = that.rowLayoutSliderValue[that.rowLayoutSliderValue.length - 1]
         })
       },

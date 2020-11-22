@@ -360,12 +360,12 @@ utils.hex2Rgb = function (hex, alpha) {
 /**
  * 数组指定列去重，返回去重后的列对象
  * @param arr 数组
- * @param col
+ * @param cell
  */
-utils.distinct = function (arr, col) {
+utils.distinct = function (arr, cell) {
   let resultArray = arr.reduce(function (result, item) {
-    if (!(item[col] in result)) {
-      result[item[col]] = item[col]
+    if (!(item[cell] in result)) {
+      result[item[cell]] = item[cell]
     }
     return result
   }, {})

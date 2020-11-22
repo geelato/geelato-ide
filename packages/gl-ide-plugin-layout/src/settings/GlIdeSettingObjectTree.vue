@@ -105,7 +105,7 @@
         this.modalVisible = false
         // bind actions
         this.editingFileParser.bindEvent(this.ideStore.editingFile.sourceContent._bindEvents, this.currentControl, this.currentActions)
-        // TODO 暂不支持，需同时考虑在删除卡片内容时，怎么同步删除引用页面
+        // TODO 暂不支持，需同时考虑在删除单元格内容时，怎么同步删除引用页面
         // this.generateObjectTreeNodeOfOpenModalAndBindEvent()
         console.log('gl-ide > gl-ide-plugin-layout > onCloseModal() > editingFile: ', this.ideStore.editingFile)
         console.log('gl-ide > gl-ide-plugin-layout > onCloseModal() > currentControl: ', this.currentControl)

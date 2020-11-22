@@ -209,7 +209,7 @@
     background-color: rgb(107, 209, 255);
   }
 
-  /*.gl-ide-preview .gl-dnd-col-wrapper {*/
+  /*.gl-ide-preview .gl-dnd-cell-wrapper {*/
   /*min-height: 2em;*/
   /*}*/
 
@@ -229,14 +229,14 @@
     display: inline-block;
   }
 
-  .gl-ide-preview .gl-dnd-col-toolbar {
+  .gl-ide-preview .gl-dnd-cell-toolbar {
     padding: 0 1em;
     line-height: 2em;
     height: 2em;
     background-color: #e5e5e5
   }
 
-  .gl-ide-preview .gl-dnd-col-toolbar button {
+  .gl-ide-preview .gl-dnd-cell-toolbar button {
     background-color: #e5e5e5;
     border-color: #e5e5e5
   }

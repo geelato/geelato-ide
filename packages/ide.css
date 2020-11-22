@@ -43,51 +43,51 @@
     cursor: move;
 }
 
-.gl-ide-plugin-x-designer-settings .ant-tabs-tab {
+.gl-ide-plugin-designer-settings .ant-tabs-tab {
     padding-right: 5px !important;
     padding-left: 8px !important;
 }
 
-.gl-ide-plugin-x-designer-settings .ant-tabs-tabpane {
+.gl-ide-plugin-designer-settings .ant-tabs-tabpane {
     padding-left: 4px;
     padding-right: 4px;
 }
 
-.gl-ide-plugin-x-designer-settings .gl-title {
+.gl-ide-plugin-designer-settings .gl-title {
     margin: 0.5em 1em;
     font-weight: bold;
 }
 
-.gl-ide-plugin-x-designer-settings .gl-title > i {
+.gl-ide-plugin-designer-settings .gl-title > i {
     margin: 0.5em
 }
 
-.gl-ide-plugin-x-designer-settings .gl-title-sub {
+.gl-ide-plugin-designer-settings .gl-title-sub {
     margin: 0.5em 0;
     font-weight: bold;
 }
 
-.gl-ide-plugin-x-designer-settings .gl-title-sub:before {
+.gl-ide-plugin-designer-settings .gl-title-sub:before {
     content: '#';
 }
 
-.gl-ide-plugin-x-designer-settings .gl-mini-btn {
+.gl-ide-plugin-designer-settings .gl-mini-btn {
     padding-right: 8px !important;
     padding-left: 8px !important;
 }
 
-.gl-ide-plugin-x-designer-settings input, .gl-ide-plugin-x-designer-settings button, .gl-ide-plugin-x-designer-settings select {
+.gl-ide-plugin-designer-settings input, .gl-ide-plugin-designer-settings button, .gl-ide-plugin-designer-settings select {
     line-height: 2em;
     padding-left: 0.5em;
 }
 
-.gl-ide-plugin-x-designer-settings th {
+.gl-ide-plugin-designer-settings th {
     font-weight: normal;
     line-height: 2em;
     background-color: #eeeeee;
 }
 
-.gl-ide-plugin-x-designer-settings .ant-tabs-bar.ant-tabs-top-bar.ant-tabs-default-bar {
+.gl-ide-plugin-designer-settings .ant-tabs-bar.ant-tabs-top-bar.ant-tabs-default-bar {
     margin: 0;
 }
 

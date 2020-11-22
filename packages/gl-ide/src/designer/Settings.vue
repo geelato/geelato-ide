@@ -4,9 +4,18 @@
             v-if="ideStore.editingFile&&ideStore.editingFile.type">
       <a-tab-pane v-for="(panel,index) in ideStore.settingPanels" :tab="panel.title" :key="index"
                   :style="{padding:`${panelPadding}px`}">
-        <component :is="panel.component" v-bind="panel.opts" :ideStore="ideStore"
-                   style="overflow-y: auto" :style="{width:`${layout.width-4}px`}" :config="setting.config"
-                   @update="onUpdate"></component>
+        <template v-if="currentPanelName&&setting[currentPanelName]">
+          <component :is="panel.component" v-bind="panel.opts"
+                     :ideStore="ideStore"
+                     style="overflow-y: auto" :style="{width:`${layout.width-4}px`}"
+                     :config="setting[currentPanelName].config"
+                     @update="onUpdate"></component>
+        </template>
+        <template v-else>
+          <component :is="panel.component" v-bind="panel.opts"
+                     :ideStore="ideStore"
+                     style="overflow-y: auto" :style="{width:`${layout.width-4}px`}"></component>
+        </template>
       </a-tab-pane>
     </a-tabs>
     <div v-else style="text-align: center;margin-top: 12em">
@@ -27,37 +36,59 @@
     props: {},
     data() {
       return {
-        activeTabKey: 1,
+        activeTabKey: 0,
         currentPanelName: '',
         setting: {}
       }
     },
     created() {
       this.$gl.bus.$on(events.ide_setting_open, this.onOpenSetting)
+      this.$gl.bus.$on(events.ide_setting_update, this.onUpdateSetting)
     },
     beforeDestroy() {
       this.$gl.bus.$off(events.ide_setting_open, this.onOpenSetting)
+      this.$gl.bus.$off(events.ide_setting_update, this.onUpdateSetting)
       this.currentPanelName = ''
     },
+    watch: {
+      'ideStore.refreshToggleFlag': function (val, oval) {
+        this.reset()
+      }
+    },
     methods: {
+      // 页面更改之后，重置
+      reset() {
+        this.activeTabKey = 0
+        this.currentPanelName = ''
+        this.setting = {}
+      },
       onOpenSetting(setting) {
-        this.setting = setting
         console.log('gl-ide > Settings > onOpenSetting > setting:', setting)
         this.currentPanelName = setting.panelName
+        this.$set(this.setting, setting.panelName, setting)
         this.activeTabKey = this.ideStore.settingPanels.findIndex(panel => panel.name === setting.panelName) || 0
       },
-      onUpdate({value}) {
-        Object.assign(this.setting.config, value)
-        console.log('gl-ide > Settings > onUpdate > value:', value)
-        console.log('gl-ide > Settings > onUpdate > this.setting:', this.setting)
+      /**
+       * 只更新设置，不切换tab
+       * @param setting
+       */
+      onUpdateSetting(setting) {
+        console.log('gl-ide > Settings > onUpdateSetting > setting:', setting)
+        this.$set(this.setting, setting.panelName, setting)
+      },
+      onUpdate({name, value}) {
+        // console.log('gl-ide > Settings > onUpdate > name:', name)
+        // console.log('gl-ide > Settings > onUpdate > currentPanelName:', this.currentPanelName)
+        // console.log('gl-ide > Settings > onUpdate > value:', value)
+        // console.log('gl-ide > Settings > onUpdate > this.setting:', this.setting)
+        // // Object.assign(this.setting[name].config, value)
       },
       onChangeTabs(key) {
         this.activeTabKey = key
-        // console.log('this.$refs:', this.$refs, key)
-        // let ref = this.$refs['panel' + key][0]
-        // if (typeof ref.reset === "function") {
-        //   ref.reset()
-        // }
+        this.currentPanelName = this.ideStore.settingPanels[key].name
+        console.log('gl-ide > Settings > onChangeTabs > currentPanelName:', this.currentPanelName)
+        this.$gl.bus.$emit(events.ide_setting_switch_panel, {panel: this.ideStore.settingPanels[key]})
+
       }
     }
   }
@@ -65,7 +96,7 @@
 
 <style>
   /*.ant-tabs-bar {*/
-    /*margin: 0;*/
+  /*margin: 0;*/
   /*}*/
 
   .gl-designer-properties .ant-tabs-nav .ant-tabs-tab {

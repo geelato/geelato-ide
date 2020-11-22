@@ -1,5 +1,5 @@
 <template>
-  <div style="width:100%;" class="gl-ide-plugin-x-designer-settings">
+  <div style="width:100%;" class="gl-ide-plugin-designer-settings">
     <a-row>
       <a-col :span="9" style="border-right: 1px solid #F2F2F2">
         <stage v-if="refreshToggleFlag" :opts="cardBind"></stage>

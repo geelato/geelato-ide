@@ -20,9 +20,9 @@ import GlTag from '../runtime/components/gl-tag/index'
 import GlTemplate from '../runtime/components/gl-template/index'
 import GlSegment from '../runtime/components/gl-segment/index'
 import GlText from '../runtime/components/gl-text/index'
-
+// 公共组件
 import GlDataSource from './components/gl-data-source/index'
-
+import GlSettingStyle from './components/gl-setting-style/Index'
 // import GlIdePluginStructure from './gl-ide-plugin-structure/index'
 import ide from './gl-ide/src/ide'
 // import Api from './Api'
@@ -48,7 +48,8 @@ const components = [
   GlTemplate,
   GlSegment,
   GlText,
-  GlDataSource
+  GlDataSource,
+  GlSettingStyle
 ]
 
 // let uiApi = new Api()
