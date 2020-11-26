@@ -42,9 +42,9 @@
           </div>
 
           <template v-if="cell.card">
-            <a-card :title="getCardConfig(cell.card).title" style="margin-top: 8px">
-              <component :ref="cell.card" :is="getCardComponent(cell.card)"
-                         v-bind="getCardConfig(cell.card).bind">
+            <a-card :title="getCellComponentConfig(cell.card).title" style="margin-top: 8px">
+              <component :ref="cell.card" :is="getCellComponent(cell.card)"
+                         v-bind="getCellComponentConfig(cell.card).bind">
                 正在加载...
               </component>
             </a-card>
@@ -401,18 +401,9 @@
     },
     watch: {
       'rowItems.length'(val, oval) {
-        // console.log(val, oval)
-        // console.log('this.props>>>>>>>>>>>>', this.componentRefs)
-        // console.log('this.props>>>>>>>>>>>>', this.rows)
-        // console.log('this.props>>>>>>>>>>>>', this.treeNodes)
-        // console.log('this.props>>>>>>>>>>>>', this.gutter)
       }
     },
     mounted() {
-      // console.log('this.props>>>>>>>>>>>>', this.componentRefs)
-      // console.log('this.props>>>>>>>>>>>>', this.rows)
-      // console.log('this.props>>>>>>>>>>>>', this.treeNodes)
-      // console.log('this.props>>>>>>>>>>>>', this.gutter)
       this.reset()
     },
     created() {
@@ -439,7 +430,6 @@
        * 初始化创建树节点
        */
       generateTreeNodeData() {
-        console.log('gl-ide > gl-ide-plugin-layout-item> generateTreeData() > treeNodes:', this.treeNodes)
         let that = this
         if (that.treeNodes !== undefined && that.treeNodes.length > 0) {
           // 已创建，不重复创建
@@ -447,7 +437,7 @@
           return;
         }
         that.rows.filter((row) => !!row.cols).forEach((row) => {
-          row.gid = that.$gl.utils.uuid(16)
+          that.generateRowNodeAndBindEvent(row)
           row.cols.filter((cell) => !!cell.items).forEach((cell) => {
             // ==========item为单元格内一个组件的配置信息，例如下方所示
             // {id:'',title: '列表',icon: 'table',component: 'GlTable',bind: {opts: table, query: {}},
@@ -457,12 +447,20 @@
             //       objectTree: [{title: '查询栏', path: 'query.mix.properties'}, {title: '工具栏', path: 'toolbar.actions'}]
             //   }
             // }
-
-            cell.items.forEach((item) => {
-              that.generateObjectTreeNodeAndBindEvent(item)
+            cell.items.forEach((cellItem) => {
+              if (cellItem.component) {
+                that.generateComponentNodeAndBindEvent(cell, cellItem)
+              } else {
+                // tab panel
+                cellItem.items.forEach((panel) => {
+                  that.generateContainerNodeAndBindEvent(cell, cellItem)
+                  panel.items.forEach((component) => {
+                    that.generateContainerPanelNodeAndBindEvent(cellItem, panel)
+                    that.generateComponentNodeAndBindEvent(cellItem, component)
+                  })
+                })
+              }
             })
-
-            cell.gid = that.$gl.utils.uuid(16)
           })
         })
         console.log('gl-ide > gl-ide-plugin-layout-item> generateTreeData() > componentRefs:', this.componentRefs)
@@ -481,6 +479,10 @@
         }
       },
       generateComponentRef(item) {
+        // 过滤掉容器
+        if (!item.gid || !item.component) {
+          return
+        }
         // item 示例：
         // {component: "GlTable"
         //   img: ""
@@ -505,42 +507,36 @@
       },
       /**
        * 创建该组件(treeNodes)下的树节点
+       * @param parent 父节点
        * @param item 组件配置信息item
        */
-      generateObjectTreeNodeAndBindEvent(item) {
-
+      generateComponentNodeAndBindEvent(parentItem, item) {
         let that = this
-        // 如果已存在treeNodes中，则不添加
-        // if (that.treeNodes.filter((node) => node.key === item.gid).length > 0) {
-        //   console.warn('gl-ide > gl-ide-plugin-layout-item> generateObjectTreeNodeAndBindEvent() > 已存在treeNodes中，不添加item:', item, that.componentRefs[item.gid])
-        //   return
-        // }
+        let parentNode = that.findTreeNode(parentItem.gid)
+        console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > parentItem,parentNode:', parentItem, parentNode)
 
-        let node = that.treeNodes.find(node => node.key === item.gid)
-        if (!node) {
-          node = {
-            title: item.title,
-            key: item.gid,
-            slots: {
-              icon: item.icon,
-            },
-            children: [],
-            _component: ''
-          }
-          that.treeNodes.push(node)
+        let node = that.findTreeNode(item.gid) || {
+          title: item.title,
+          key: item.gid,
+          slots: {
+            icon: item.icon,
+          },
+          children: [],
+          _component: ''
         }
+        parentNode.children.push(node)
         let groups = node.children
 
-        // 加载每张单元格组件配置cardComponent
+        // 加载每个单元格内的组件
         //  {id: item.gid, component: this.$refs[item.gid][0], type: item.type, meta: item.meta}
         let cardComponent = that.componentRefs[item.gid]
-        console.log('gl-ide-plugin-layout > UIItem > generateObjectTreeNodeAndBindEvent() > item.gid,cardComponent:', item.gid, cardComponent, that.componentRefs)
+        console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > item.gid,cardComponent:', item.gid, cardComponent, that.componentRefs)
         if (cardComponent && cardComponent.meta && cardComponent.meta.objectTree) {
           node._component = cardComponent.meta.component
           cardComponent.meta.objectTree.forEach((treeNodeObject) => {
             // treeNodeObject: {title:xx,path:xx.yy.zz}
             let group = groups.find(group => group.key === treeNodeObject.path)
-            console.log('gl-ide-plugin-layout > UIItem > generateObjectTreeNodeAndBindEvent() > find group:', treeNodeObject.path, ' and result:', group)
+            console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > find group:', treeNodeObject.path, ' and result:', group)
             if (!group) {
               group = {
                 title: treeNodeObject.title + '[组]',
@@ -556,19 +552,19 @@
             let childNodes = group.children
             // childObjects 为简单对象或数组
             let childObjects = eval('item.bind.opts.' + treeNodeObject.path)
-            console.log('gl-ide-plugin-layout > UIItem > generateObjectTreeNodeAndBindEvent() > card title, childObjects:', cardComponent.meta.title, childObjects, treeNodeObject.path)
+            console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > card title, childObjects:', cardComponent.meta.title, childObjects, treeNodeObject.path)
             if (childObjects && typeof childObjects === "object") {
               // stepA 为对象树添加，找已有的对象树中，是否存在控件，没有则添加
               for (let key in childObjects) {
                 let childObj = childObjects[key]
-                console.log('gl-ide-plugin-layout > UIItem > generateObjectTreeNodeAndBindEvent() > key, gid, childObj:', key, childObj.gid, childObj)
+                console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > key, gid, childObj:', key, childObj.gid, childObj)
                 if (childObj.control) {
                   // 未设置control值的，可能为form的隐藏属性，这里需过滤掉
                   let foundChildrenNode = childNodes.find((childNode) => childNode.key === item.gid + '_$_' + childObj.gid)
                   let foundChildrenNodeTitle = childObj.title + ' [' + childObj.control + ']'
-                  console.log('gl-ide-plugin-layout > UIItem > generateObjectTreeNodeAndBindEvent() > find control:', childObj.gid, ' and result:', foundChildrenNode)
+                  console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > find control:', childObj.gid, ' and result:', foundChildrenNode)
                   if (!foundChildrenNode) {
-                    console.log('gl-ide-plugin-layout > UIItem > generateObjectTreeNodeAndBindEvent() > add control:', foundChildrenNodeTitle)
+                    console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > add control:', foundChildrenNodeTitle)
                     childNodes.push({
                       title: foundChildrenNodeTitle,
                       // 组件id+组件内的控件id
@@ -590,7 +586,7 @@
                     that.editingFileParser.bindEvent(that.bindEvents, control, that.events[childObj.gid], controlComponent.$parent)
                   }
                 } else {
-                  console.log('gl-ide-plugin-layout > UIItem > generateObjectTreeNodeAndBindEvent() > 未设置control值：', childObj)
+                  console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > 未设置control值：', childObj)
                 }
               }
               // stepB 从对象树删除多余的控件
@@ -607,27 +603,123 @@
                   childObjectIndex++
                 }
                 if (!found) {
-                  console.log('gl-ide-plugin-layout > UIItem > generateObjectTreeNodeAndBindEvent() > find invalid control and delete：', childNode)
+                  console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > find invalid control and delete：', childNode)
                   childNodes.splice(childObjectIndex, 1)
                 }
               })
             }
           })
         }
-        console.log('gl-ide-plugin-layout > UIItem > generateObjectTreeNodeAndBindEvent() > treeNodes result:', that.treeNodes)
+
+        console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > treeNodes result:', that.treeNodes)
       },
 
+      generateContainerNodeAndBindEvent(parentItem, container) {
+        let that = this
+        let parentNode = that.findTreeNode(parentItem.gid)
+        let node = that.findTreeNode(container.gid) || {
+          title: container.title,
+          key: container.gid,
+          disabled: true,
+          slots: {
+            icon: 'folder',
+          },
+          children: [],
+        }
+        parentNode.children.push(node)
+      },
+
+      generateContainerPanelNodeAndBindEvent(parentItem, panel) {
+        let that = this
+        let parentNode = that.findTreeNode(parentItem.gid)
+        let node = that.findTreeNode(panel.gid) || {
+          title: panel.title,
+          key: panel.gid,
+          disabled: true,
+          slots: {
+            icon: 'folder',
+          },
+          children: [],
+        }
+        parentNode.children.push(node)
+      },
+
+      generateRowNodeAndBindEvent(row) {
+        let that = this
+        let node = that.findTreeNode(row.gid) || {
+          title: row.title,
+          key: row.gid,
+          disabled: true,
+          slots: {
+            icon: 'folder',
+          },
+          children: [],
+        }
+        that.treeNodes.push(node)
+        row.cols.forEach((cell) => {
+          that.generateCellNodeAndBindEvent(row, cell)
+        })
+      },
+      generateCellNodeAndBindEvent(row, cell) {
+        let rowNode = this.findTreeNode(row.gid)
+        let group = {
+          title: cell.title || '单元格',
+          key: cell.gid,
+          disabled: true,
+          slots: {
+            icon: 'folder',
+          },
+          children: []
+        }
+        rowNode.children.push(group)
+      },
+      // 递归查找树节点
+      findTreeNode(gid) {
+        return function recursionFindTreeNode(nodes, gid) {
+          if (!nodes || nodes.length === 0) {
+            return
+          }
+
+          for (let index in nodes) {
+            let node = nodes[index]
+            if (node.key === gid) {
+              return node
+            } else {
+              if (node.children && node.children.length > 0) {
+                let foundNode = recursionFindTreeNode(node.children, gid)
+                if (foundNode) {
+                  return foundNode
+                }
+              }
+            }
+          }
+        }(this.treeNodes, gid)
+      },
       /**
        * 移除objectTree相应的节点
-       * @param item 组件配置信息item
+       * @param gid 节点key
        */
-      removeObjectTreeNode(item) {
-        let that = this
-        that.treeNodes.forEach((node, index) => {
-          if (node.key === item.gid) {
-            that.treeNodes.splice(index, 1)
+      removeObjectTreeNode(gid) {
+        return function removeObjectTreeNode(nodes, gid) {
+          if (!nodes || nodes.length === 0) {
+            return
           }
-        })
+          for (let index in nodes) {
+            let node = nodes[index]
+            console.log('removeObjectTreeNode>', node.key, gid, node.key === gid)
+            if (node.key === gid) {
+              nodes.splice(index, 1)
+              return node
+            } else {
+              if (node.children && node.children.length > 0) {
+                let foundNode = removeObjectTreeNode(node.children, gid)
+                if (foundNode) {
+                  return foundNode
+                }
+              }
+            }
+          }
+        }(this.treeNodes, gid)
       },
       saveCardComponent(e) {
         console.log('saveCardComponent>', e)
@@ -662,11 +754,11 @@
         this.currentSelectedCard = cell
         this.$gl.bus.$emit(events.ide_setting_update, {panelName: 'GlIdePluginLayoutCardSettings', config: cell})
       },
-      getCardConfig(cardId) {
+      getCellComponentConfig(cardId) {
         return this.componentRefs[cardId]
       },
-      getCardComponent(cardId) {
-        let card = this.getCardConfig(cardId)
+      getCellComponent(cardId) {
+        let card = this.getCellComponentConfig(cardId)
         return Vue.component(card.type)
       },
       onRowEnd: function (args, rowItems) {
@@ -680,6 +772,7 @@
         row.cols.forEach(cell => {
           cell.gid = that.$gl.utils.uuid(16)
         })
+        this.generateRowNodeAndBindEvent(row)
       },
       onRowDelete(rowIndex) {
         let that = this
@@ -695,7 +788,7 @@
             that.rowItems[rowIndex].cols.forEach(cell => {
               cell.items.forEach(item => {
                 delete that.componentRefs[item.gid]
-                that.removeObjectTreeNode(item)
+                that.removeObjectTreeNode(item.gid)
                 console.log('gl-ide-plugin-layout > UIItem > onRowDelete() > remove componentRef: ', item.gid)
               })
             })
@@ -709,32 +802,52 @@
       onRowClone(e) {
         console.log('gl-ide-plugin-layout > UIItem > onRowClone: ', e)
       },
+      // 单元格内加组件或容器
       onCellItemAdd: function (e, cell) {
-
+        let that = this
         console.log('gl-ide-plugin-layout > UIItem > onCellItemAdd() > event.newIndex: ', e.newIndex)
         console.log('gl-ide-plugin-layout > UIItem > onCellItemAdd() > items: ', cell.items)
         let item = cell.items[cell.items.length === e.newIndex && e.newIndex > 0 ? e.newIndex - 1 : e.newIndex]
 
-        // 若添加的为容器，则返回
-        if (!item.component) {
-          console.log('gl-ide-plugin-layout > UIItem > onCellItemAdd() > !item.component. e,item:', e, item)
-          return
-        }
 
-        this.generateComponentRef(item)
-        this.generateObjectTreeNodeAndBindEvent(item)
+        if (!item.component) {
+          // 若添加的为容器
+          console.log('gl-ide-plugin-layout > UIItem > onCellItemAdd() > !item.component. e,item:', e, item)
+          // 构建对象树
+          item.gid = item.gid || this.$gl.utils.uuid(16)
+          that.generateContainerNodeAndBindEvent(cell, item)
+
+          item.items.forEach((panel) => {
+            panel.gid = panel.gid || this.$gl.utils.uuid(16)
+            panel.items.forEach((component) => {
+              that.generateContainerPanelNodeAndBindEvent(item, panel)
+              // that.generateComponentNodeAndBindEvent(cellItem, component)
+            })
+          })
+        }else{
+          // 若添加的为组件
+          this.generateComponentRef(item)
+          this.generateComponentNodeAndBindEvent(cell, item)
+        }
         console.log('gl-ide-plugin-layout > UIItem > onCellItemAdd() > item: ', item)
         console.log('gl-ide-plugin-layout > UIItem > onCellItemAdd() > this.refs: ', this.$refs)
         console.log('gl-ide-plugin-layout > UIItem > onCellItemAdd() > this.componentRefs: ', this.componentRefs)
       },
-      onContainerAdd(e, container) {
-        this.onCellItemAdd(e, container)
+      // 容器内添加组件
+      onContainerAdd(e, tab) {
+        let item = tab.items[tab.items.length === e.newIndex && e.newIndex > 0 ? e.newIndex - 1 : e.newIndex]
+        this.generateComponentRef(item)
+        this.generateComponentNodeAndBindEvent(tab, item)
       },
       onAddSlot(e, item) {
 
       },
       onCellItemChange(e, cell) {
         console.log('gl-ide-plugin-layout > UIItem > onCellItemChange: ', e, cell)
+        // 在移动时，先清除该树节点
+        if (e.added && e.added.element && e.added.element.gid) {
+          this.removeObjectTreeNode(e.added.element.gid)
+        }
       },
       onCellChoose(e) {
         console.log('gl-ide-plugin-layout > UIItem > onCellChoose: ', e)
@@ -752,7 +865,7 @@
       //     onCancel() {
       //       cell.items.splice(index, 1);
       //       delete that.componentRefs[item.gid]
-      //       that.removeObjectTreeNode(item)
+      //       that.removeObjectTreeNode(item.gid)
       //       console.log('gl-ide-plugin-layout > UIItem > onColDelete() > this.componentRefs: ', that.componentRefs)
       //     },
       //   });
@@ -771,7 +884,7 @@
           onCancel() {
             items.splice(index, 1);
             delete that.componentRefs[item.gid]
-            that.removeObjectTreeNode(item)
+            that.removeObjectTreeNode(item.gid)
             console.log('gl-ide-plugin-layout > UIItem > onComponentDelete() > this.componentRefs: ', that.componentRefs)
           },
         });
@@ -789,7 +902,7 @@
       //     onCancel() {
       //       cellItem.slots.splice(index, 1);
       //       delete that.componentRefs[slot.gid || slot.gid]
-      //       that.removeObjectTreeNode(slot)
+      //       that.removeObjectTreeNode(slot.gid)
       //       console.log('gl-ide-plugin-layout > UIItem > onColDelete() > this.componentRefs: ', that.componentRefs)
       //     },
       //   });
@@ -798,7 +911,7 @@
         console.log('gl-ide-plugin-layout > UIItem > onCardReload() > item: ', item)
         // 重新创建引用、绑定事件
         this.generateComponentRef(item)
-        this.generateObjectTreeNodeAndBindEvent(item)
+        this.generateComponentNodeAndBindEvent(item)
         // 重绘单元格
         console.log('..................', this.$refs[item.gid][0].name, typeof this.$refs[item.gid][0].refresh)
         if (typeof this.$refs[item.gid][0].refresh === 'function') {
