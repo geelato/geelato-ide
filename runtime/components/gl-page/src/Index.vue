@@ -74,7 +74,8 @@
           height: '100%'
         },
         iframeWin: {},
-        iframeDocument: {}
+        iframeDocument: {},
+        $_vars: {}
       }
     },
     watch: {
@@ -115,6 +116,7 @@
     methods: {
       refresh() {
         this.refreshFlag = false
+        this.$_vars = {}
         this.$nextTick(function () {
           this.refreshFlag = true
         })

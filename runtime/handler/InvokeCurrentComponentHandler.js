@@ -4,7 +4,7 @@ export default class InvokeCurrentComponentHandler {
     this.$root = $root
   }
 
-  doAction(action, ctx, data) {
+  doAction(action, page, ctx, data) {
     console.log('geelato > runtime > InvokeCurrentComponentHandler.js > doAction() > action:', action)
     console.log('geelato > runtime > InvokeCurrentComponentHandler.js > doAction() > ctx:', ctx)
     console.log('geelato > runtime > InvokeCurrentComponentHandler.js > doAction() > data:', data)

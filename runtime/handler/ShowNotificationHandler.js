@@ -4,7 +4,7 @@ export default class ShowMessageHandler {
     this.$root = $root
   }
 
-  doAction(action, ctx, data) {
+  doAction(action, page, ctx, data) {
     // e.g.
     // this.$root.$notification.open({
     //   message: 'Notification Title',

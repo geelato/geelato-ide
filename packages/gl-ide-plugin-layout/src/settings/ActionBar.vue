@@ -24,6 +24,7 @@
            <a-select-option value="ShowMessage">提醒消息</a-select-option>
           <a-select-option value="SetVars">设置变量值</a-select-option>
            <a-select-option value="ScriptBlock">执行代码块</a-select-option>
+           <a-select-option value="InvokeRestfulSrv">调用服务（Restful）</a-select-option>
            <!--<a-select-option value="triggerEvent">触发事件</a-select-option>-->
         </a-select-opt-group>
       </a-select>
@@ -33,7 +34,7 @@
            type="setting"/></a-button>
       <a-button v-if="isLastOne!==true" @click="addCallback" type="link" title="添加回调"><a-icon
           type="plus-circle"/></a-button>
-      <a-button @click="$emit('doActionRemove',doItem.handler,doItems,doItemIndex)" class="remove" type="link"
+      <a-button @click="$emit('doActionRemoved',doItem.handler,doItems,doItemIndex)" class="remove" type="link"
                 style="color: red"
                 title="删除动作"><a-icon type="close-circle"/></a-button>
      </span>
@@ -42,7 +43,7 @@
 
 <script>
   export default {
-    name: "ActionBar",
+    name: "GlActionBar",
     props: {
       isLastOne: Boolean,
       label: String,
@@ -52,12 +53,13 @@
     },
     methods: {
       addCallback() {
-        // if (this.doItem.then === undefined) {
-        //   this.doItem.then = []
-        // }
+        if (!this.doItem.then) {
+          this.doItem.then = []
+        }
         this.doItem.then.push({handler: '', fn: '', params: {}, then: []})
         // this.doItems.push({handler: '', fn: '', params: {}})
         console.log('doItems>', this.doItems, this.doItem)
+        this.$emit('doActionAdded', this.doItem.handler, this.doItems, this.doItemIndex)
       }
     }
   }

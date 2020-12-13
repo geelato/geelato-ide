@@ -9,7 +9,7 @@
     name: 'GlPageRuntime',
     components: {},
     props: {},
-    data () {
+    data() {
       return {
         pageId: this.$route.params.pageId,
         extendId: this.$route.name,
@@ -21,13 +21,13 @@
         this.forceRefresh()
       }
     },
-    mounted () {
+    mounted() {
     },
     methods: {
       /**
        * 更新状态，强行触发
        * */
-      forceRefresh () {
+      forceRefresh() {
         this.refreshFlag = false
         this.$nextTick(() => {
           this.pageId = this.$route.params.pageId

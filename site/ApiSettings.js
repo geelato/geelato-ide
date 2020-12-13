@@ -36,6 +36,14 @@ export default class ApiSettings {
           //   })
           // }
         }
+      } else {
+        if (error.isAxiosError) {
+          if (error.message === 'Network Error')
+            notification.error({
+              message: 'Network Error',
+              description: '网络错误，请稍后重试。'
+            })
+        }
       }
       return Promise.reject(error)
     }
@@ -124,11 +132,19 @@ export default class ApiSettings {
       //   data:{},
       //   meta:{} // 可选
       // }
-      return 'msg' in response.data && 'code' in response.data && 'data' in response.data
+      let data = response.data
+      if (typeof response.data === 'string') {
+        data = JSON.parse(response.data)
+      }
+      return 'msg' in data && 'code' in data && 'data' in data
     }
     // 是否为分页列表数据
     const isPageResult = function (response) {
-      return 'page' in response.data && 'size' in response.data && 'total' in response.data
+      let data = response.data
+      if (typeof response.data === 'string') {
+        data = JSON.parse(response.data)
+      }
+      return 'page' in data && 'size' in data && 'total' in data
     }
 
     const builder = (data, message, code = 0, headers = {}) => {

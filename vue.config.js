@@ -9,10 +9,10 @@ function resolve(dir) {
 
 module.exports = {
   runtimeCompiler: true,
-  // 修改 src 为 examples
+  // 修改 src 为 site
   pages: {
     index: {
-      entry: 'examples/main.js',
+      entry: 'site/main.js',
       template: 'public/index.html',
       filename: 'index.html'
     }
@@ -34,14 +34,14 @@ module.exports = {
   },
   chainWebpack: config => {
     config.resolve.alias
-      .set('@', resolve('examples'))
+      .set('@', resolve('site'))
 
     // packages和examples目录需要加入编译
     config.module
       .rule('js')
       .include.add(/packages/)
       .end()
-      .include.add(/examples/)
+      .include.add(/site/)
       .end()
       .use('babel')
       .loader('babel-loader')

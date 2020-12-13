@@ -1,5 +1,6 @@
 import InvokeCurrentComponentHandler from './handler/InvokeCurrentComponentHandler'
 import InvokeComponentHandler from './handler/InvokeComponentHandler'
+import InvokeRestfulSrvHandler from './handler/InvokeRestfulSrvHandler'
 import OpenModalHandler from './handler/OpenModalHandler'
 import ShowMessageHandler from './handler/ShowMessageHandler'
 
@@ -11,6 +12,7 @@ export default class ActionHandler {
     this.handlers = {
       InvokeCurrentComponentHandler: new InvokeCurrentComponentHandler(this.$root),
       InvokeComponentHandler: new InvokeComponentHandler(this.$root),
+      InvokeRestfulSrvHandler: new InvokeRestfulSrvHandler(this.$root),
       OpenModalHandler: new OpenModalHandler(this.$root),
       ShowMessageHandler: new ShowMessageHandler(this.$root)
     }
@@ -37,7 +39,8 @@ export default class ActionHandler {
       const doItem = action.do[index]
       const handlerName = doItem.handler + 'Handler'
       try {
-        let promise = this.handlers[handlerName].doAction(doItem, ctx, data)
+        let page = that.findCurrentPage(ctx)
+        let promise = this.handlers[handlerName].doAction(doItem, page, ctx, data)
         console.log('geelato > runtime > ActionHandler.js > doAction() > execute and return promise:', promise)
         if (promise && typeof promise.then === 'function') {
           promise.then(function (result) {
@@ -64,7 +67,8 @@ export default class ActionHandler {
         // action:{handler,fn,then,params}
         const handlerName = thenItem.handler + 'Handler'
         try {
-          let promise = this.handlers[handlerName].doAction(thenItem, ctx, data)
+          let page = that.findCurrentPage(ctx)
+          let promise = this.handlers[handlerName].doAction(thenItem, page, ctx, data)
           console.log('geelato > runtime > ActionHandler.js > doThen() > execute and return promise:', promise)
           if (promise && typeof promise.then === 'function') {
             promise.then(function (result) {
@@ -85,7 +89,19 @@ export default class ActionHandler {
     }
   }
 
-  doFail(actionThen, ctx, data, callback) {
-    console.error('geelato > runtime > ActionHandler.js > doFail() > action or actionThen,ctx,data:', actionThen, ctx, data)
+  doFail(actionThen, ctx, result, callback) {
+    // if (result.message === 'Network Error') {
+    //   this.$root.$message.error('网络错误，请稍后重试。')
+    // }
+    // console.error('geelato > runtime > ActionHandler.js > doFail() > action or actionThen,ctx,data:', actionThen, ctx, data)
+  }
+
+  findCurrentPage(component) {
+    console.log('geelato > runtime > ActionHandler.js > findCurrentPage() > component.$parent):', component.$parent)
+    if (component.$parent.$vnode.tag.search(/-GlPage$/) !== -1) {
+      return component.$parent
+    } else {
+      return this.findCurrentPage(component.$parent)
+    }
   }
 }

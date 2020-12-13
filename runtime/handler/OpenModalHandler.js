@@ -13,7 +13,7 @@ export default class OpenModalHandler {
    * @param ctx
    * @param data 由于采用基于paramMapping的方式，直接从ctx中取值，不再使用该值
    */
-  doAction(action, ctx, data) {
+  doAction(action, page, ctx, data) {
     console.log('geelato > runtime > OpenModalHandler.js > doAction() > action:', action)
     console.log('geelato > runtime > OpenModalHandler.js > doAction() > ctx:', ctx)
     console.log('geelato > runtime > OpenModalHandler.js > doAction() > data:', data)

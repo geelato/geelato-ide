@@ -181,7 +181,7 @@
         let controlKey = keys[1]
         // let controlShortKey = keys[1]
         let item = that.ideStore.editingFile.sourceContent._componentRefs[componentKey]
-        let controlComponent = item.component.$_getRefByGid(controlKey)
+        let controlComponent = item.component.$_getRefControlByGid(controlKey)
         this.currentComponent = item
         console.log('gl-ide-setting-object-tree> onSelect() > currentComponent:', item)
         console.log('gl-ide-setting-object-tree> onSelect() > controlKey:', controlKey)
@@ -202,7 +202,7 @@
           that.modalVisible = true
           return
         } else {
-          console.log('Not found.', item)
+          console.error('gl-ide-setting-object-tree> onSelect() > Not found.', item)
         }
 
         console.log('gl-ide-setting-object-tree> onSelect() > selectedKeys:', selectedKeys);

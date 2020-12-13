@@ -576,7 +576,7 @@
                   }
                   // 基于配置的事件初始化绑定
                   let componentItem = that.componentRefs[item.gid]
-                  let controlComponent = componentItem.component.$_getRefByGid(childObj.gid)
+                  let controlComponent = componentItem.component.$_getRefControlByGid(childObj.gid)
                   let control = {
                     gid: childObj.gid,
                     title: childObj.title,

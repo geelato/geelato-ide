@@ -14,7 +14,7 @@ export default class InvokeComponentHandler {
    * @param data
    * @return {*}
    */
-  doAction(action, ctx, data) {
+  doAction(action, page, ctx, data) {
     console.log('geelato > runtime > InvokeComponentHandler.js > doAction() > action:', action)
     console.log('geelato > runtime > InvokeComponentHandler.js > doAction() > ctx:', ctx, this.getComponentRefs(ctx))
     console.log('geelato > runtime > InvokeComponentHandler.js > doAction() > data:', data)

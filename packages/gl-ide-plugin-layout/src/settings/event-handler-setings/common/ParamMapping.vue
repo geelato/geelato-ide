@@ -19,34 +19,45 @@
           <table class="gl-table">
             <tr>
               <td class="gl-table-cell label" style="font-weight: normal;width: 4em">
-                参数名
+                参数名s
               </td>
               <td class="gl-table-cell">
-                <a-select v-model="paramMappingItem.target.gid" style="width: 100%"
-                          @change="onChangeInParam($event,paramMappingItem)">
-                  <a-select-opt-group v-for="(optionData,optionDataIndex) in inParamSelection"
-                                      :label="optionData.title" :key="optionData.gid+'_'+optionDataIndex">
-                    <template v-if="optionData.items">
-                      <a-select-opt-group v-for="(subOptionData,subOptionDataIndex) in optionData.items"
-                                          :label="subOptionData.title"
-                                          :key="subOptionData.gid+'_'+subOptionDataIndex"
-                                          style="padding-left: 1em">
-                        <a-select-option v-for="inParam in subOptionData.inParams"
-                                         :key="subOptionData.gid+'.'+inParam.gid"
-                                         :value="subOptionData.gid+'.'+inParam.gid">
-                          {{inParam.name+'-'+inParam.title}}
+                <a-input-group compact v-if="paramMappingItem.target.mode==='SELECT'||!paramMappingItem.target.mode">
+                  <a-select v-model="paramMappingItem.target.gid" style="width: 85%"
+                            @change="onChangeInParam($event,paramMappingItem)">
+                    <a-select-opt-group v-for="(optionData,optionDataIndex) in inParamSelection"
+                                        :label="optionData.title" :key="optionData.gid+'_'+optionDataIndex">
+                      <template v-if="optionData.items">
+                        <a-select-opt-group v-for="(subOptionData,subOptionDataIndex) in optionData.items"
+                                            :label="subOptionData.title"
+                                            :key="subOptionData.gid+'_'+subOptionDataIndex"
+                                            style="padding-left: 1em">
+                          <a-select-option v-for="inParam in subOptionData.inParams"
+                                           :key="subOptionData.gid+'.'+inParam.gid"
+                                           :value="subOptionData.gid+'.'+inParam.gid">
+                            {{inParam.name+'-'+inParam.title}}
+                          </a-select-option>
+                        </a-select-opt-group>
+                      </template>
+                      <template v-else>
+                        <a-select-option v-for="(inParam,inParamIndex) in optionData.inParams"
+                                         :key="inParam.gid+'_'+inParamIndex"
+                                         :value="optionData.gid+'.'+inParam.gid">
+                          {{inParam.title+' ('+inParam.name+')'}}
                         </a-select-option>
-                      </a-select-opt-group>
-                    </template>
-                    <template v-else>
-                      <a-select-option v-for="(inParam,inParamIndex) in optionData.inParams"
-                                       :key="inParam.gid+'_'+inParamIndex"
-                                       :value="optionData.gid+'.'+inParam.gid">
-                        {{inParam.title+' ('+inParam.name+')'}}
-                      </a-select-option>
-                    </template>
-                  </a-select-opt-group>
-                </a-select>
+                      </template>
+                    </a-select-opt-group>
+                  </a-select>
+                  <a-button title="转为输入模式" @click="paramMappingItem.target.mode='INPUT'">
+                    <a-icon type="edit"/>
+                  </a-button>
+                </a-input-group>
+                <a-input-group compact v-if="paramMappingItem.target.mode==='INPUT'">
+                  <a-input style="width: 85%" v-model="paramMappingItem.target.name"></a-input>
+                  <a-button title="转为选择模式" @click="paramMappingItem.target.mode='SELECT'">
+                    <a-icon type="select"/>
+                  </a-button>
+                </a-input-group>
               </td>
             </tr>
             <tr>
@@ -54,6 +65,7 @@
                 值来源
               </td>
               <td class="gl-table-cell">
+
                 <a-select v-model="paramMappingItem.src.gid" style="width: 100%"
                           @change="onChangeOutParam($event,paramMappingItem)">
                   <a-select-opt-group v-for="(optionData,optionDataIndex) in outParamSelection"
@@ -64,6 +76,7 @@
                     </a-select-option>
                   </a-select-opt-group>
                 </a-select>
+
               </td>
             </tr>
           </table>
@@ -240,6 +253,7 @@
                     newInParam.name = inParam[cardDefined.meta.inParam.name]
                     newInParam.title = inParam[cardDefined.meta.inParam.title]
                     newInParam.title = newInParam.title === 'undefined' ? '' : (newInParam.title || '')
+                    newInParam.mode = newInParam.mode === 'undefined' ? '' : (newInParam.mode || '')
                     newInParams.push(newInParam)
                     console.log('gl-ide-plugin-layout > event-handler-settings > ParamMapping > parseTargetPage() > push newInParam:', newInParam)
                   }
@@ -288,6 +302,7 @@
                     newOutParam.name = outParam[outParamItem.name]
                     newOutParam.title = outParam[outParamItem.title]
                     newOutParam.title = newOutParam.title === 'undefined' ? '' : (newOutParam.title || '')
+                    newOutParam.mode = newOutParam.mode === 'undefined' ? '' : (newOutParam.mode || '')
                     newOutParam.dataCtx = outParamItem.dataCtx
                     newOutParams.push(newOutParam)
                     console.log('gl-ide-plugin-layout > event-handler-settings > ParamMapping > loadAndParseSourcePage() > push newOutParam:', newOutParam)

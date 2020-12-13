@@ -50,13 +50,14 @@
               <div class="line event-action" v-for="(doItem,doItemIndex) in action.do"
                    :key="actionIndex+'_'+doItemIndex">
                 <action-bar label="触发动作" :doItems="action.do" :doItem="doItem" :doItemIndex="doItemIndex"
-                            @doActionSetting="doActionSetting" @doActionRemove="doActionRemove"
-                            @doActionChange="doActionChange" @setCondition="onSetCondition"></action-bar>
+                            @doActionSetting="doActionSetting" @doActionRemoved="doActionRemoved"
+                            @doActionChange="doActionChange" @doActionAdded="doActionAdded"
+                            @setCondition="onSetCondition"></action-bar>
                 <div class="line" v-if="doItem.then" v-for="(thenItem,thenItemIndex) in doItem.then"
                      :key="actionIndex+'_'+doItemIndex+'_'+thenItemIndex">
                   <action-bar label="回调动作" :isLastOne="true" :doItems="doItem.then" :doItem="thenItem"
                               :doItemIndex="thenItemIndex"
-                              @doActionSetting="doActionSetting" @doActionRemove="doActionRemove"
+                              @doActionSetting="doActionSetting" @doActionRemoved="doActionRemoved"
                               @doActionChange="doActionChange"></action-bar>
                 </div>
               </div>
@@ -91,6 +92,7 @@
   import OpenModal from './event-handler-setings/OpenModal'
   import InvokeCurrentComponent from './event-handler-setings/InvokeCurrentComponent'
   import InvokeComponent from './event-handler-setings/InvokeComponent'
+  import InvokeRestfulSrv from './event-handler-setings/InvokeRestfulSrv'
   import ShowMessage from './event-handler-setings/ShowMessage'
   import ShowAndHide from './event-handler-setings/ShowAndHide'
   import ReadAndWrite from './event-handler-setings/ReadAndWrite'
@@ -106,6 +108,7 @@
     ReadAndWrite,
     InvokeCurrentComponent,
     InvokeComponent,
+    InvokeRestfulSrv,
     Empty
   }
 
@@ -189,7 +192,10 @@
           that.currentDetailComponentName = that.hasDetailComponent($event) ? $event : 'Empty'
         })
       },
-      doActionRemove($event, doItems, index) {
+      doActionAdded($event, doItems, index) {
+        this.$nextTick()
+      },
+      doActionRemoved($event, doItems, index) {
         console.log($event, doItems, index)
         console.log(this.currentDoItemIndex, doItems, index)
         if (index === this.currentDoItemIndex) {
@@ -198,7 +204,7 @@
           this.currentDetailComponentName = 'Empty'
         }
         doItems.splice(index, 1)
-        // this.$gl.utils.remove(doItems, index)
+        this.$nextTick()
       },
       onSetCondition(item) {
         console.log('gl-ide-plugin-layout > GlIdeSettingEvent > onSetCondition() > item:', item)
