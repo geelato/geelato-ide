@@ -102,7 +102,7 @@
                       {{cellItem.title}}{{$ide.store.assist.showComponentId?'-'+cellItem.gid:''}}
                     </div>&nbsp;
                     <div style="display:inline-block;float: right">
-                      <!--<a-button size="small" @click="onCardReload(cell,cellItem,cellItemIndex)"-->
+                      <!--<a-button size="small" @click="onComponentReload(cell,cellItem,cellItemIndex)"-->
                       <!--title="刷新">-->
                       <!--<a-icon type="reload"/>-->
                       <!--</a-button>-->
@@ -381,8 +381,8 @@
         modalWidthPercent: this.modalWidthPercentDefault,
         // modalWidth: (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) * this.modalWidthPercent,
         currentSelectedRow: {},
-        // 一个单元格对应一个col
-        currentSelectedCard: {},
+        // 一个单元格对应一个cell
+        currentSelectedCell: {},
         // 单元格内的项，即表单、列表等组件
         currentSelectedCardItem: {},
         rowItems: this.rows,
@@ -414,9 +414,9 @@
     },
     methods: {
       onSettingSwitchPanel({panel}) {
-        console.log('panel:', panel, this.currentSelectObjectUid, this.currentSelectedCard, this.currentSelectedCardItem)
+        console.log('panel:', panel, this.currentSelectObjectUid, this.currentSelectedCell, this.currentSelectedCardItem)
         if (panel.name === "GlIdePluginLayoutCardSettings") {
-          this.currentSelectObjectUid = this.currentSelectedCard.gid
+          this.currentSelectObjectUid = this.currentSelectedCell.gid
         } else if (panel.name === "GlIdePluginLayoutSegmentSettings") {
           this.currentSelectObjectUid = this.currentSelectedCardItem.gid
         }
@@ -449,7 +449,7 @@
             // }
             cell.items.forEach((cellItem) => {
               if (cellItem.component) {
-                that.generateComponentNodeAndBindEvent(cell, cellItem)
+                that.generateComponentNodeAndBindEvent(cellItem, cell)
               } else {
                 // tab panel
                 cellItem.items.forEach((panel) => {
@@ -467,6 +467,7 @@
       },
       /**
        * 初始化组件树中的组件引用
+       * 不包括布局容器
        */
       initComponentRefs() {
         for (let rowIndex in this.rowItems) {
@@ -494,9 +495,9 @@
         //   id: "XSOb2tMmwgk6KfFR"
         //   title: "列表"
         // }
-        console.log('gl-ide > gl-ide-plugin-layout-item> generateComponentRef() > item:', item)
-        console.log('gl-ide > gl-ide-plugin-layout-item> generateComponentRef() > this.$refs:', this.$refs)
-        console.log('gl-ide > gl-ide-plugin-layout-item> generateComponentRef() > this.$refs[item.gid]:', this.$refs[item.gid])
+        console.log('gl-ide-plugin-layout-item> UIItem > generateComponentRef() > item:', item)
+        console.log('gl-ide-plugin-layout-item> UIItem > generateComponentRef() > this.$refs:', this.$refs)
+        console.log('gl-ide-plugin-layout-item> UIItem > generateComponentRef() > this.$refs[item.gid]:', this.$refs[item.gid])
         this.componentRefs[item.gid] = {
           id: item.gid,
           component: this.$refs[item.gid][0],
@@ -507,14 +508,25 @@
       },
       /**
        * 创建该组件(treeNodes)下的树节点
-       * @param parent 父节点
        * @param item 组件配置信息item
+       * @param parent 父节点
        */
-      generateComponentNodeAndBindEvent(parentItem, item) {
+      generateComponentNodeAndBindEvent(item, parentItem) {
         let that = this
+        console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > item（组件配置信息）:', item)
+        console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > parentItem:', parentItem)
         let parentNode = that.findTreeNode(parentItem.gid)
-        console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > parentItem,parentNode:', parentItem, parentNode)
-
+        console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > find parentNode by parentItem.gid:', parentNode)
+        parentNode.children.push(this.updateComponentNodeAndBindEvent(item))
+      },
+      /**
+       * 创建或更新该组件配置对应的树节点
+       * 树节点子的控件会自动去重
+       * @param item 组件配置信息item
+       * @return node 创建的节点
+       */
+      updateComponentNodeAndBindEvent(item) {
+        const that = this
         let node = that.findTreeNode(item.gid) || {
           title: item.title,
           key: item.gid,
@@ -524,7 +536,6 @@
           children: [],
           _component: ''
         }
-        parentNode.children.push(node)
         let groups = node.children
 
         // 加载每个单元格内的组件
@@ -573,6 +584,10 @@
                         icon: 'link',
                       }
                     })
+                  } else {
+                    // 存在，则更新
+                    foundChildrenNode.title = foundChildrenNodeTitle
+                    foundChildrenNode.slots = childObj.slots
                   }
                   // 基于配置的事件初始化绑定
                   let componentItem = that.componentRefs[item.gid]
@@ -612,8 +627,8 @@
         }
 
         console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > treeNodes result:', that.treeNodes)
+        return node
       },
-
       generateContainerNodeAndBindEvent(parentItem, container) {
         let that = this
         let parentNode = that.findTreeNode(parentItem.gid)
@@ -729,7 +744,7 @@
         this.modalVisible = false
         this.modalWidthPercent = this.modalWidthPercentDefault
         this.$gl.bus.$emit('gl_ide_plugin_layout__modal_close')
-        this.onCardReload(this.currentSelectedCardItem)
+        this.onComponentReload(this.currentSelectedCardItem)
       },
       /**
        * card 对应 cell
@@ -746,12 +761,12 @@
 
       onCardSettingOpen(cell) {
         console.log('gl-ide-plugin-layout > UIItem > onCardSettingOpen>', cell)
-        this.currentSelectedCard = cell
+        this.currentSelectedCell = cell
         this.$gl.bus.$emit(events.ide_setting_open, {panelName: 'GlIdePluginLayoutCardSettings', config: cell})
       },
       onCardSettingUpdate(cell) {
         console.log('gl-ide-plugin-layout > UIItem > onCardSettingUpdate>', cell)
-        this.currentSelectedCard = cell
+        this.currentSelectedCell = cell
         this.$gl.bus.$emit(events.ide_setting_update, {panelName: 'GlIdePluginLayoutCardSettings', config: cell})
       },
       getCellComponentConfig(cardId) {
@@ -824,10 +839,10 @@
               // that.generateComponentNodeAndBindEvent(cellItem, component)
             })
           })
-        }else{
+        } else {
           // 若添加的为组件
           this.generateComponentRef(item)
-          this.generateComponentNodeAndBindEvent(cell, item)
+          this.generateComponentNodeAndBindEvent(item, cell)
         }
         console.log('gl-ide-plugin-layout > UIItem > onCellItemAdd() > item: ', item)
         console.log('gl-ide-plugin-layout > UIItem > onCellItemAdd() > this.refs: ', this.$refs)
@@ -837,7 +852,7 @@
       onContainerAdd(e, tab) {
         let item = tab.items[tab.items.length === e.newIndex && e.newIndex > 0 ? e.newIndex - 1 : e.newIndex]
         this.generateComponentRef(item)
-        this.generateComponentNodeAndBindEvent(tab, item)
+        this.generateComponentNodeAndBindEvent(item, tab)
       },
       onAddSlot(e, item) {
 
@@ -907,13 +922,18 @@
       //     },
       //   });
       // },
-      onCardReload(item) {
-        console.log('gl-ide-plugin-layout > UIItem > onCardReload() > item: ', item)
+      /**
+       *  关闭组件配置页面时，需重新加载组件，确保对组件的更新都生效
+       *  如组件内增加了控件，在关闭配置页面时，需同步在对象树中新增
+       *  @param item 组件配置信息
+       */
+      onComponentReload(item) {
+        console.log('gl-ide-plugin-layout > UIItem > onComponentReload() > item: ', item)
         // 重新创建引用、绑定事件
         this.generateComponentRef(item)
-        this.generateComponentNodeAndBindEvent(item)
+        this.updateComponentNodeAndBindEvent(item)
         // 重绘单元格
-        console.log('..................', this.$refs[item.gid][0].name, typeof this.$refs[item.gid][0].refresh)
+        // console.log('..................', this.$refs[item.gid][0].name, typeof this.$refs[item.gid][0].refresh)
         if (typeof this.$refs[item.gid][0].refresh === 'function') {
           this.$refs[item.gid][0].refresh()
         }

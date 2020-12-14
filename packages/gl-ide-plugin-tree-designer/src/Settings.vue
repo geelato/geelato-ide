@@ -271,7 +271,7 @@
             <tr class="gl-table-row">
               <td colspan="3">
                 <a-button size="small" block
-                          @click="config.menuAction.actions.push({gid:$gl.utils.uuid(16),title:'',title:'操作',icon:''})"
+                          @click="config.menuAction.actions.push({gid:$gl.utils.uuid(16),title:'',title:'操作',icon:'',control:'link'})"
                           style="line-height: 1.499em">
                   <a-icon type="plus" size="small"/>
                   添加菜单项

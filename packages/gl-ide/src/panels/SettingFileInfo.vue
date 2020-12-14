@@ -20,21 +20,21 @@
               control: 'input',
               title: '类型',
               props: {
-                readonly: true
+                readOnly: true
               }
             },
             component: {
               control: 'input',
               title: '组件',
               props: {
-                readonly: true
+                readOnly: true
               }
             },
             code: {
               control: 'input',
               title: '编码',
               props: {
-                readonly: true
+                readOnly: true
               }
             },
             description: {
@@ -65,7 +65,8 @@
                 ]
               }
             ]
-          }
+          },
+          ds: {}
         },
         formQuery: {}
       }
