@@ -1,6 +1,7 @@
 <template>
   <div>
-    <gl-form ref="form" :opts="opts" :params="params.ShowMessage" @propertyUpdate="onPropertyUpdate"></gl-form>
+    <gl-form ref="form" :opts="opts" :params="params.ShowNotification" @propertyUpdate="onPropertyUpdate"></gl-form>
+    <gl-string-value-setting-tip></gl-string-value-setting-tip>
   </div>
 </template>
 
@@ -10,7 +11,7 @@
       params: {
         type: Object,
         default() {
-          return {ShowMessage: {}}
+          return {ShowNotification: {}}
         }
       }
     },
@@ -26,14 +27,14 @@
           properties: {
             // 设置该id:{}，便于子实体中依赖该id
             id: {},
-            message: {
+            content: {
               control: 'input',
-              title: '提示内容',
+              title: '通知内容',
               rules: {
                 required: true,
               },
               props: {
-                placeholder: '提示内容'
+                placeholder: '通知内容'
               }
             },
             method: {
@@ -66,7 +67,7 @@
                 cols: [
                   {
                     span: 24,
-                    rows: [{cols: [{span: 6, label: true, field: 'message'}, {span: 18, field: 'message'}]}]
+                    rows: [{cols: [{span: 6, label: true, field: 'content'}, {span: 18, field: 'content'}]}]
                   }]
               }
             ],
@@ -86,7 +87,7 @@
         let form = this.$refs.form.getValues()
         this.$emit('update', {
           ShowNotification: {
-            message: form.message,
+            content: form.content,
             description: form.description
           }
         })

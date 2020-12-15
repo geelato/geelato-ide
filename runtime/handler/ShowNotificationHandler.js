@@ -1,20 +1,18 @@
-export default class ShowMessageHandler {
+import VarsParser from '../VarsParser'
+
+export default class ShowNotificationHandler {
 
   constructor($root) {
     this.$root = $root
+    this.varsParser = new VarsParser()
   }
 
   doAction(action, page, ctx, data) {
-    // e.g.
-    // this.$root.$notification.open({
-    //   message: 'Notification Title',
-    //   description:
-    //     'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
-    //   onClick: () => {
-    //     console.log('Notification Clicked!')
-    //   },
-    // })
-
-    this.$root.$notification.open(action.params.ShowNotification)
+    const msg = action.params.ShowNotification
+    const result = this.varsParser.parse(msg.content, {page: page, component: ctx})
+    this.$root.$notification.open({
+      message: result,
+      description: msg.description
+    })
   }
 }

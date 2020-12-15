@@ -3,6 +3,7 @@ import Sidebar from './src/Sidebar'
 import StageUI from './src/stage/UI'
 import StageSrc from './src/stage/Src'
 import events from './src/events'
+import GlStringValueSettingTip from './src/settings/event-handler-setings/common/StringValueSettingTip'
 import GlIdeSettingObjectTree from './src/settings/GlIdeSettingObjectTree'
 import GlIdePluginLayoutCardSettings from './src/settings/CardSettings'
 import GlIdePluginLayoutSegmentSettings from './src/settings/SegmentSettings'
@@ -85,7 +86,7 @@ const plugin = {
   },
   sidebar: {
     title: '布局',
-    icon:'layout',
+    icon: 'layout',
     component: Sidebar
   }
 }
@@ -95,6 +96,7 @@ export default {
   install: function (Vue) {
     Vue.component(StageUI.name, StageUI)
     Vue.component(StageSrc.name, StageSrc)
+    Vue.component(GlStringValueSettingTip.name, GlStringValueSettingTip)
     Vue.component(GlIdeSettingObjectTree.name, GlIdeSettingObjectTree)
     Vue.component(GlIdePluginLayoutCardSettings.name, GlIdePluginLayoutCardSettings)
     Vue.component(GlIdePluginLayoutSegmentSettings.name, GlIdePluginLayoutSegmentSettings)

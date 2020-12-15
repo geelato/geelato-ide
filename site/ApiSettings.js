@@ -10,10 +10,9 @@ export default class ApiSettings {
 
   interceptors(axios) {
     const service = axios
-
     const err = (error) => {
+      console.log('geelato-ide > apiHelper.js > interceptors() > error: ', error)
       if (error.response) {
-        console.log('geelato-ide > apiHelper.js > interceptors() > error.response: ', error.response)
         error.response.data = builder('', error.response.data, error.response.status)
         const data = error.response.data
         // const token = Vue.ls.get(ACCESS_TOKEN)
@@ -38,11 +37,12 @@ export default class ApiSettings {
         }
       } else {
         if (error.isAxiosError) {
-          if (error.message === 'Network Error')
+          if (error.message === 'Network Error') {
             notification.error({
               message: 'Network Error',
               description: '网络错误，请稍后重试。'
             })
+          }
         }
       }
       return Promise.reject(error)

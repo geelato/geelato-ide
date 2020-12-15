@@ -7,25 +7,28 @@
     </span>
     <span>{{label}}&nbsp;&nbsp;</span>
     <span>
-      <a-select :defaultValue="doItem.handler" style="width: 200px"
+      <a-select :defaultValue="doItem.handler" style="width: 220px"
                 @change="$emit('doActionChange',$event,doItem,doItemIndex)" :allowClear="true">
         <a-select-opt-group label="链接动作">
            <a-select-option value="OpenModal">弹出窗口（modal）</a-select-option>
-          <a-select-option value="CloseModal">关闭窗口（modal）</a-select-option>
-          <a-select-option value="OpenWin">打开新窗口（window）</a-select-option>
+          <a-select-option value="CloseModal" disabled>关闭窗口（modal）</a-select-option>
+          <a-select-option value="OpenWin" disabled>打开新窗口（window）</a-select-option>
         </a-select-opt-group>
         <a-select-opt-group label="控件动作">
           <a-select-option value="InvokeCurrentComponent">调用当前控件方法</a-select-option>
           <a-select-option value="InvokeComponent">调用指定控件方法</a-select-option>
-          <!--<a-select-option value="ShowAndHide">显示/隐藏</a-select-option>-->
-          <a-select-option value="ReadAndWrite">只读/可写</a-select-option>
+          <a-select-option value="ShowAndHide" disabled>显示/隐藏</a-select-option>
+          <a-select-option value="ReadAndWrite" disabled>只读/可写[X]</a-select-option>
+        </a-select-opt-group>
+         <a-select-opt-group label="反馈动作">
+           <a-select-option value="ShowMessage">提醒消息</a-select-option>
+           <a-select-option value="ShowNotification">弹出通知卡片</a-select-option>
         </a-select-opt-group>
          <a-select-opt-group label="其它动作">
-           <a-select-option value="ShowMessage">提醒消息</a-select-option>
-          <a-select-option value="SetVars">设置变量值</a-select-option>
-           <a-select-option value="ScriptBlock">执行代码块</a-select-option>
            <a-select-option value="InvokeRestfulSrv">调用服务（Restful）</a-select-option>
-           <!--<a-select-option value="triggerEvent">触发事件</a-select-option>-->
+           <a-select-option value="SetVars" disabled>设置变量值</a-select-option>
+           <a-select-option value="ScriptBlock" disabled>执行代码块</a-select-option>
+           <a-select-option value="triggerEvent" disabled>触发事件</a-select-option>
         </a-select-opt-group>
       </a-select>
     </span>

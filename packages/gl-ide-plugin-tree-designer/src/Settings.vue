@@ -24,7 +24,7 @@
                 树标题：
               </td>
               <td class="gl-table-cell">
-                <input v-model="config.title" style="width: 99%"/>
+                <a-input v-model="config.title" style="width: 99%"/>
               </td>
             </tr>
             <tr class="gl-table-row">
@@ -157,10 +157,10 @@
                   <td colspan="3" style="border: 0">
                     <table style="width: 100%;">
                       <tr class="gl-table-row" :key="action.gid">
-                        <td class="gl-table-cell" style="width: 25%;border-top: 0;border-left:0"><input
+                        <td class="gl-table-cell" style="width: 25%;border-top: 0;border-left:0"><a-input
                             v-model="action.title" style="width: 99%"/></td>
                         <td class="gl-table-cell" style="width: 45%;border-top: 0;border-left:0">
-                          <input style="width: 98%" v-model="action.icon"/>
+                          <a-input style="width: 98%" v-model="action.icon"/>
                         </td>
                         <td class="gl-table-cell" style="border-top: 0;border-left:0">
                           <a-button class="gl-mini-btn" v-if="currentActionIndex!==actionIndex"

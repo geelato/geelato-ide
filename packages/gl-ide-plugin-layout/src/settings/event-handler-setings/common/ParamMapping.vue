@@ -48,13 +48,13 @@
                       </template>
                     </a-select-opt-group>
                   </a-select>
-                  <a-button title="转为输入模式" @click="paramMappingItem.target.mode='INPUT'">
+                  <a-button title="转为输入模式" @click="$set(paramMappingItem.target,'mode','INPUT')">
                     <a-icon type="edit"/>
                   </a-button>
                 </a-input-group>
                 <a-input-group compact v-if="paramMappingItem.target.mode==='INPUT'">
                   <a-input style="width: 85%" v-model="paramMappingItem.target.name"></a-input>
-                  <a-button title="转为选择模式" @click="paramMappingItem.target.mode='SELECT'">
+                  <a-button title="转为选择模式" @click="$set(paramMappingItem.target,'mode','SELECT');onChangeInParam(paramMappingItem.target.gid,paramMappingItem)">
                     <a-icon type="select"/>
                   </a-button>
                 </a-input-group>

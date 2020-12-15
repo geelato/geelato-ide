@@ -3,6 +3,7 @@ import InvokeComponentHandler from './handler/InvokeComponentHandler'
 import InvokeRestfulSrvHandler from './handler/InvokeRestfulSrvHandler'
 import OpenModalHandler from './handler/OpenModalHandler'
 import ShowMessageHandler from './handler/ShowMessageHandler'
+import ShowNotificationHandler from './handler/ShowNotificationHandler'
 
 export default class ActionHandler {
 
@@ -14,7 +15,8 @@ export default class ActionHandler {
       InvokeComponentHandler: new InvokeComponentHandler(this.$root),
       InvokeRestfulSrvHandler: new InvokeRestfulSrvHandler(this.$root),
       OpenModalHandler: new OpenModalHandler(this.$root),
-      ShowMessageHandler: new ShowMessageHandler(this.$root)
+      ShowMessageHandler: new ShowMessageHandler(this.$root),
+      ShowNotificationHandler: new ShowNotificationHandler(this.$root)
     }
   }
 
@@ -97,7 +99,11 @@ export default class ActionHandler {
   }
 
   findCurrentPage(component) {
-    console.log('geelato > runtime > ActionHandler.js > findCurrentPage() > component.$parent):', component.$parent)
+    if (!component.$parent.$vnode) {
+      // 到了根节点，还找不到，可能是在设计器中执行该方案，设计器的舞台中不存在GlPage
+      return undefined
+    }
+    console.log('geelato > runtime > ActionHandler.js > findCurrentPage() > component.$parent):', component.$parent.$vnode.tag, component.$parent)
     if (component.$parent.$vnode.tag.search(/-GlPage$/) !== -1) {
       return component.$parent
     } else {

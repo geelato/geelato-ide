@@ -20,7 +20,7 @@
                 表格标题：
               </td>
               <td class="gl-table-cell">
-                <input v-model="config.title" style="width: 99%"/>
+                <a-input v-model="config.title" style="width: 99%"/>
               </td>
             </tr>
             <tr class="gl-table-row">
@@ -109,7 +109,7 @@
                   <td colspan="3" style="border: 0">
                     <table style="width: 100%;">
                       <tr class="gl-table-row" :key="col.gid">
-                        <td class="gl-table-cell" style="width: 25%;border-top: 0;border-left:0"><input
+                        <td class="gl-table-cell" style="width: 25%;border-top: 0;border-left:0"><a-input
                             v-model="col.title" style="width: 99%"/></td>
                         <td class="gl-table-cell" style="width: 45%;border-top: 0;border-left:0">
                           <a-select v-model="col.dataIndex" :allowClear="true" v-if="!isOperateColumn(col)"
@@ -296,7 +296,7 @@
                     <table style="width: 100%;">
                       <tr v-if="property" class="gl-table-row"
                           :key="propertyIndex">
-                        <td class="gl-table-cell" style="width: 20%;border-left: 0;border-top: 0"><input
+                        <td class="gl-table-cell" style="width: 20%;border-left: 0;border-top: 0"><a-input
                             v-model="property.title" style="width: 99%"/></td>
                         <td class="gl-table-cell" style="width: 32%;border-left: 0;border-top: 0">
                           <a-select v-model="property.field" :allowClear="true" style="min-width: 99%">
@@ -354,13 +354,13 @@
                             <tr class="gl-table-row">
                               <td class="gl-table-cell gl-table-cell-sub-label">占位符：</td>
                               <td class="gl-table-cell">
-                                <input v-model="property.props.placeholder" style="width: 99%"/>
+                                <a-input v-model="property.props.placeholder" style="width: 99%"/>
                               </td>
                             </tr>
                             <tr class="gl-table-row">
                               <td class="gl-table-cell gl-table-cell-sub-label">默认值：</td>
                               <td class="gl-table-cell">
-                                <input v-model="property.props.defaultValue" style="width: 99%"/>
+                                <a-input v-model="property.props.defaultValue" style="width: 99%"/>
                               </td>
                             </tr>
                           </table>
@@ -411,7 +411,7 @@
             >
               <tr v-for="(toolbarAction,toolbarActionIndex) in config.toolbar.actions" class="gl-table-row"
                   :key="toolbarAction.gid">
-                <td class="gl-table-cell"><input v-model="toolbarAction.title" style="width: 99%"/></td>
+                <td class="gl-table-cell"><a-input v-model="toolbarAction.title" style="width: 99%"/></td>
                 <td class="gl-table-cell">
                   <a-select v-model="toolbarAction.type" :allowClear="true"
                             style="min-width: 99%">
@@ -420,7 +420,7 @@
                     </a-select-option>
                   </a-select>
                 </td>
-                <td class="gl-table-cell"><input v-model="toolbarAction.icon" style="width: 99%"/></td>
+                <td class="gl-table-cell"><a-input v-model="toolbarAction.icon" style="width: 99%"/></td>
                 <td class="gl-table-cell">
                   <a-button class="gl-mini-btn"
                             @click="$gl.utils.remove(config.toolbar.actions,toolbarActionIndex)">
@@ -463,7 +463,7 @@
               <tr v-for="(rowAction,rowActionIndex) in config.table.rowAction.actions" class="gl-table-row"
                   :key="rowAction.gid">
                 <td class="gl-table-cell">
-                  <input v-model="rowAction.title" style="width: 99%"/>
+                  <a-input v-model="rowAction.title" style="width: 99%"/>
                 </td>
                 <td class="gl-table-cell">
                   <a-button class="gl-mini-btn"

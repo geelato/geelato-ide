@@ -32,7 +32,7 @@
           <!--:title="param.description"/></span>{{param.title}}-->
           <!--</td>-->
           <!--<td class="gl-table-cell">-->
-          <!--<input v-model="param.value" style="min-width: 99%" :placeholder="param.placeholder||param.name"-->
+          <!--<a-input v-model="param.value" style="min-width: 99%" :placeholder="param.placeholder||param.name"-->
           <!--@change="updateSettings"/>-->
           <!--</td>-->
           <!--</tr>-->

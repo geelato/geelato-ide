@@ -10,7 +10,7 @@
           标题：
         </td>
         <td class="gl-table-cell">
-          <input v-model="config.title" style="width: 99%"/>
+          <a-input v-model="config.title" style="width: 99%"/>
         </td>
       </tr>
       <tr class="gl-table-row">

@@ -23,7 +23,7 @@
               外部地址：
             </td>
             <td class="gl-table-cell">
-              <input v-model="config.url" style="width: 100%" placeholder="例如：https://www.geelato.org"/>
+              <a-input v-model="config.url" style="width: 100%" placeholder="例如：https://www.geelato.org"/>
             </td>
           </tr>
           <tr class="gl-table-row" v-show="config.src==='platform'">
@@ -59,7 +59,7 @@
               页面宽度：
             </td>
             <td class="gl-table-cell">
-              <input v-model="config.width" placehodler="例如：1024px" style="width: 100%"/>
+              <a-input v-model="config.width" placehodler="例如：1024px" style="width: 100%"/>
             </td>
           </tr>
           <tr class="gl-table-row" v-if="config.sizeMode==='fixed'">
@@ -67,7 +67,7 @@
               页面高度：
             </td>
             <td class="gl-table-cell">
-              <input v-model="config.height" placehodler="例如：600px" style="width: 100%"/>
+              <a-input v-model="config.height" placehodler="例如：600px" style="width: 100%"/>
             </td>
           </tr>
         </table>

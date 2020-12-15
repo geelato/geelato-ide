@@ -63,7 +63,7 @@
               <a-radio-button value="PAGE">当前页面变量</a-radio-button>
             </a-radio-group>
           </div>
-          <a-input v-model="params.InvokeRestfulSrv.result.setVar.name"></a-input>
+          <a-input v-model="params.InvokeRestfulSrv.result.setVar.name" placeholder="写入变量名，如myVarA"></a-input>
         </td>
       </tr>
       </tbody>
@@ -85,7 +85,7 @@
         type: Object,
         default() {
           return {
-            InvokeRestfulSrv: this.defaultConfig
+            InvokeRestfulSrv: JSON.parse(JSON.stringify(this.defaultConfig))
           }
         }
       }
@@ -97,7 +97,7 @@
           srvUrl: '',
           method: 'POST',
           params: {},
-          result: {handler: '', setVar: {scope: '', name: '', value: ''}}
+          result: {handler: '', setVar: {scope: 'component', name: '', value: ''}}
         }
       }
     },
@@ -107,7 +107,7 @@
     },
     mounted() {
       if (this.params && !this.params.InvokeRestfulSrv) {
-        this.$set(this.params, 'InvokeRestfulSrv', this.defaultConfig)
+        this.$set(this.params, 'InvokeRestfulSrv', JSON.parse(JSON.stringify(this.defaultConfig)))
       }
     },
     methods: {}

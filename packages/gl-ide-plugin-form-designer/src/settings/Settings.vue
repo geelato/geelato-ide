@@ -156,7 +156,7 @@
                   字段名：
                 </td>
                 <td class="gl-table-cell">
-                  <input v-model="fieldConfig.title" style="width: 99%"/>
+                  <a-input v-model="fieldConfig.title" style="width: 99%"/>
                 </td>
               </tr>
               <tr class="gl-table-row">
@@ -277,7 +277,7 @@
                   占位符：
                 </td>
                 <td class="gl-table-cell">
-                  <input v-model="fieldConfig.props.placeholder" style="width: 99%"/>
+                  <a-input v-model="fieldConfig.props.placeholder" style="width: 99%"/>
                 </td>
               </tr>
               <tr class="gl-table-row">

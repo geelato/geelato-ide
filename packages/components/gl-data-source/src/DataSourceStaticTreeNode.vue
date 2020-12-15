@@ -2,7 +2,7 @@
   <div>
     <div v-for="(item,index) in items" :key="index">
       <div class="gl-title-sub"> 节点名称：</div>
-      <input v-model="item[dataAlias.text]" style="width: 100%" placeholder="输入节点名称"/>
+      <a-input v-model="item[dataAlias.text]" style="width: 100%" placeholder="输入节点名称"/>
       <div class="gl-title-sub"> 节点Key：</div>
       {{item[dataAlias.value]}}
       <!--<a-input placeholder="选项值" :aria-readonly="true"/>-->
@@ -12,7 +12,7 @@
 
 <script>
   export default {
-    name: "GlDataSourceStatic",
+    name: "GlDataSourceStaticTreeNode",
     props: {
       dataItems: {
         type: Array

@@ -1,6 +1,7 @@
 <template>
   <div>
     <gl-form ref="form" :opts="opts" :params="params.ShowMessage" @propertyUpdate="onPropertyUpdate"></gl-form>
+    <gl-string-value-setting-tip></gl-string-value-setting-tip>
   </div>
 </template>
 

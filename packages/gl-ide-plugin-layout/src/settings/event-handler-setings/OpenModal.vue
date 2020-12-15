@@ -5,7 +5,7 @@
       <tr>
         <td class="gl-table-cell label" style="width: 30%">打开页面</td>
         <td class="gl-table-cell" colspan="3">
-          <!--<input v-model="modalInfo.pageId" style="width: 100%"/>-->
+          <!--<a-input v-model="modalInfo.pageId" style="width: 100%"/>-->
           <a-tree-select
               style="width: 100%"
               :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }"
@@ -23,17 +23,17 @@
       <tr class="gl-table-row">
         <td class="gl-table-cell label" style="width: 20%">页面标题</td>
         <td class="gl-table-cell" colspan="3">
-          <input v-model="modalInfo.title" style="width: 100%"/>
+          <a-input v-model="modalInfo.title" style="width: 100%"/>
         </td>
       </tr>
       <tr>
         <td class="gl-table-cell label" style="width: 20%">页面宽度</td>
         <td class="gl-table-cell" style="width: 30%">
-          <input v-model="modalInfo.width" placeholder="1200px" style="width: 98%"/>
+          <a-input v-model="modalInfo.width" placeholder="1200px" style="width: 98%"/>
         </td>
         <td class="gl-table-cell label" style="width: 20%">页面高度</td>
         <td class="gl-table-cell" style="width: 30%">
-          <input v-model="modalInfo.height" placeholder="800px" style="width: 98%"/>
+          <a-input v-model="modalInfo.height" placeholder="800px" style="width: 98%"/>
         </td>
       </tr>
       <tr>
@@ -148,7 +148,7 @@
     <!--<template v-for="(action,actionIndex) in modalInfo.actions">-->
     <!--<tr class="gl-table-row" :key="actionIndex">-->
     <!--&lt;!&ndash; TODO change? &ndash;&gt;-->
-    <!--<td class="gl-table-cell"><input v-model="action.text" style="width: 99%" @change="onActionUpdate()"/></td>-->
+    <!--<td class="gl-table-cell"><a-input v-model="action.text" style="width: 99%" @change="onActionUpdate()"/></td>-->
     <!--<td class="gl-table-cell">-->
     <!--<a-select v-model="action.type" :allowClear="true" @change="onActionUpdate()"-->
     <!--style="min-width: 99%">-->

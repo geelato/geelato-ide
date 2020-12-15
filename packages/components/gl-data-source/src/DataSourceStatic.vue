@@ -12,13 +12,13 @@
     >
       <div v-for="(item,index) in items" :key="index" class="gl-select-item gl-dnd-select-handle">
         <!--<span>-->
-        <!--<input type="radio" name="defaultIndex"/>-->
+        <!--<a-input type="radio" name="defaultIndex"/>-->
         <!--</span>-->
         <span>
-          <input v-model="item[dataAlias.text]" style="width: 6em" placeholder="选项内容"/>
+          <a-input v-model="item[dataAlias.text]" style="width: 6em" placeholder="选项内容"/>
         </span>
         <!--<span>-->
-        <!--<input v-model="item.value" style="width: 4em" placeholder="选项值"/>-->
+        <!--<a-input v-model="item.value" style="width: 4em" placeholder="选项值"/>-->
         <!--</span>-->
         <span>
           <a-input-number v-model="item[dataAlias.value]" style="width: 4em" placeholder="选项值"/>

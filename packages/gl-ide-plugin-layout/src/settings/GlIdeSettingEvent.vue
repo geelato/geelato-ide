@@ -94,6 +94,7 @@
   import InvokeComponent from './event-handler-setings/InvokeComponent'
   import InvokeRestfulSrv from './event-handler-setings/InvokeRestfulSrv'
   import ShowMessage from './event-handler-setings/ShowMessage'
+  import ShowNotification from './event-handler-setings/ShowNotification'
   import ShowAndHide from './event-handler-setings/ShowAndHide'
   import ReadAndWrite from './event-handler-setings/ReadAndWrite'
   import Empty from './event-handler-setings/Empty'
@@ -104,6 +105,7 @@
     ScriptBlock,
     OpenModal,
     ShowMessage,
+    ShowNotification,
     ShowAndHide,
     ReadAndWrite,
     InvokeCurrentComponent,

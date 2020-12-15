@@ -57,7 +57,7 @@
     <tr class="gl-table-row">
       <td class="gl-table-cell">
         <div class="gl-title-sub"> 查询条件：</div>
-        <textarea style="width: 100%" rows="5" :value="JSON.stringify(dsItem)"></textarea>
+        <!--<a-textarea style="width: 100%" rows="5" :value="JSON.stringify(dsItem)"></a-textarea>-->
         <table class="gl-table">
           <tr style="text-align: center">
             <th class="gl-table-cell" style="width: 35%">参数</th>
@@ -84,7 +84,7 @@
                       <span v-if="!fieldMeta.nullable" class="gl-required" style="font-weight: bold">*</span>{{fieldMeta.fieldName}}&nbsp;({{fieldMeta.title}})
                     </a-select-option>
                   </a-select>
-                  <!--<input v-model="param.name"/>-->
+                  <!--<a-input v-model="param.name"/>-->
                 </td>
                 <td class="gl-table-cell">
                   <a-select v-model="param.cop" style="min-width: 99%">
@@ -93,7 +93,7 @@
                     </a-select-option>
                   </a-select>
                 </td>
-                <td class="gl-table-cell"><input v-model="param.value" style="width: 99%"/></td>
+                <td class="gl-table-cell"><a-input v-model="param.value" style="width: 99%"/></td>
                 <td class="gl-table-cell">
                   <a-button class="gl-mini-btn gl-dnd-action-row-handle">
                     <a-icon type="drag"/>
@@ -131,7 +131,7 @@
       <!--</td>-->
       <td class="gl-table-cell">
         <div class="gl-title-sub"> 描述：</div>
-        <textarea v-model="dsItem.description" rows="4" style="width: 100%"></textarea>
+        <a-textarea v-model="dsItem.description" rows="4" style="width: 100%"></a-textarea>
       </td>
     </tr>
     </tbody>
@@ -141,10 +141,11 @@
 <script>
   import GlDataSourceDynamicSelectEntity from "./DataSourceDynamicSelectEntity";
   import ideSelectItems from '../../../gl-ide/src/data/ideSelectItems'
+  import ATextarea from "ant-design-vue/es/input/TextArea";
 
   export default {
     name: "GlDataSourceDynamic",
-    components: {GlDataSourceDynamicSelectEntity},
+    components: {ATextarea, GlDataSourceDynamicSelectEntity},
     props: {
       dsItem: {
         type: Object,

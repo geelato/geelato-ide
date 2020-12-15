@@ -7,14 +7,10 @@
         group='layoutItems'
         :sort="true"
         @add="onRowAdd($event,rowItems)"
-        @end="onRowEnd($event,rowItems)"
-        @clone="onClone($event,rowItems)"
-        @change="onRowChange($event,rowItems)"
     >
       <a-row v-for="(row,rowIndex) in rowItems" :gutter="row.gutter||gutter" :key="rowIndex" class="gl-dnd-row xxxx"
              :class="{'gl-selected':currentSelectObjectUid===row.gid}">
         <div class="gl-dnd-row-toolbar">
-          <!--<div style="display:inline" @click="showBreadcrumbs=true">&gt;</div>-->
           <div style="display:inline" title="拖动单元格" class="gl-dnd-row-handle">
             <a-icon type="table"/>
             行
@@ -34,8 +30,8 @@
               单元格{{cell.displayMode==='Tabs'?'显示为【标签页】':(cell.displayMode==='Collapse'?'显示为【折叠面板】':'')}}
             </div>&nbsp;
             <div style="display:inline-block;float: right">
-              <a-button size="small" @click="onComponentDelete(cell.items,cellItem,cellItemIndex)" type="danger"
-                        title="删除该单元格">
+              <a-button size="small" @click="onCellClear(cell)" type="danger"
+                        title="清空该单元格">
                 <a-icon type="delete"></a-icon>
               </a-button>
             </div>
@@ -69,6 +65,8 @@
                    style="padding-top: 0.1em;position: relative"
                    :class="{'gl-selected':currentSelectObjectUid===cellItem.gid}">
                 <template v-if="cellItem.component">
+                  <!-- 单元格内该项为组件 -->
+                  <!--组件工具条-->
                   <div class="gl-component-item-hover-title">
                     <div style="text-align: left;display:inline" class="gl-dnd-handle-cell-item">
                       <a-icon :type="cellItem.icon"/>
@@ -81,7 +79,7 @@
                       <a-icon type="minus" :rotate="-45"/>
                     </div>
                     <div class="crumbs"
-                         @click="onSelectObject({currentUID:cell.gid,row:row,cell:cell});onCardSettingOpen(cell,colIndex)">
+                         @click="onSelectObject({currentUID:cell.gid,row:row,cell:cell});onCellSettingOpen(cell,colIndex)">
                       <a-icon type="border"></a-icon>
                       单元格
                     </div>
@@ -102,16 +100,7 @@
                       {{cellItem.title}}{{$ide.store.assist.showComponentId?'-'+cellItem.gid:''}}
                     </div>&nbsp;
                     <div style="display:inline-block;float: right">
-                      <!--<a-button size="small" @click="onComponentReload(cell,cellItem,cellItemIndex)"-->
-                      <!--title="刷新">-->
-                      <!--<a-icon type="reload"/>-->
-                      <!--</a-button>-->
-                      <!--<a-button size="small"-->
-                      <!--title="单元格设置">-->
-                      <!--<a-icon type="layout" theme="filled"/>-->
-                      <!--&lt;!&ndash;<span>单元格设置</span>&ndash;&gt;-->
-                      <!--</a-button>-->
-                      <a-button size="small" @click="onCardOpen(cell,cellItem,cellItemIndex)"
+                      <a-button size="small" @click="onComponentDesignerOpen(cell,cellItem,cellItemIndex)"
                                 title="组件设置">
                         <a-icon type="setting" theme="filled"/>
                       </a-button>
@@ -129,8 +118,7 @@
                   </div>
                   <!-- 组件 -->
                   <div class="gl-component-wrapper gl-dnd-handle-cell-item"
-                       @click="onSelectObject({currentUID:cellItem.gid,row:row,cell:cell,cellItem:cellItem})">
-                    <!--{{row.gid}}{{row.gid}}-->
+                       @click="onSelectObject({currentUID:cellItem.gid,row:row,cell:cell,component:cellItem})">
                     <component :ref="cellItem.gid" v-show="cellItem.show" :is="$globalVue.component(cellItem.component)"
                                v-bind="cellItem.bind" :style="cellItem.style"></component>
                     <div v-if="!cellItem.show" style="text-align: center;font-size: 3em;background-color: #f0f0f0">
@@ -139,30 +127,30 @@
                   </div>
                 </template>
                 <template v-else>
-                  <!-- 容器 -->
+                  <!-- 单元格内该项为容器 -->
                   <div class="gl-container-wrapper">
                     <a-tabs v-if="cellItem.type==='Tabs'" :default-active-key="0" type="editable-card"
                             @edit="(targetKey, action)=>{onTabsEdit(targetKey, action,cellItem)}">
-                      <a-tab-pane :tab="tabItem.title" v-for="(tabItem,tabItemIndex) in cellItem.items"
-                                  :key="tabItemIndex">
+                      <a-tab-pane :tab="panel.title" v-for="(panel,panelIndex) in cellItem.items"
+                                  :key="panelIndex">
                         <gl-draggable
-                            :list="tabItem.items"
+                            :list="panel.items"
                             animation="700"
                             handle=".gl-dnd-handle-cell-item"
                             group='card'
                             :sort="true"
-                            @add="onContainerAdd($event,tabItem)"
-                            @change="onCellItemChange"
+                            @add="onContainerPanelComponentAdd($event,panel)"
+                            @change="onContainerPanelComponentChange($event,panel)"
                             class="gl-dnd-panel-wrapper"
                         >
-                          <div v-for="(panel,panelIndex) in tabItem.items" :key="panel.gid"
+                          <div v-for="(component,componentIndex) in panel.items" :key="component.gid"
                                class="gl-container-item-wrapper"
-                               style="padding-top: 0.1em;position: relative" :style="panel.style"
-                               :class="{'gl-selected':currentSelectObjectUid===panel.gid}">
+                               style="padding-top: 0.1em;position: relative" :style="component.style"
+                               :class="{'gl-selected':currentSelectObjectUid===component.gid}">
                             <div class="gl-component-item-hover-title">
                               <div style="text-align: left;display:inline" class="gl-dnd-handle-cell-item">
-                                <a-icon :type="panel.icon"/>
-                                {{panel.title}}{{$ide.store.assist.showComponentId?'-'+panel.gid:''}}
+                                <a-icon :type="component.icon"/>
+                                {{component.title}}{{$ide.store.assist.showComponentId?'-'+component.gid:''}}
                               </div>&nbsp;
                             </div>
                             <div class="gl-component-item-breadcrumbs" v-if="showBreadcrumbs">
@@ -171,7 +159,7 @@
                                 <a-icon type="minus" :rotate="-45"/>
                               </div>
                               <div class="crumbs"
-                                   @click="onSelectObject({currentUID:cell.gid,row:row,cell:cell});onCardSettingOpen(cell,colIndex)">
+                                   @click="onSelectObject({currentUID:cell.gid,row:row,cell:cell});onCellSettingOpen(cell,colIndex)">
                                 <a-icon type="border"></a-icon>
                                 单元格
                               </div>
@@ -179,8 +167,8 @@
                                 <a-icon type="minus" :rotate="-45"/>
                               </div>
                               <div class="crumbs gl-dnd-handle-cell-item" @click="showBreadcrumbs=false" title="拖动单元格">
-                                <a-icon :type="panel.icon"/>
-                                {{panel.title}}{{$ide.store.assist.showComponentId?'-'+panel.gid:''}}
+                                <a-icon :type="component.icon"/>
+                                {{component.title}}{{$ide.store.assist.showComponentId?'-'+component.gid:''}}
                               </div>&nbsp;
                             </div>
                             <div class="gl-component-item-toolbar" v-if="!showBreadcrumbs">
@@ -189,23 +177,23 @@
                                 <a-icon type="double-left"/>
                               </div>
                               <div style="display:inline" title="拖动单元格" class="gl-dnd-handle-cell-item">
-                                <a-icon :type="panel.icon"/>
-                                {{panel.title}}{{$ide.store.assist.showComponentId?'-'+panel.gid:''}}
+                                <a-icon :type="component.icon"/>
+                                {{component.title}}{{$ide.store.assist.showComponentId?'-'+component.gid:''}}
                               </div>&nbsp;
                               <div style="display:inline-block;float: right">
-                                <a-button size="small" @click="onCardOpen(cell,panel,panelIndex)"
+                                <a-button size="small" @click="onComponentDesignerOpen(cell,component,componentIndex)"
                                           title="组件设置">
                                   <a-icon type="setting" theme="filled"/>
                                 </a-button>
-                                <a-button size="small" v-if="panel.show!==false" @click="panel.show=false"
+                                <a-button size="small" v-if="component.show!==false" @click="component.show=false"
                                           title="隐藏该组件内容">
                                   <a-icon type="eye-invisible"/>
                                 </a-button>
-                                <a-button size="small" v-if="panel.show===false" @click="panel.show=true"
+                                <a-button size="small" v-if="component.show===false" @click="component.show=true"
                                           title="展示该组件内容">
                                   <a-icon type="eye"/>
                                 </a-button>
-                                <a-button size="small" @click="onComponentDelete(tabItem.items,panel,panelIndex)"
+                                <a-button size="small" @click="onComponentDelete(panel.items,component,componentIndex)"
                                           type="danger"
                                           title="删除该组件">
                                   <a-icon type="delete"></a-icon>
@@ -213,16 +201,18 @@
                               </div>
                             </div>
                             <div class="gl-component-wrapper gl-dnd-handle-cell-item" style="min-height: 4em"
-                                 @click="onSelectObject({currentUID:panel.gid,row:row,cell:cell,cellItem:panel,container:''})">
-                              <component :ref="panel.gid" v-show="panel.show"
-                                         :is="$globalVue.component(panel.component)"
-                                         v-bind="panel.bind"></component>
-                              <div v-if="!panel.show" class="gl-component-hidden-placeholder">
-                                <a-icon :type="panel.icon" @click="panel.show=true" title="点击展示该组件内容"/>
+                                 @click="onSelectObject({currentUID:component.gid,row:row,cell:cell,component:component})">
+                              <component :ref="component.gid" v-show="component.show"
+                                         :is="$globalVue.component(component.component)"
+                                         v-bind="component.bind"></component>
+                              <div v-if="!component.show" class="gl-component-hidden-placeholder">
+                                <a-icon :type="component.icon" @click="component.show=true" title="点击展示该组件内容"/>
                               </div>
                             </div>
                           </div>
-                          <div class="gl-dnd-panel-placeholder" v-if="tabItem.items.length===0">{拖入组件}</div>
+                          <div class="gl-dnd-panel-placeholder" v-if="panel.items.length===0"
+                               @click="onSelectObject({currentUID:cell.gid,row:row,cell:cell})">{拖入组件}
+                          </div>
                         </gl-draggable>
                       </a-tab-pane>
                       <!--插槽 slots-->
@@ -233,18 +223,18 @@
                             handle=".gl-dnd-handle-cell-item"
                             group='card'
                             :sort="true"
-                            @add="onAddSlot($event,cellItem)"
-                            @change="onCellItemChange"
+                            @add="onContainerSlotComponentAdd($event,cellItem)"
+                            @change="onContainerSlotComponentChange($event,cellItem)"
                             class="gl-dnd-slot-wrapper"
                         >
-                          <div v-for="(slot,slotIndex) in cellItem.slots" :key="slot.gid"
+                          <div v-for="(slotComponent,slotComponentIndex) in cellItem.slots" :key="slotComponent.gid"
                                class="gl-slot-item-wrapper"
                                style="padding-top: 0.1em;position: relative"
-                               :class="{'gl-selected':currentSelectObjectUid===slot.gid}">
+                               :class="{'gl-selected':currentSelectObjectUid===slotComponent.gid}">
                             <div class="gl-component-item-hover-title">
                               <div style="text-align: left;display:inline" class="gl-dnd-handle-cell-item">
-                                <a-icon :type="slot.icon"/>
-                                {{slot.title}}{{$ide.store.assist.showComponentId?'-'+slot.gid:''}}
+                                <a-icon :type="slotComponent.icon"/>
+                                {{slotComponent.title}}{{$ide.store.assist.showComponentId?'-'+slotComponent.gid:''}}
                               </div>&nbsp;
                             </div>
                             <div class="gl-component-item-breadcrumbs" v-if="showBreadcrumbs">
@@ -253,7 +243,7 @@
                                 <a-icon type="minus" :rotate="-45"/>
                               </div>
                               <div class="crumbs"
-                                   @click="onSelectObject({currentUID:cell.gid,row:row,cell:cell});onCardSettingOpen(cell,colIndex)">
+                                   @click="onSelectObject({currentUID:cell.gid,row:row,cell:cell});onCellSettingOpen(cell,colIndex)">
                                 <a-icon type="border"></a-icon>
                                 单元格
                               </div>
@@ -261,18 +251,20 @@
                                 <a-icon type="minus" :rotate="-45"/>
                               </div>
                               <div class="crumbs gl-dnd-handle-cell-item" @click="showBreadcrumbs=false" title="拖动单元格">
-                                <a-icon :type="slot.icon"/>
-                                {{slot.title}}{{$ide.store.assist.showComponentId?'-'+slot.gid:''}}
+                                <a-icon :type="slotComponent.icon"/>
+                                {{slotComponent.title}}{{$ide.store.assist.showComponentId?'-'+slotComponent.gid:''}}
                               </div>&nbsp;
                             </div>
                             <div class="gl-component-item-toolbar" v-if="!showBreadcrumbs">
                               <!--Tab插槽只需要展示这部分操作即可-->
                               <div style="display:inline-block;float: right">
-                                <a-button size="small" @click="onCardOpen(cell,slot,slotIndex)"
+                                <a-button size="small"
+                                          @click="onComponentDesignerOpen(cell,slotComponent,slotComponentIndex)"
                                           title="组件设置">
                                   <a-icon type="setting" theme="filled"/>
                                 </a-button>
-                                <a-button size="small" @click="onComponentDelete(cellItem.slots,slot,slotIndex)"
+                                <a-button size="small"
+                                          @click="onComponentDelete(cellItem.slots,slotComponent,slotComponentIndex)"
                                           type="danger"
                                           title="删除该组件">
                                   <a-icon type="delete"></a-icon>
@@ -280,11 +272,12 @@
                               </div>
                             </div>
                             <div class="gl-component-wrapper gl-dnd-handle-cell-item"
-                                 @click="onSelectObject({currentUID:slot.gid,row:row,cell:cell,cellItem:slot})">
-                              <component :ref="slot.gid" v-show="slot.show" :is="$globalVue.component(slot.component)"
-                                         v-bind="slot.bind" :style="slot.style"></component>
-                              <div v-if="!slot.show" style="text-align: center;font-size: 3em">
-                                <a-icon :type="slot.icon" @click="slot.show=true" title="点击展示该组件内容"/>
+                                 @click="onSelectObject({currentUID:slotComponent.gid,row:row,cell:cell,component:slotComponent})">
+                              <component :ref="slotComponent.gid" v-show="slotComponent.show"
+                                         :is="$globalVue.component(slotComponent.component)"
+                                         v-bind="slotComponent.bind" :style="slotComponent.style"></component>
+                              <div v-if="!slotComponent.show" style="text-align: center;font-size: 3em">
+                                <a-icon :type="slotComponent.icon" @click="slotComponent.show=true" title="点击展示该组件内容"/>
                               </div>
                             </div>
                           </div>
@@ -297,17 +290,12 @@
                   </div>
                 </template>
               </div>
-              <div class="gl-dnd-placeholder" v-if="cell.items.length===0">{ 拖入组件或布局容器 }</div>
-              <!--<div v-if="rowItems.length===1&&(!cell.items||cell.items.length===0)"-->
-              <!--style="text-align: center;padding-top:.2em">-->
-              <!--从左边【组件】栏目拖动组件到此。-->
-              <!--</div>-->
+              <div class="gl-dnd-placeholder" v-if="cell.items.length===0"
+                   @click="onSelectObject({currentUID:row.gid,row:row})">{ 拖入组件或布局容器 }
+              </div>
             </gl-draggable>
           </template>
         </a-col>
-        <!--<div class="gl-dnd-row-toolbar" @click="onRowDelete(rowIndex)" title="删除行">-->
-        <!--<a-icon type="close-circle" theme="twoTone" twoToneColor="#f5222d"/>-->
-        <!--</div>-->
       </a-row>
       <div v-if="!rowItems||rowItems.length===0" style="text-align: center;padding-top: 1em">
         从左边【布局】栏目中拖动布局行列到该区域，再从【组件】栏目拖动组件到布局行列中。
@@ -317,11 +305,10 @@
       <a-modal class="gl-card-designer" :title="modalTitle" centered :width="modalWidth" v-model="modalVisible"
                @ok="() => modalVisible = false" @cancel="onCloseModal" okText="保存" cancelText="取消"
                :maskClosable="false">
-        <component :is="$globalVue.component(currentSelectedCardItem.meta.designer)"
-                   v-bind="currentSelectedCardItem.bind"></component>
+        <component :is="$globalVue.component(currentSelectedComponent.meta.designer)"
+                   v-bind="currentSelectedComponent.bind"></component>
         <template slot="footer">
           <div style="text-align: center">
-            <!--<a-button type="primary" @click="saveCardComponent">暂存</a-button>-->
             <a-button type="danger" @click="onCloseModal">
               关闭
             </a-button>
@@ -384,7 +371,7 @@
         // 一个单元格对应一个cell
         currentSelectedCell: {},
         // 单元格内的项，即表单、列表等组件
-        currentSelectedCardItem: {},
+        currentSelectedComponent: {},
         rowItems: this.rows,
         cellItems: [],
         // {id:component}
@@ -399,10 +386,6 @@
         return (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) * this.modalWidthPercent
       }
     },
-    watch: {
-      'rowItems.length'(val, oval) {
-      }
-    },
     mounted() {
       this.reset()
     },
@@ -414,11 +397,11 @@
     },
     methods: {
       onSettingSwitchPanel({panel}) {
-        console.log('panel:', panel, this.currentSelectObjectUid, this.currentSelectedCell, this.currentSelectedCardItem)
+        console.log('gl-ide-plugin-layout-item > onSettingSwitchPanel > panel:', panel, this.currentSelectObjectUid, this.currentSelectedCell, this.currentSelectedComponent)
         if (panel.name === "GlIdePluginLayoutCardSettings") {
           this.currentSelectObjectUid = this.currentSelectedCell.gid
         } else if (panel.name === "GlIdePluginLayoutSegmentSettings") {
-          this.currentSelectObjectUid = this.currentSelectedCardItem.gid
+          this.currentSelectObjectUid = this.currentSelectedComponent.gid
         }
       },
       reset() {
@@ -439,7 +422,7 @@
         that.rows.filter((row) => !!row.cols).forEach((row) => {
           that.generateRowNodeAndBindEvent(row)
           row.cols.filter((cell) => !!cell.items).forEach((cell) => {
-            // ==========item为单元格内一个组件的配置信息，例如下方所示
+            // ==========item为单元格内一个组件的配置信息，例如下方所示===================
             // {id:'',title: '列表',icon: 'table',component: 'GlTable',bind: {opts: table, query: {}},
             //   meta: {
             //     component: 'GlIdePluginTableDesigner',
@@ -447,23 +430,28 @@
             //       objectTree: [{title: '查询栏', path: 'query.mix.properties'}, {title: '工具栏', path: 'toolbar.actions'}]
             //   }
             // }
+            // =======================================================================
+            // cell 单元格
+            // cellItem 单元格内的项，可能是组件(存在cellItem.component)，也可能是tabs等容器
             cell.items.forEach((cellItem) => {
               if (cellItem.component) {
                 that.generateComponentNodeAndBindEvent(cellItem, cell)
               } else {
-                // tab panel
+                // cellItem.items 对应tabs的多个面板
+                // panel 容器的一个面板
+                that.generateContainerNodeAndBindEvent(cellItem, cell)
                 cellItem.items.forEach((panel) => {
-                  that.generateContainerNodeAndBindEvent(cell, cellItem)
+                  that.generateContainerPanelNodeAndBindEvent(panel, cellItem)
+                  // panel.items 对应页板内的多个组件
                   panel.items.forEach((component) => {
-                    that.generateContainerPanelNodeAndBindEvent(cellItem, panel)
-                    that.generateComponentNodeAndBindEvent(cellItem, component)
+                    that.generateComponentNodeAndBindEvent(component, panel)
                   })
                 })
               }
             })
           })
         })
-        console.log('gl-ide > gl-ide-plugin-layout-item> generateTreeData() > componentRefs:', this.componentRefs)
+        console.log('gl-ide-plugin-layout-item> generateTreeData() > componentRefs:', this.componentRefs)
       },
       /**
        * 初始化组件树中的组件引用
@@ -513,11 +501,12 @@
        */
       generateComponentNodeAndBindEvent(item, parentItem) {
         let that = this
-        console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > item（组件配置信息）:', item)
-        console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > parentItem:', parentItem)
+        console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > generate node from item（component config）:', item)
+        const resultNode = this.updateComponentNodeAndBindEvent(item)
+        console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > find parentNode by parentItem.gid, parentItem is:', parentItem)
         let parentNode = that.findTreeNode(parentItem.gid)
-        console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > find parentNode by parentItem.gid:', parentNode)
-        parentNode.children.push(this.updateComponentNodeAndBindEvent(item))
+        console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > found parentNode:', parentNode, 'and push componentNode', resultNode)
+        parentNode.children.push(resultNode)
       },
       /**
        * 创建或更新该组件配置对应的树节点
@@ -541,7 +530,7 @@
         // 加载每个单元格内的组件
         //  {id: item.gid, component: this.$refs[item.gid][0], type: item.type, meta: item.meta}
         let cardComponent = that.componentRefs[item.gid]
-        console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > item.gid,cardComponent:', item.gid, cardComponent, that.componentRefs)
+        // console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > item.gid,cardComponent:', item.gid, cardComponent, that.componentRefs)
         if (cardComponent && cardComponent.meta && cardComponent.meta.objectTree) {
           node._component = cardComponent.meta.component
           cardComponent.meta.objectTree.forEach((treeNodeObject) => {
@@ -573,9 +562,10 @@
                   // 未设置control值的，可能为form的隐藏属性，这里需过滤掉
                   let foundChildrenNode = childNodes.find((childNode) => childNode.key === item.gid + '_$_' + childObj.gid)
                   let foundChildrenNodeTitle = childObj.title + ' [' + childObj.control + ']'
-                  console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > find control:', childObj.gid, ' and result:', foundChildrenNode)
+                  console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > control(', childObj.gid, ') in objectTree? ', !foundChildrenNode ? 'No.' : 'Yes.')
                   if (!foundChildrenNode) {
-                    console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > add control:', foundChildrenNodeTitle)
+                    console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > add control(', childObj.gid, ',', foundChildrenNodeTitle, ')to objectTree:'
+                    )
                     childNodes.push({
                       title: foundChildrenNodeTitle,
                       // 组件id+组件内的控件id
@@ -629,7 +619,12 @@
         console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > treeNodes result:', that.treeNodes)
         return node
       },
-      generateContainerNodeAndBindEvent(parentItem, container) {
+      /**
+       * 创建容器树节点
+       * @param item 组件配置信息item
+       * @param parent 父节点
+       */
+      generateContainerNodeAndBindEvent(container, parentItem) {
         let that = this
         let parentNode = that.findTreeNode(parentItem.gid)
         let node = that.findTreeNode(container.gid) || {
@@ -644,7 +639,7 @@
         parentNode.children.push(node)
       },
 
-      generateContainerPanelNodeAndBindEvent(parentItem, panel) {
+      generateContainerPanelNodeAndBindEvent(panel, parentItem) {
         let that = this
         let parentNode = that.findTreeNode(parentItem.gid)
         let node = that.findTreeNode(panel.gid) || {
@@ -688,7 +683,10 @@
         }
         rowNode.children.push(group)
       },
-      // 递归查找树节点
+
+      /**
+       *  递归查找树节点
+       */
       findTreeNode(gid) {
         return function recursionFindTreeNode(nodes, gid) {
           if (!nodes || nodes.length === 0) {
@@ -710,6 +708,7 @@
           }
         }(this.treeNodes, gid)
       },
+
       /**
        * 移除objectTree相应的节点
        * @param gid 节点key
@@ -736,36 +735,101 @@
           }
         }(this.treeNodes, gid)
       },
-      saveCardComponent(e) {
-        console.log('saveCardComponent>', e)
-      },
 
       onCloseModal(e) {
         this.modalVisible = false
         this.modalWidthPercent = this.modalWidthPercentDefault
         this.$gl.bus.$emit('gl_ide_plugin_layout__modal_close')
-        this.onComponentReload(this.currentSelectedCardItem)
+        this.onComponentReload(this.currentSelectedComponent)
       },
       /**
-       * card 对应 cell
+       * 打开组件的独立设计器
        */
-      onCardOpen(cell, item, index) {
-        console.log('gl-ide-plugin-layout > UIItem > onCardOpen() > item:', item)
-        if (item.meta) {
-          this.modalTitle = item.meta.title
-          this.currentSelectedCardItem = item
-          this.modalWidthPercent = item.meta.modalWidthPercent || this.modalWidthPercentDefault
+      onComponentDesignerOpen(cell, component, index) {
+        console.log('gl-ide-plugin-layout > UIItem > onComponentDesignerOpen() > component:', component)
+        if (component.meta) {
+          this.modalTitle = component.meta.title
+          this.currentSelectedComponent = component
+          this.modalWidthPercent = component.meta.modalWidthPercent || this.modalWidthPercentDefault
         }
         this.modalVisible = true
       },
 
-      onCardSettingOpen(cell) {
-        console.log('gl-ide-plugin-layout > UIItem > onCardSettingOpen>', cell)
+      /**
+       *  删除组件
+       *  包括容器内的项(组件)、tab内的项(组件)、slot内的项(组件)
+       *  @param components 删除的组件所在的集合
+       *  @param component  删除的组件
+       *  @param index 删除的组件所在的集合的索引位置
+       *  @param confirmTitle 提醒确认信息
+       */
+      onComponentDelete(components, component, index, confirmTitle) {
+        console.log('gl-ide-plugin-layout > UIItem > onItemDelete: ', components, component, index)
+        let that = this
+        this.$confirm({
+          title: confirmTitle || '是否删除?',
+          cancelText: '是',
+          okText: '否',
+          content: '',
+          onOk() {
+          },
+          onCancel() {
+            components.splice(index, 1);
+            delete that.componentRefs[component.gid]
+            that.removeObjectTreeNode(component.gid)
+            console.log('gl-ide-plugin-layout > UIItem > onComponentDelete() > this.componentRefs: ', that.componentRefs)
+          },
+        });
+      },
+      /**
+       *  关闭组件配置页面时，需重新加载组件，确保对组件的更新都生效
+       *  如组件内增加了控件，在关闭配置页面时，需同步在对象树中新增
+       *  @param item 组件配置信息
+       */
+      onComponentReload(item) {
+        console.log('gl-ide-plugin-layout > UIItem > onComponentReload() > item: ', item)
+        // 重新创建引用、绑定事件
+        this.generateComponentRef(item)
+        this.updateComponentNodeAndBindEvent(item)
+        // 重绘单元格
+        // console.log('..................', this.$refs[item.gid][0].name, typeof this.$refs[item.gid][0].refresh)
+        if (typeof this.$refs[item.gid][0].refresh === 'function') {
+          this.$refs[item.gid][0].refresh()
+        }
+        item.show = !item.show
+        this.$nextTick(() => {
+          item.show = !item.show
+        })
+      },
+
+      /**
+       * 打开主设计器的组件设置面板
+       */
+      onComponentSettingOpen(component) {
+        this.currentSelectedComponent = component
+        this.$gl.bus.$emit(events.ide_setting_open, {panelName: 'GlIdePluginLayoutSegmentSettings', config: component})
+      },
+      onComponentSettingUpdate(component) {
+        console.log('gl-ide-plugin-layout > UIItem > onComponentSettingUpdate>', component)
+        this.currentSelectedComponent = component
+        this.$gl.bus.$emit(events.ide_setting_update, {
+          panelName: 'GlIdePluginLayoutSegmentSettings',
+          config: component
+        })
+      },
+
+
+      /**
+       * 打开主设计器的单元格属性设置面板
+       * @param cell 需设置的单元格
+       */
+      onCellSettingOpen(cell) {
+        console.log('gl-ide-plugin-layout > UIItem > onCellSettingOpen>', cell)
         this.currentSelectedCell = cell
         this.$gl.bus.$emit(events.ide_setting_open, {panelName: 'GlIdePluginLayoutCardSettings', config: cell})
       },
-      onCardSettingUpdate(cell) {
-        console.log('gl-ide-plugin-layout > UIItem > onCardSettingUpdate>', cell)
+      onCellSettingUpdate(cell) {
+        console.log('gl-ide-plugin-layout > UIItem > onCellSettingUpdate>', cell)
         this.currentSelectedCell = cell
         this.$gl.bus.$emit(events.ide_setting_update, {panelName: 'GlIdePluginLayoutCardSettings', config: cell})
       },
@@ -776,9 +840,10 @@
         let card = this.getCellComponentConfig(cardId)
         return Vue.component(card.type)
       },
-      onRowEnd: function (args, rowItems) {
-        console.log('gl-ide-plugin-layout > UIItem > onRowEnd: ', args, rowItems, rowItems[rowItems.length === 1 ? 0 : args.newIndex])
-      },
+
+      /**
+       *  添加行
+       */
       onRowAdd: function (args, rowItems) {
         console.log('gl-ide-plugin-layout > UIItem > onRowAdd: ', args, rowItems, rowItems[rowItems.length === 1 ? 0 : args.newIndex], rowItems.length)
         let that = this
@@ -789,6 +854,9 @@
         })
         this.generateRowNodeAndBindEvent(row)
       },
+      /**
+       *  删除行
+       */
       onRowDelete(rowIndex) {
         let that = this
         this.$confirm({
@@ -811,149 +879,109 @@
           },
         });
       },
-      onRowChange(e) {
-        console.log('gl-ide-plugin-layout > UIItem > onRowChange: ', e)
-      },
-      onRowClone(e) {
-        console.log('gl-ide-plugin-layout > UIItem > onRowClone: ', e)
-      },
-      // 单元格内加组件或容器
+      /**
+       *  单元格内加cellItem（组件或容器）
+       */
       onCellItemAdd: function (e, cell) {
         let that = this
-        console.log('gl-ide-plugin-layout > UIItem > onCellItemAdd() > event.newIndex: ', e.newIndex)
-        console.log('gl-ide-plugin-layout > UIItem > onCellItemAdd() > items: ', cell.items)
-        let item = cell.items[cell.items.length === e.newIndex && e.newIndex > 0 ? e.newIndex - 1 : e.newIndex]
+        let cellItem = cell.items[cell.items.length === e.newIndex && e.newIndex > 0 ? e.newIndex - 1 : e.newIndex]
+        let isContainer = !cellItem.component
+        console.log('gl-ide-plugin-layout > UIItem > onCellItemAdd() > added cellItem' + (isContainer ? '(container)' : '(component)') + ':', cellItem, ' at newIndex: ', e.newIndex)
+        console.log('gl-ide-plugin-layout > UIItem > onCellItemAdd() > then the items:', cell.items)
 
-
-        if (!item.component) {
+        if (isContainer) {
           // 若添加的为容器
-          console.log('gl-ide-plugin-layout > UIItem > onCellItemAdd() > !item.component. e,item:', e, item)
-          // 构建对象树
-          item.gid = item.gid || this.$gl.utils.uuid(16)
-          that.generateContainerNodeAndBindEvent(cell, item)
-
-          item.items.forEach((panel) => {
+          cellItem.gid = cellItem.gid || this.$gl.utils.uuid(16)
+          that.generateContainerNodeAndBindEvent(cellItem, cell)
+          // cellItem.items 对应tabs的多个面板
+          // panel 容器的一个面板
+          cellItem.items.forEach((panel) => {
             panel.gid = panel.gid || this.$gl.utils.uuid(16)
-            panel.items.forEach((component) => {
-              that.generateContainerPanelNodeAndBindEvent(item, panel)
-              // that.generateComponentNodeAndBindEvent(cellItem, component)
-            })
+            // 【注意】通过拖拉过来创建的容器项，其子组的数组items默认不具有响应式，需要在items中拖入第2个组件时才变成响应式
+            // 这里通过加多一次$set的方式，让panel的items即刻变成响应式，第1次在items内拖入组件时，就可以触发事件。
+            that.$set(panel, 'items', [])
+            that.generateContainerPanelNodeAndBindEvent(panel, cellItem)
+            // panel.items 对应页板内的多个组件
+            // panel.items.forEach((component) => {
+            // that.generateComponentNodeAndBindEvent(cellItem, component)
+            // })
           })
         } else {
-          // 若添加的为组件
-          this.generateComponentRef(item)
-          this.generateComponentNodeAndBindEvent(item, cell)
+          // 若添加的cellItem为组件
+          this.generateComponentRef(cellItem)
+          this.generateComponentNodeAndBindEvent(cellItem, cell)
         }
-        console.log('gl-ide-plugin-layout > UIItem > onCellItemAdd() > item: ', item)
         console.log('gl-ide-plugin-layout > UIItem > onCellItemAdd() > this.refs: ', this.$refs)
         console.log('gl-ide-plugin-layout > UIItem > onCellItemAdd() > this.componentRefs: ', this.componentRefs)
       },
-      // 容器内添加组件
-      onContainerAdd(e, tab) {
-        let item = tab.items[tab.items.length === e.newIndex && e.newIndex > 0 ? e.newIndex - 1 : e.newIndex]
-        this.generateComponentRef(item)
-        this.generateComponentNodeAndBindEvent(item, tab)
+      //
+      /**
+       * 容器内的面板添加组件
+       *  @param e 拖拉变更事件
+       *  @param panel 面板，如tabPane
+       */
+      onContainerPanelComponentAdd(e, panel) {
+        console.log('gl-ide-plugin-layout > UIItem > onContainerPanelComponentAdd() > e:', e, 'panel:', panel)
+        let component = panel.items[panel.items.length === e.newIndex && e.newIndex > 0 ? e.newIndex - 1 : e.newIndex]
+        this.generateComponentRef(component)
+        this.generateComponentNodeAndBindEvent(component, panel)
       },
-      onAddSlot(e, item) {
-
+      onContainerPanelComponentChange(e, item) {
+        console.log('gl-ide-plugin-layout > UIItem > onContainerPanelComponentChange: ', e, item)
+        this.removeObjectTreeNodeBeforeComponentMove(e)
+      },
+      /**
+       * 直接将添加到插槽的组件挂到容器上
+       *  @param e 拖拉变更事件
+       *  @param cellItem 容器
+       */
+      onContainerSlotComponentAdd(e, cellItem) {
+        let component = cellItem.slots[cellItem.slots.length === e.newIndex && e.newIndex > 0 ? e.newIndex - 1 : e.newIndex]
+        this.generateComponentRef(component)
+        this.generateComponentNodeAndBindEvent(component, cellItem)
+        console.log('gl-ide-plugin-layout > UIItem > onContainerSlotComponentAdd: ', e, cellItem)
+      },
+      onContainerSlotComponentChange(e, item) {
+        console.log('gl-ide-plugin-layout > UIItem > onContainerSlotComponentChange: ', e, item)
+        this.removeObjectTreeNodeBeforeComponentMove(e)
       },
       onCellItemChange(e, cell) {
         console.log('gl-ide-plugin-layout > UIItem > onCellItemChange: ', e, cell)
-        // 在移动时，先清除该树节点
-        if (e.added && e.added.element && e.added.element.gid) {
-          this.removeObjectTreeNode(e.added.element.gid)
-        }
+        this.removeObjectTreeNodeBeforeComponentMove(e)
       },
-      onCellChoose(e) {
-        console.log('gl-ide-plugin-layout > UIItem > onCellChoose: ', e)
-      },
-      // onColDelete(cell, item, index) {
-      //   console.log('gl-ide-plugin-layout > UIItem > onColDelete: ', cell, item, index)
-      //   let that = this
-      //   this.$confirm({
-      //     title: '是否删除该单元格内容?',
-      //     cancelText: '是',
-      //     okText: '否',
-      //     content: '',
-      //     onOk() {
-      //     },
-      //     onCancel() {
-      //       cell.items.splice(index, 1);
-      //       delete that.componentRefs[item.gid]
-      //       that.removeObjectTreeNode(item.gid)
-      //       console.log('gl-ide-plugin-layout > UIItem > onColDelete() > this.componentRefs: ', that.componentRefs)
-      //     },
-      //   });
-      // },
-      // 容器内的项、tab内的项、slot内的项
-      onComponentDelete(items, item, index, confirmTitle) {
-        console.log('gl-ide-plugin-layout > UIItem > onItemDelete: ', items, item, index)
+      /**
+       *  清除该单元格内的所有内容，单元格本身不删除
+       *  @param cell 单元格
+       */
+      onCellClear(cell) {
         let that = this
         this.$confirm({
-          title: confirmTitle || '是否删除?',
+          title: '是否清空该单元格?',
           cancelText: '是',
           okText: '否',
           content: '',
           onOk() {
           },
           onCancel() {
-            items.splice(index, 1);
-            delete that.componentRefs[item.gid]
-            that.removeObjectTreeNode(item.gid)
-            console.log('gl-ide-plugin-layout > UIItem > onComponentDelete() > this.componentRefs: ', that.componentRefs)
+            for (let index in cell.items) {
+              let cellItem = cell.items[index]
+              if (cell.items[index].component) {
+                delete that.componentRefs[cellItem.gid]
+              } else {
+                cellItem.items.forEach((panel) => {
+                  panel.items.forEach(component => {
+                    delete that.componentRefs[component.gid]
+                  })
+                })
+              }
+              that.removeObjectTreeNode(cellItem.gid)
+            }
+            cell.opts = {}
+            cell.items.splice(0, cell.items.length)
           },
         });
       },
-      // onSlotDelete(cellItem, slot, index) {
-      //   console.log('gl-ide-plugin-layout > UIItem > onColDelete: ', cellItem, slot, index)
-      //   let that = this
-      //   this.$confirm({
-      //     title: '是否删除该插槽?',
-      //     cancelText: '是',
-      //     okText: '否',
-      //     content: '',
-      //     onOk() {
-      //     },
-      //     onCancel() {
-      //       cellItem.slots.splice(index, 1);
-      //       delete that.componentRefs[slot.gid || slot.gid]
-      //       that.removeObjectTreeNode(slot.gid)
-      //       console.log('gl-ide-plugin-layout > UIItem > onColDelete() > this.componentRefs: ', that.componentRefs)
-      //     },
-      //   });
-      // },
-      /**
-       *  关闭组件配置页面时，需重新加载组件，确保对组件的更新都生效
-       *  如组件内增加了控件，在关闭配置页面时，需同步在对象树中新增
-       *  @param item 组件配置信息
-       */
-      onComponentReload(item) {
-        console.log('gl-ide-plugin-layout > UIItem > onComponentReload() > item: ', item)
-        // 重新创建引用、绑定事件
-        this.generateComponentRef(item)
-        this.updateComponentNodeAndBindEvent(item)
-        // 重绘单元格
-        // console.log('..................', this.$refs[item.gid][0].name, typeof this.$refs[item.gid][0].refresh)
-        if (typeof this.$refs[item.gid][0].refresh === 'function') {
-          this.$refs[item.gid][0].refresh()
-        }
-        item.show = !item.show
-        this.$nextTick(() => {
-          item.show = !item.show
-        })
-      },
-      onComponentSettingOpen(component) {
-        this.currentSelectedCardItem = component
-        this.$gl.bus.$emit(events.ide_setting_open, {panelName: 'GlIdePluginLayoutSegmentSettings', config: component})
-      },
-      onComponentSettingUpdate(component) {
-        console.log('gl-ide-plugin-layout > UIItem > onComponentSettingUpdate>', component)
-        this.currentSelectedCardItem = component
-        this.$gl.bus.$emit(events.ide_setting_update, {
-          panelName: 'GlIdePluginLayoutSegmentSettings',
-          config: component
-        })
-      },
+
       onRowSettingOpen(row) {
 
       },
@@ -961,23 +989,32 @@
         this.currentSelectedRow = row
       },
       /**
-       * @param currentUID 当前选择对象的UID，如行、单元格、组件、字段等对象ID
-       * @param row 选择的行，若选择了row，则col及cellItem为空
-       * @param cell 选择的单元格(列、格)，若选择了col，则cellItem为空
-       * @param cellItem 选择的组件
+       *  在组件移动时，先清除该树节点
+       *  @param e change event of dnd
        */
-      onSelectObject({currentUID, row, cell, cellItem}) {
-        console.log('{currentUID, row, cell, cellItem}>', {currentUID, row, cell, cellItem})
+      removeObjectTreeNodeBeforeComponentMove(e) {
+        if (e.added && e.added.element && e.added.element.gid) {
+          this.removeObjectTreeNode(e.added.element.gid)
+        }
+      },
+      /**
+       * @param currentUID 当前选择对象的UID，如行、单元格、组件、字段等对象ID
+       * @param row 选择的行，若本次选择了row对象，则cell及component为空
+       * @param cell 选择的单元格(列、格)，若本次选择了cell对象，则component为空
+       * @param component 选择的组件
+       */
+      onSelectObject({currentUID, row, cell, component}) {
+        console.log('{currentUID, row, cell, component}>', {currentUID, row, cell, component})
         this.currentSelectObjectUid = currentUID
 
         this.onRowSettingUpdate(row)
-        this.onCardSettingUpdate(cell)
-        this.onComponentSettingUpdate(cellItem)
+        this.onCellSettingUpdate(cell)
+        this.onComponentSettingUpdate(component)
 
-        if (cellItem) {
-          this.onComponentSettingOpen(cellItem)
+        if (component) {
+          this.onComponentSettingOpen(component)
         } else if (cell) {
-          this.onCardSettingOpen(cell)
+          this.onCellSettingOpen(cell)
         } else if (row) {
           this.onRowSettingOpen(row)
         }
