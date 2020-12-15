@@ -399,9 +399,9 @@
       onSettingSwitchPanel({panel}) {
         console.log('gl-ide-plugin-layout-item > onSettingSwitchPanel > panel:', panel, this.currentSelectObjectUid, this.currentSelectedCell, this.currentSelectedComponent)
         if (panel.name === "GlIdePluginLayoutCardSettings") {
-          this.currentSelectObjectUid = this.currentSelectedCell.gid
+          this.currentSelectObjectUid = this.currentSelectedCell ? this.currentSelectedCell.gid : ''
         } else if (panel.name === "GlIdePluginLayoutSegmentSettings") {
-          this.currentSelectObjectUid = this.currentSelectedComponent.gid
+          this.currentSelectObjectUid = this.currentSelectedComponent ? this.currentSelectedComponent.gid : ''
         }
       },
       reset() {
@@ -774,6 +774,7 @@
           onOk() {
           },
           onCancel() {
+            that.currentSelectedComponent = {}
             components.splice(index, 1);
             delete that.componentRefs[component.gid]
             that.removeObjectTreeNode(component.gid)
