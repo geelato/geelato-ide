@@ -4,5 +4,7 @@ export default {
   // 更新ide的设置面板
   ide_setting_update: 'gl_ide_setting_update',
   // 切换面板
-  ide_setting_switch_panel: 'ide_setting_switch_panel'
+  ide_setting_switch_panel: 'ide_setting_switch_panel',
+  // 更新对象树节点
+  ide_setting_update_object_tree_node: 'ide_setting_update_object_tree_node'
 }

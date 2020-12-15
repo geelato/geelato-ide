@@ -391,9 +391,11 @@
     },
     created() {
       this.$gl.bus.$on(events.ide_setting_switch_panel, this.onSettingSwitchPanel)
+      this.$gl.bus.$on(events.ide_setting_update_object_tree_node, this.onObjectTreeNodeUpdate)
     },
     destroyed() {
       this.$gl.bus.$off(events.ide_setting_switch_panel, this.onSettingSwitchPanel)
+      this.$gl.bus.$off(events.ide_setting_update_object_tree_node, this.onObjectTreeNodeUpdate)
     },
     methods: {
       onSettingSwitchPanel({panel}) {
@@ -447,6 +449,12 @@
                     that.generateComponentNodeAndBindEvent(component, panel)
                   })
                 })
+                // slots 容器的的插槽
+                if (cellItem.slots && cellItem.slots.length > 0) {
+                  cellItem.slots.forEach((slotComponent) => {
+                    that.generateComponentNodeAndBindEvent(slotComponent, cellItem)
+                  })
+                }
               }
             })
           })
@@ -819,6 +827,13 @@
         })
       },
 
+      /**
+       * 更新对象树节点的名称
+       */
+      onObjectTreeNodeUpdate(treeNode) {
+        const node = this.findTreeNode(treeNode.gid)
+        Object.assign(node, treeNode)
+      },
 
       /**
        * 打开主设计器的单元格属性设置面板
