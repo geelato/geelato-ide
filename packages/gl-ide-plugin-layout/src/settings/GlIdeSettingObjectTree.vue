@@ -2,7 +2,7 @@
   对象树，用户配置绑定事件
 -->
 <template>
-  <div>
+  <div class="gl-ide-setting-object-tree">
     <span style="padding-left: 2.4em">
         <a-icon type="file"/>
         当前页面
@@ -47,6 +47,7 @@
   /* eslint-disable no-unused-vars */
   import EditingFileParser from '../../../../runtime/EditingFileParser'
   import GlIdeSettingEvent from './GlIdeSettingEvent'
+  import events from "../../../gl-ide/src/events";
 
   let actionsTemplate = [{
     on: 'click',
@@ -110,6 +111,7 @@
         console.log('gl-ide > gl-ide-plugin-layout > onCloseModal() > editingFile: ', this.ideStore.editingFile)
         console.log('gl-ide > gl-ide-plugin-layout > onCloseModal() > currentControl: ', this.currentControl)
         console.log('gl-ide > gl-ide-plugin-layout > onCloseModal() > bind currentActions: ', this.currentActions)
+        this.$gl.bus.$emit(events.ide_setting_update_component_event_state, this.currentComponent)
       },
       /**
        * 关闭时，解析配置的事件，找出引用的页面
@@ -216,6 +218,18 @@
   }
 </script>
 
-<style scoped>
+<style>
+  .gl-ide-setting-object-tree li.ant-tree-treenode-disabled > .ant-tree-node-content-wrapper span {
+    /*color: rgba(0, 0, 0, 0.25);*/
+    color: rgba(0, 0, 0, 0.75);
+    cursor: not-allowed;
+  }
 
+  .gl-ide-setting-object-tree .ant-tree-node-content-wrapper span.ant-tree-title {
+    color: #44a4ff;
+  }
+
+  .gl-ide-setting-object-tree li.gl-configured > .ant-tree-node-content-wrapper > span.ant-tree-title:after {
+    content: '⚡';
+  }
 </style>

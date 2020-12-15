@@ -392,10 +392,12 @@
     created() {
       this.$gl.bus.$on(events.ide_setting_switch_panel, this.onSettingSwitchPanel)
       this.$gl.bus.$on(events.ide_setting_update_object_tree_node, this.onObjectTreeNodeUpdate)
+      this.$gl.bus.$on(events.ide_setting_update_component_event_state, this.onComponentEventStateUpdate)
     },
     destroyed() {
       this.$gl.bus.$off(events.ide_setting_switch_panel, this.onSettingSwitchPanel)
       this.$gl.bus.$off(events.ide_setting_update_object_tree_node, this.onObjectTreeNodeUpdate)
+      this.$gl.bus.$off(events.ide_setting_update_component_event_state, this.onComponentEventStateUpdate)
     },
     methods: {
       onSettingSwitchPanel({panel}) {
@@ -530,6 +532,7 @@
           slots: {
             icon: item.icon,
           },
+          disabled: true,
           children: [],
           _component: ''
         }
@@ -574,14 +577,15 @@
                   if (!foundChildrenNode) {
                     console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > add control(', childObj.gid, ',', foundChildrenNodeTitle, ')to objectTree:'
                     )
-                    childNodes.push({
+                    foundChildrenNode = {
                       title: foundChildrenNodeTitle,
                       // 组件id+组件内的控件id
                       key: item.gid + '_$_' + childObj.gid, // that.$gl.utils.uuid(16),
                       slots: {
                         icon: 'link',
                       }
-                    })
+                    }
+                    childNodes.push(foundChildrenNode)
                   } else {
                     // 存在，则更新
                     foundChildrenNode.title = foundChildrenNodeTitle
@@ -595,7 +599,12 @@
                     title: childObj.title,
                     component: controlComponent
                   }
-                  if (controlComponent && that.events[childObj.gid]) {
+                  // 初始事件配置状态
+                  foundChildrenNode.class = 'gl-not-configured'
+                  if (controlComponent && that.events[childObj.gid] && that.events[childObj.gid].length > 0) {
+                    // 更新节点的事件配置状态
+                    foundChildrenNode.class = 'gl-configured'
+                    // 绑定事件
                     that.editingFileParser.bindEvent(that.bindEvents, control, that.events[childObj.gid], controlComponent.$parent)
                   }
                 } else {
@@ -622,6 +631,17 @@
               })
             }
           })
+          // 更新节点的事件配置状态
+          // that.onComponentEventStateUpdate(cardComponent)
+          // for (let key in cardComponent.component.glRefControls) {
+          //   const control = cardComponent.component.glRefControls[key]
+          //   let e = this.$ide.store.editingFile.sourceContent.events[control.property.gid]
+          //   // 【注意】control的gid规则：component.gid+'_$_'+control.gid
+          //   this.onObjectTreeNodeUpdate({
+          //     gid: cardComponent.id + '_$_' + control.property.gid,
+          //     class: e && e.length > 0 ? 'gl-configured' : 'gl-not-configured'
+          //   })
+          // }
         }
 
         console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > treeNodes result:', that.treeNodes)
@@ -700,7 +720,6 @@
           if (!nodes || nodes.length === 0) {
             return
           }
-
           for (let index in nodes) {
             let node = nodes[index]
             if (node.key === gid) {
@@ -749,6 +768,23 @@
         this.modalWidthPercent = this.modalWidthPercentDefault
         this.$gl.bus.$emit('gl_ide_plugin_layout__modal_close')
         this.onComponentReload(this.currentSelectedComponent)
+      },
+      /**
+       *  重新标识该组件下所有控件的绑定事件状态
+       *  @param component 组件
+       *  @param gid 组件gid
+       */
+      onComponentEventStateUpdate({component, gid, id}) {
+        console.log('{component, gid, id}', {component, gid, id})
+        for (let key in component.glRefControls) {
+          const control = component.glRefControls[key]
+          let e = this.$ide.store.editingFile.sourceContent.events[control.property.gid]
+          // 【注意】control的gid规则：component.gid+'_$_'+control.gid
+          this.onObjectTreeNodeUpdate({
+            gid: gid || id + '_$_' + control.property.gid,
+            class: e && e.length > 0 ? 'gl-configured' : 'gl-not-configured'
+          })
+        }
       },
       /**
        * 打开组件的独立设计器
@@ -832,6 +868,7 @@
        */
       onObjectTreeNodeUpdate(treeNode) {
         const node = this.findTreeNode(treeNode.gid)
+        console.log('node,this.treeNodes', node, this.treeNodes, treeNode.gid)
         Object.assign(node, treeNode)
       },
 

@@ -91,11 +91,12 @@
                 </tr>
                 <template v-if="currentContainerItemIndex===cellItemIndex">
                   <tr v-if="cellItem.type==='Tabs'">
-                    <td colspan="3" style="padding:0.2em;">
+                    <td colspan="3" style="padding:0.5em;">
+                      标签容器设置
                       <table class="gl-table" style="border: 1px solid">
                         <tr class="gl-table-row">
-                          <td class="gl-table-cell gl-table-cell-sub-label">
-                            标签标题：
+                          <td class="gl-table-cell gl-table-cell-sub-label" style="width: 5em">
+                            标题：
                           </td>
                           <td class="gl-table-cell">
                             <gl-draggable
@@ -116,7 +117,7 @@
                         <tr class="gl-table-row">
                           <td class="gl-table-cell gl-table-cell-sub-label">
                             <a-icon type="info-circle" title="该设置不会在舞台中预览，需在预览页面查看。"/>
-                            标签位置
+                            位置：
                           </td>
                           <td class="gl-table-cell">
                             <a-radio-group v-model="cellItem.opts.tabPosition" size="small">
@@ -130,7 +131,7 @@
                         <tr class="gl-table-row">
                           <td class="gl-table-cell gl-table-cell-sub-label">
                             <a-icon type="info-circle" title="该设置不会在舞台中预览，需在预览页面查看。"/>
-                            标签类型
+                            类型：
                           </td>
                           <td class="gl-table-cell">
                             <a-radio-group v-model="cellItem.opts.type" size="small">
@@ -142,7 +143,7 @@
                         <tr class="gl-table-row">
                           <td class="gl-table-cell gl-table-cell-sub-label">
                             <a-icon type="info-circle" title="该设置不会在舞台中预览，需在预览页面查看。"/>
-                            标签大小
+                            大小：
                           </td>
                           <td class="gl-table-cell">
                             <a-radio-group v-model="cellItem.opts.size" size="small">
@@ -154,7 +155,7 @@
                         </tr>
                         <tr class="gl-table-row">
                           <td class="gl-table-cell gl-table-cell-sub-label">
-                            标签插槽：
+                            插槽：
                           </td>
                           <td class="gl-table-cell">
                             <gl-draggable
