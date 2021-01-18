@@ -47,8 +47,7 @@
             </a-card>
           </template>
           <template v-else-if="cell.rows">
-            <GlIdePluginLayoutStageUIItem :rows="cell.rows" :componentRefs="componentRefs"
-                                          :bindEventHandlers="bindEventHandlers"
+            <GlIdePluginLayoutStageUIItem :rows="cell.rows" :componentRefs="componentRefs" :bindEventHandlers="bindEventHandlers"
                                           :gutter="gutter" :treeNodes="treeNodes"></GlIdePluginLayoutStageUIItem>
           </template>
           <template v-else>
@@ -67,7 +66,7 @@
                    class="gl-cell-item-wrapper"
                    style="padding-top: 0.1em;position: relative"
                    :class="{'gl-selected':currentSelectObjectUid===cellItem.gid}">
-                <template v-if="cellItem.component||cellItem.componentName">
+                <template v-if="cellItem.component">
                   <!-- 单元格内该项为组件 -->
                   <!--组件工具条-->
                   <div class="gl-component-item-hover-title">
@@ -122,8 +121,7 @@
                   <!-- 组件 -->
                   <div class="gl-component-wrapper gl-dnd-handle-cell-item"
                        @click="onSelectObject({currentUID:cellItem.gid,row:row,cell:cell,component:cellItem})">
-                    <component :ref="cellItem.gid" v-show="cellItem.show"
-                               :is="$globalVue.component(cellItem.component||cellItem.componentName)"
+                    <component :ref="cellItem.gid" v-show="cellItem.show" :is="$globalVue.component(cellItem.component)"
                                v-bind="cellItem.bind" :style="cellItem.style"></component>
                     <div v-if="!cellItem.show" style="text-align: center;font-size: 3em;background-color: #f0f0f0">
                       <a-icon :type="cellItem.icon" @click="cellItem.show=true" title="点击展示该组件内容"/>
@@ -208,7 +206,7 @@
                             <div class="gl-component-wrapper gl-dnd-handle-cell-item" style="min-height: 4em"
                                  @click="onSelectObject({currentUID:component.gid,row:row,cell:cell,component:component})">
                               <component :ref="component.gid" v-show="component.show"
-                                         :is="$globalVue.component(component.component||component.componentName)"
+                                         :is="$globalVue.component(component.component)"
                                          v-bind="component.bind"></component>
                               <div v-if="!component.show" class="gl-component-hidden-placeholder">
                                 <a-icon :type="component.icon" @click="component.show=true" title="点击展示该组件内容"/>
@@ -280,7 +278,7 @@
                             <div class="gl-component-wrapper gl-dnd-handle-cell-item"
                                  @click="onSelectObject({currentUID:slotComponent.gid,row:row,cell:cell,component:slotComponent})">
                               <component :ref="slotComponent.gid" v-show="slotComponent.show"
-                                         :is="$globalVue.component(slotComponent.component||slotComponent.componentName)"
+                                         :is="$globalVue.component(slotComponent.component)"
                                          v-bind="slotComponent.bind" :style="slotComponent.style"></component>
                               <div v-if="!slotComponent.show" style="text-align: center;font-size: 3em">
                                 <a-icon :type="slotComponent.icon" @click="slotComponent.show=true" title="点击展示该组件内容"/>
@@ -435,7 +433,7 @@
        */
       updateComponentNodeAndBindEvent(item) {
         // 若是基础组件（控件）
-        if ((item.component || item.componentName) === 'GlControl') {
+        if (item.component === 'GlControl') {
           return this.updateControlNodeAndBindEvent(item)
         }
         // 若是高级组件，如表单、列表
@@ -457,7 +455,7 @@
         let cardComponent = that.componentRefs[item.gid]
         // console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > item.gid,cardComponent:', item.gid, cardComponent, that.componentRefs)
         if (cardComponent && cardComponent.meta && cardComponent.meta.objectTree) {
-          node._component = cardComponent.meta.component || cardComponent.meta.componentName
+          node._component = cardComponent.meta.component
           cardComponent.meta.objectTree.forEach((treeNodeObject) => {
             // treeNodeObject: {title:xx,path:xx.yy.zz}
             let group = groups.find(group => group.key === treeNodeObject.path)
@@ -507,7 +505,6 @@
                   }
                   // 基于配置的事件初始化绑定
                   let componentItem = that.componentRefs[item.gid]
-                  console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > find component in componentRefs:', that.componentRefs, 'by gid "', item.gid, '" and get', componentItem)
                   let controlComponent = componentItem.component.$_getRefControlByGid(childObj.gid)
                   let control = {
                     gid: childObj.gid,
@@ -584,13 +581,13 @@
         let foundChildrenNode = that.findTreeNode(item.gid)
 
         let childObj = item.bind.opts
-        console.log('gl-ide-plugin-layout > UIItem > updateControlNodeAndBindEvent() > gid, childObj:', childObj.gid, childObj)
+        console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > gid, childObj:', childObj.gid, childObj)
         if (childObj.control) {
           // 未设置control值的，可能为form的隐藏属性，这里需过滤掉
           let foundChildrenNodeTitle = childObj.title + ' [' + childObj.control + ']'
-          console.log('gl-ide-plugin-layout > UIItem > updateControlNodeAndBindEvent() > control(', childObj.gid, ') in objectTree? ', !foundChildrenNode ? 'No.' : 'Yes.')
+          console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > control(', childObj.gid, ') in objectTree? ', !foundChildrenNode ? 'No.' : 'Yes.')
           if (!foundChildrenNode) {
-            console.log('gl-ide-plugin-layout > UIItem > updateControlNodeAndBindEvent() > add control(', childObj.gid, ',', foundChildrenNodeTitle, ')to objectTree:'
+            console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > add control(', childObj.gid, ',', foundChildrenNodeTitle, ')to objectTree:'
             )
             foundChildrenNode = {
               title: foundChildrenNodeTitle,
@@ -608,9 +605,8 @@
           // 基于配置的事件初始化绑定
           // let controlComponent = that.$refs[item.gid][0]
           let componentItem = that.componentRefs[item.gid]
-          console.log('gl-ide-plugin-layout > UIItem > updateControlNodeAndBindEvent() > find component in componentRefs:', that.componentRefs, 'by gid "', item.gid, '" and get', componentItem)
           let controlComponent = componentItem.component
-          console.log('gl-ide-plugin-layout > UIItem > updateControlNodeAndBindEvent() > controlComponent:', controlComponent, that.$refs)
+          console.log('controlComponent>>>>>', controlComponent, that.$refs)
           let control = {
             gid: childObj.gid,
             title: childObj.title,
@@ -626,7 +622,7 @@
             that.editingFileParser.bindEvent(that.bindEventHandlers, control, that.events[childObj.gid], controlComponent.$parent)
           }
         } else {
-          console.log('gl-ide-plugin-layout > UIItem > updateControlNodeAndBindEvent() > 未设置control值：', childObj)
+          console.log('gl-ide-plugin-layout > UIItem > generateComponentNodeAndBindEvent() > 未设置control值：', childObj)
         }
 
         return foundChildrenNode
@@ -759,35 +755,27 @@
        *  @param component 组件(高级组件或控件)
        *  @param gid 组件gid
        */
-      onComponentEventStateUpdate({currentComponent, currentControl}) {
+      onComponentEventStateUpdate({component, gid, id}) {
         let that = this
-        let {component, gid, id} = currentComponent
         console.log('gl-ide-plugin-layout > UIItem > onComponentEventStateUpdate > {component, gid, id}:', {
           component,
           gid,
           id
         })
         if (component.glType === 'control') {
-          // update(gid, component.opts.gid)
-          update(gid, currentControl.gid)
+          update(component.opts.gid)
         } else if (component.glType === 'component') {
-          update(gid, currentControl.gid)
-          // for (let key in component.glRefControls) {
-          //   // 过滤掉部分节点的更新，分组节点，如：component.glRefControls[key]，为gl-table的query组，该组没有gid
-          //   if (component.glRefControls[key].gid) {
-          //     update(gid, component.glRefControls[key].gid)
-          //   }
-          // }
+          for (let key in component.glRefControls) {
+            update(component.glRefControls[key].gid)
+          }
         }
 
-        function update(componentGid, controlGid) {
-          console.assert(controlGid, 'controlGid不能为空。')
-          let e = that.$ide.store.editingFile.sourceContent.events[controlGid]
-          console.log('gl-ide-plugin-layout > UIItem > onComponentEventStateUpdate.update() > componentGid, controlGid:', componentGid, controlGid)
-          console.log('gl-ide-plugin-layout > UIItem > onComponentEventStateUpdate.update() > event:', e)
+        function update(gid) {
+          // console.log('gl-ide-plugin-layout > UIItem > onComponentEventStateUpdate > control........', control)
+          let e = that.$ide.store.editingFile.sourceContent.events[gid]
           // 【注意】control的gid规则：component.gid+'_$_'+control.gid
           that.onObjectTreeNodeUpdate({
-            gid: componentGid + '_$_' + controlGid,
+            gid: gid+ '_$_' + gid,
             class: e && e.length > 0 ? 'gl-configured' : 'gl-not-configured'
           })
         }
@@ -876,7 +864,7 @@
        */
       onObjectTreeNodeUpdate(treeNode) {
         const node = this.findTreeNode(treeNode.gid)
-        console.log('gl-ide > gl-ide-plugin-layout > onObjectTreeNodeUpdate > node:', node, ',treeNodes:', this.treeNodes, 'treeNode:', treeNode)
+        console.log('node,this.treeNodes', node, this.treeNodes, treeNode.gid)
         Object.assign(node, treeNode)
       },
 
@@ -946,7 +934,7 @@
       onCellItemAdd: function (e, cell) {
         let that = this
         let cellItem = cell.items[cell.items.length === e.newIndex && e.newIndex > 0 ? e.newIndex - 1 : e.newIndex]
-        let isContainer = !(cellItem.component || cellItem.componentName)
+        let isContainer = !cellItem.component
         console.log('gl-ide-plugin-layout > UIItem > onCellItemAdd() > added cellItem' + (isContainer ? '(container)' : '(component)') + ':', cellItem, ' at newIndex: ', e.newIndex)
         console.log('gl-ide-plugin-layout > UIItem > onCellItemAdd() > then the items:', cell.items)
 
@@ -1026,7 +1014,7 @@
           onCancel() {
             for (let index in cell.items) {
               let cellItem = cell.items[index]
-              if (cell.items[index].component || cell.items[index].componentName) {
+              if (cell.items[index].component) {
                 delete that.componentRefs[cellItem.gid]
               } else {
                 cellItem.items.forEach((panel) => {

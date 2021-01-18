@@ -1,4 +1,4 @@
-import SimplePageDefinition from "../../../runtime/SimplePageDefinition";
+import SimplePageDefinition from "../../../runtime/definition/SimplePageDefinition";
 
 const plugins = []
 const files = []
@@ -51,7 +51,7 @@ function resetStore() {
   GlobalVue.set(store, 'editingFile', {})
   GlobalVue.set(store, 'editingCardItem', {})
   GlobalVue.set(store, 'assist', JSON.parse(JSON.stringify(assist)))
-  GlobalVue.set(store, 'editingCardItem', {})
+  // GlobalVue.set(store, 'editingCardItem', {})
   GlobalVue.set(store, 'layout', JSON.parse(JSON.stringify(defaultLayout)))
 }
 

@@ -1,5 +1,5 @@
 export default {
-  component: 'GlSegment',
+  componentName: 'GlSegment',
   designer: 'GlIdePluginSegmentDesigner',
   title: 'UI片段编辑器',
   objectTree: [{title: 'UI片段', path: 'segments'}],

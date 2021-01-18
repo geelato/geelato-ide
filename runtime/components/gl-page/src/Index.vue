@@ -7,10 +7,11 @@
       <template v-if="config.opts.layout.rows">
         <gl-page-item
             v-if="refreshFlag"
+            :glCtx="glCtx"
             :rows="config.opts.layout.rows"
             :componentRefs="config.componentRefs"
             :events="config.events"
-            :bindEvents="config._bindEvents"
+            :bindEventHandlers="config._bindEventHandlers"
             :gutter="config.opts.layout.gutter"
             :treeNodes="config.objectTree"
             :params="params"
@@ -34,6 +35,7 @@
 </template>
 
 <script>
+  import CtxPage from '../../../definition/CtxPage'
   import GlPageItem from './Item'
 
   export default {
@@ -49,7 +51,7 @@
       gid: {
         type: String,
         default() {
-          return this.$gl.utils.uuid(8)
+          return this.$gl.utils.uuid(16)
         }
       },
       pageId: String,
@@ -75,7 +77,9 @@
         },
         iframeWin: {},
         iframeDocument: {},
-        $_vars: {}
+        glVars: {},
+        glCtx: {page: new CtxPage()},
+        glType: 'page'
       }
     },
     watch: {
@@ -116,7 +120,7 @@
     methods: {
       refresh() {
         this.refreshFlag = false
-        this.$_vars = {}
+        this.glVars = {}
         this.$nextTick(function () {
           this.refreshFlag = true
         })
@@ -127,24 +131,30 @@
       reloadPage() {
         const that = this
         let condition = {}
+        // pageId可能存在一样的情况，基于pageId+extendId可以获取唯一文件
         if (this.pageId || that.opts.pageId) {
           condition = {id: this.pageId || that.opts.pageId}
         } else if (this.extendId || that.opts.extendId) {
           // 基于页面文件树节点id
-          condition = {extendId: this.extendId || that.opts.extendId}
+          Object.assign(condition, {extendId: this.extendId || that.opts.extendId})
         } else {
           return
         }
         console.log('geelato > runtime > gl-page > Index.vue > reloadPage() > try to load Page by condition:', condition)
-        that.$gl.api.query('platform_app_page', 'id,type,code,description,sourceContent', condition).then(function (res) {
+        that.$gl.api.query('platform_app_page', 'id,extendId,appId,type,code,description,sourceContent', condition).then(function (res) {
           console.log('geelato > runtime > gl-page > Index.vue > reloadPage() > load res:', res)
           if (res.data.length === 0) {
             that.$message.warn('从服务端获取不到该页面信息，可能该页面已删除！')
           } else {
             that.config = JSON.parse(res.data[0].sourceContent)
             that.config.componentRefs = that.config.componentRefs || {}
-            that.config._bindEvents = {}
-            console.log('geelato > runtime > gl-page > Index.vue > reloadPage() > page config:', that.config)
+            that.config._bindEventHandlers = {}
+            that.$set(that.glCtx.page, 'pageGid', that.gid)
+            that.$set(that.glCtx.page, 'pageId', res.data[0].id)
+            that.$set(that.glCtx.page, 'nodeId', res.data[0].extendId)
+            that.$set(that.glCtx.page, 'appId', res.data[0].appId)
+            console.log('geelato > runtime > gl-page > Index.vue > reloadPage() > glCtx:', that.glCtx)
+            console.log('geelato > runtime > gl-page > Index.vue > reloadPage() > page:', that.config)
           }
         }).catch(function (e) {
           console.error('geelato > runtime > gl-page > Index.vue > reloadPage() > load page err: ', e)

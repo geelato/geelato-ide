@@ -6,7 +6,7 @@ export default {
       group: '模板片段',
       title: '模板',
       icon: 'code',
-      component: 'GlSegment',
+      componentName: 'GlSegment',
       img: '',
       description: '',
       show: true,

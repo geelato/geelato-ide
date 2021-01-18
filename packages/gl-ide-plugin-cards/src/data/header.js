@@ -19,7 +19,7 @@ export default {
     }
   },
   meta: {
-    component: 'GlHeader',
+    componentName: 'GlHeader',
     designer: 'GlIdePluginHeaderDesigner',
     title: '标题设置',
     objectTree: [],

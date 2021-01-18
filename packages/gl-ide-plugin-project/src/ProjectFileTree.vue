@@ -4,7 +4,7 @@
 </template>
 
 <script>
-  import SimplePageDefinition from '../../../runtime/SimplePageDefinition'
+  import SimplePageDefinition from '../../../runtime/definition/SimplePageDefinition'
   import EditingFileParser from '../../../runtime/EditingFileParser'
 
   export default {
@@ -310,6 +310,7 @@
       },
       newPage(data) {
         this.$ide.openFile(new SimplePageDefinition({
+          appId: this.project.id,
           extendId: data.id,
           name: data.text,
           type: data.type,
@@ -360,9 +361,12 @@
        * @param item {node {id:xxx}} 页面id，对应页面实体的extend_id
        */
       openPage(event, item) {
+        console.log('item>', item)
         let that = this
         that.$gl.api.query('platform_app_page', 'id,type,code,description,sourceContent', {extendId: item.node.id}).then(function (res) {
-          that.$ide.openFile(res.data[0])
+          let fileData = {extendId: item.node.id, appId: that.project.id}
+          Object.assign(fileData, res.data[0])
+          that.$ide.openFile(fileData)
         }).catch(function (e) {
           console.error(e)
           that.$message.error('从服务端获取、解析信息失败！')

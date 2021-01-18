@@ -87,7 +87,7 @@
         this.activeTabKey = key
         this.currentPanelName = this.ideStore.settingPanels[key].name
         console.log('gl-ide > Settings > onChangeTabs > currentPanelName:', this.currentPanelName)
-        this.$gl.bus.$emit(events.ide_setting_switch_panel, {panel: this.ideStore.settingPanels[key]})
+        this.$gl.bus.$emit(events.ide_setting_panel_switch, {panel: this.ideStore.settingPanels[key]})
 
       }
     }

@@ -17,6 +17,7 @@
 <script>
 
   import GlSettingStyle from "../../../components/gl-setting-style/Index";
+  import events from "../../../gl-ide/src/events";
 
   export default {
     name: 'GlIdePluginLayoutSegmentSettings',
@@ -41,6 +42,8 @@
       // }
     },
     created() {
+      // this.$gl.bus.$on(events.ide_stage_component_delete)
+
       // this.reset()
     },
     updated() {

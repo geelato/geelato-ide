@@ -1,10 +1,10 @@
 import form from './form.js'
-// import form2 from './form2.js'
 import toolbar from './toolbar.js'
 import table from './table.js'
 import tree from './tree.js'
 import header from './header.js'
 import pageLoader from './page_loader.js'
+import controlButton from './control/button'
 
 
 export default {
@@ -12,7 +12,7 @@ export default {
     group: '组件',
     title: '列表',
     icon: 'table',
-    component: 'GlTable',
+    componentName: 'GlTable',
     img: '',
     description: '',
     show: true,
@@ -23,7 +23,7 @@ export default {
       group: '组件',
       title: '表单',
       icon: 'form',
-      component: 'GlForm',
+      componentName: 'GlForm',
       img: '',
       description: '',
       show: true,
@@ -35,7 +35,7 @@ export default {
     //   group: '组件',
     //   title: '表单2',
     //   icon: 'form',
-    //   component: 'GlForm',
+    //   componentName: 'GlForm',
     //   img: '',
     //   description: '',
     //   show: true,
@@ -46,7 +46,7 @@ export default {
     {
       title: '页面引用',
       icon: 'link',
-      component: 'GlPage',
+      componentName: 'GlPage',
       img: '',
       description: '',
       show: true,
@@ -57,7 +57,7 @@ export default {
       group: '组件',
       title: '树',
       icon: 'cluster',
-      component: 'GlTree',
+      componentName: 'GlTree',
       img: '',
       description: '',
       show: true,
@@ -67,7 +67,7 @@ export default {
     {
       title: '工具条',
       icon: 'tool',
-      component: 'GlToolbar',
+      componentName: 'GlToolbar',
       img: '',
       description: '',
       show: true,
@@ -78,11 +78,22 @@ export default {
       group: '组件',
       title: '标题',
       icon: 'bars',
-      component: 'GlHeader',
+      componentName: 'GlHeader',
       img: '',
       description: '',
       show: true,
       bind: {opts: header.opts, params: {}},
       meta: header.meta
+    },
+    {
+      group: '控件',
+      title: '按钮',
+      icon: 'border',
+      componentName: 'GlControl',
+      img: '',
+      description: '',
+      show: true,
+      bind: {opts: controlButton.opts, params: {}},
+      meta: controlButton.meta
     }],
 }

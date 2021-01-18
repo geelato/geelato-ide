@@ -1,6 +1,6 @@
 <template>
   <div>
-    <gl-list v-bind="config" @doAction="onListDoAction"></gl-list>
+    <gl-list v-bind="config" gid="zserfvgydu27365w" :opts="{}" @doAction="onListDoAction"></gl-list>
   </div>
 </template>
 

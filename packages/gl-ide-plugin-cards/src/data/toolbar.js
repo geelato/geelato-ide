@@ -16,7 +16,7 @@ export default {
     ]
   },
   meta: {
-    component: 'GlToolbar',
+    componentName: 'GlToolbar',
     designer: 'GlIdePluginToolbarDesigner',
     title: '扩展项设计器',
     objectTree: [

@@ -37,7 +37,7 @@ class SimplePageDefinition {
       _componentRefs: {},
       events: {},
       // 运行时生成的事件引用，不保存
-      _bindEvents: {},
+      _bindEventHandlers: {},
       // 当前页面的子页面，如弹层的页面[{type:modal,page:{}}]、如嵌入页面[{type:inner,page:{}}]
       _subPages: [],
       // 默认查询参数，与opts不同，query是同一页面定义下的不同参数
@@ -45,6 +45,8 @@ class SimplePageDefinition {
     }
     // 对像数据库中的id(guid)
     this.id = params.id || ''
+    // 所属应用id
+    this.appId = params.appId || ''
     // 扩展id，用于关联其它对象
     this.extendId = params.extendId
     // 页面名称 不需要名称字段，从树节点中获取
@@ -59,19 +61,19 @@ class SimplePageDefinition {
     this.sourceContent = params.sourceContent ? this.parseContent(params.sourceContent) : JSON.parse(JSON.stringify(defaultContent))
     this.sourceContent._componentRefs = this.sourceContent._componentRefs || {}
     this.sourceContent.events = this.sourceContent.events || {}
-    this.sourceContent._bindEvents = this.sourceContent._bindEvents || {}
+    this.sourceContent._bindEventHandlers = this.sourceContent._bindEventHandlers || {}
 
     // 预览的内容
     this.previewContent = params.previewContent ? this.parseContent(params.previewContent) : JSON.parse(JSON.stringify(defaultContent))
     this.previewContent._componentRefs = this.previewContent._componentRefs || {}
     this.previewContent.events = this.previewContent.events || {}
-    this.previewContent._bindEvents = this.previewContent._bindEvents || {}
+    this.previewContent._bindEventHandlers = this.previewContent._bindEventHandlers || {}
 
     // 发布的内容
     this.releaseContent = params.releaseContent ? this.parseContent(params.releaseContent) : JSON.parse(JSON.stringify(defaultContent))
     this.releaseContent._componentRefs = this.releaseContent._componentRefs || {}
     this.releaseContent.events = this.releaseContent.events || {}
-    this.releaseContent._bindEvents = this.releaseContent._bindEvents || {}
+    this.releaseContent._bindEventHandlers = this.releaseContent._bindEventHandlers || {}
 
 
     this.objectTree = []

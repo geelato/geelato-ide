@@ -105,13 +105,21 @@
       onCloseModal() {
         this.modalVisible = false
         // bind actions
-        this.editingFileParser.bindEvent(this.ideStore.editingFile.sourceContent._bindEvents, this.currentControl, this.currentActions)
+        this.editingFileParser.bindEvent(this.ideStore.editingFile.sourceContent._bindEventHandlers, this.currentControl, this.currentActions)
         // TODO 暂不支持，需同时考虑在删除单元格内容时，怎么同步删除引用页面
         // this.generateObjectTreeNodeOfOpenModalAndBindEvent()
         console.log('gl-ide > gl-ide-plugin-layout > onCloseModal() > editingFile: ', this.ideStore.editingFile)
         console.log('gl-ide > gl-ide-plugin-layout > onCloseModal() > currentControl: ', this.currentControl)
         console.log('gl-ide > gl-ide-plugin-layout > onCloseModal() > bind currentActions: ', this.currentActions)
-        this.$gl.bus.$emit(events.ide_setting_update_component_event_state, this.currentComponent)
+        // 清除无效的event键
+        if (this.currentActions && this.currentActions.length === 0) {
+          delete  this.ideStore.editingFile.sourceContent.events[this.currentControl.gid]
+        }
+        this.$gl.bus.$emit(events.ide_setting_component_event_state_update, {
+          currentComponent: this.currentComponent,
+          currentControl: this.currentControl,
+          currentActions: this.currentActions
+        })
       },
       /**
        * 关闭时，解析配置的事件，找出引用的页面
@@ -183,7 +191,7 @@
         let controlKey = keys[1]
         // let controlShortKey = keys[1]
         let item = that.ideStore.editingFile.sourceContent._componentRefs[componentKey]
-        let controlComponent = item.component.$_getRefControlByGid(controlKey)
+        let controlComponent = item.meta.componentName === 'GlControl' ? item.component : item.component.$_getRefControlByGid(controlKey)
         this.currentComponent = item
         console.log('gl-ide-setting-object-tree> onSelect() > currentComponent:', item)
         console.log('gl-ide-setting-object-tree> onSelect() > controlKey:', controlKey)
@@ -197,10 +205,10 @@
           })
           // console.log('that.ideStore.editingFile.sourceContent.events[controlKey]>', that.ideStore.editingFile.sourceContent.events[controlKey], that.ideStore.editingFile.sourceContent.events, controlKey)
           if (that.ideStore.editingFile.sourceContent.events[controlKey] === undefined) {
-            that.ideStore.editingFile.sourceContent.events[controlKey] = JSON.parse(JSON.stringify(actionsTemplate))
+            that.ideStore.editingFile.sourceContent.events[controlKey] = [] // JSON.parse(JSON.stringify(actionsTemplate))
           }
           that.$set(that, 'currentActions', that.ideStore.editingFile.sourceContent.events[controlKey])
-          that.editingFileParser.clearEvent(that.ideStore.editingFile.sourceContent._bindEvents, that.currentControl, that.currentActions)
+          that.editingFileParser.clearEvent(that.ideStore.editingFile.sourceContent._bindEventHandlers, that.currentControl, that.currentActions)
           that.modalVisible = true
           return
         } else {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--<gl-table ref="magicForm" :opts="config"></gl-table>-->
-    <gl-list v-bind="config" @doAction="onListDoAction"></gl-list>
+    <gl-list v-bind="config" gid="zsedcfthnjik9182" :opts="{}" @doAction="onListDoAction"></gl-list>
   </div>
 </template>
 

@@ -79,7 +79,7 @@ export default {
     watch: {}
   },
   meta: {
-    component: 'GlForm',
+    componentName: 'GlForm',
     designer: 'GlIdePluginFormDesigner',
     title: '表单编辑器',
     objectTree: [{title: '表单控件', path: 'properties'}],

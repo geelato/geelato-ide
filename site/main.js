@@ -12,7 +12,7 @@ import geelatoIde from './../packages/index'
 import './../packages/ide.css'
 
 import Ide from './components/Ide'
-import Preview from './components/Preview'
+import Preview from '../runtime/components/gl-page-runtime/index'
 import SegmentMaker from './components/SegmentMaker'
 import geelatoRuntime from '../runtime/index.js'
 
@@ -56,7 +56,7 @@ const routes = [
   {path: '/', redirect: '/ide'},
   {path: '/ide', component: Ide},
   {path: '/segmentMaker', component: SegmentMaker},
-  {path: '/preview/:pageId', component: Preview}
+  {path: '/preview/:pageId/:extendId', component: Preview}
 ]
 
 // 3. 创建 router 实例，然后传 `routes` 配置

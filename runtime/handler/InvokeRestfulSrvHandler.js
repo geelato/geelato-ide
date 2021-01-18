@@ -53,11 +53,11 @@ export default class InvokeRestfulSrvHandler {
           const setVar = action.params.InvokeRestfulSrv.result.setVar
           if (setVar.name) {
             if (setVar.scope === 'COMPONENT') {
-              ctx.$set(ctx.$data.$_vars, setVar.name, result)
-              console.log('geelato > runtime > InvokeRestfulSrvHandler.js > doAction() > component $_vars:', ctx.$data.$_vars)
+              ctx.$set(ctx.$data.glVars, setVar.name, result)
+              console.log('geelato > runtime > InvokeRestfulSrvHandler.js > doAction() > component glVars:', ctx.$data.glVars)
             } else if (setVar.scope === 'PAGE') {
-              page.$set(page.$data.$_vars, setVar.name, result)
-              console.log('geelato > runtime > InvokeRestfulSrvHandler.js > doAction() > page $_vars:', page.$data.$_vars)
+              page.$set(page.$data.glVars, setVar.name, result)
+              console.log('geelato > runtime > InvokeRestfulSrvHandler.js > doAction() > page glVars:', page.$data.glVars)
             }
           }
         }

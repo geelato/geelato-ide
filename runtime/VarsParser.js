@@ -28,11 +28,11 @@ export default class VarsParser {
     app ? this.app = app : ''
     page ? this.page = page : ''
     component ? this.component = component : ''
-    const platformVars = this.platform ? this.platform.$data.$_vars : {}
+    const platformVars = this.platform ? this.platform.$data.glVars : {}
     // TODO 提供platform和app的变量管理入口
-    const appVars = this.app ? this.app.$data.$_vars : {urlRoot: 'http://localhost:8080'}
-    const pageVars = this.page ? this.page.$data.$_vars : {}
-    const componentVars = this.component ? this.component.$data.$_vars : {}
+    const appVars = this.app ? this.app.$data.glVars : {urlRoot: 'http://localhost:8080'}
+    const pageVars = this.page ? this.page.$data.glVars : {}
+    const componentVars = this.component ? this.component.$data.glVars : {}
     console.log('geelato > runtime > VarsParser.js > parse() > platformVars:', platformVars)
     console.log('geelato > runtime > VarsParser.js > parse() > appVars:', appVars)
     console.log('geelato > runtime > VarsParser.js > parse() > pageVars :', pageVars)

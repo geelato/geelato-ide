@@ -5,7 +5,7 @@
     <a-dropdown size="small">
       <a-menu slot="overlay">
         <a-menu-item size="small" key="1" style="font-size: 12px" @click="showProjectForm">
-          <a-icon type="border" />
+          <a-icon type="border"/>
           从空白创建应用
         </a-menu-item>
         <a-menu-item size="small" key="2" style="font-size: 12px" @click="showTemplateProjectForm">
@@ -29,7 +29,7 @@
     <a-dropdown size="small">
       <a-menu slot="overlay">
         <a-menu-item size="small" key="1" style="font-size: 12px" @click="comingSoon('工具管理')">
-          <a-icon type="deployment-unit" />
+          <a-icon type="deployment-unit"/>
           部署
         </a-menu-item>
       </a-menu>
@@ -91,7 +91,7 @@
       showProjectForm() {
         this.$gl.bus.$emit('gl-ide.designer.showProjectForm')
       },
-      showCurrentProjectForm(){
+      showCurrentProjectForm() {
         this.$gl.bus.$emit('gl-ide.designer.showCurrentProjectForm')
       },
       showTemplateProjectForm() {
@@ -117,7 +117,8 @@
        */
       preview() {
         if (this.ideStore.editingFile && this.ideStore.editingFile.id) {
-          window.open(window.location.origin + "/#/preview/" + this.ideStore.editingFile.id, '_blank')
+          console.log('this.ideStore.editingFile', this.ideStore.editingFile)
+          window.open(window.location.origin + `/#/preview/${this.ideStore.editingFile.id}/${this.ideStore.editingFile.extendId}`, '_blank')
         }
       },
       callback(key) {

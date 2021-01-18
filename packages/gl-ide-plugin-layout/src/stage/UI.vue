@@ -4,7 +4,7 @@
     <GlIdePluginLayoutStageUIItem :rows="ideStore.editingFile.sourceContent.opts.layout.rows"
                                   :componentRefs="ideStore.editingFile.sourceContent._componentRefs"
                                   :events="ideStore.editingFile.sourceContent.events"
-                                  :bindEvents="ideStore.editingFile.sourceContent._bindEvents"
+                                  :bindEventHandlers="ideStore.editingFile.sourceContent._bindEventHandlers"
                                   :gutter="ideStore.editingFile.sourceContent.opts.layout.gutter"
                                   :treeNodes="ideStore.editingFile.objectTree"
     ></GlIdePluginLayoutStageUIItem>
@@ -221,6 +221,18 @@
     line-height: 2.4em;
   }
 
+  /*.gl-dnd-more-than-one-child {*/
+    /*display: none;*/
+  /*}*/
+
+  /*.gl-dnd-only-one-child {*/
+    /*display: none;*/
+  /*}*/
+
+  .gl-dnd-ghost + .gl-dnd-only-one-child {
+    display: block;
+  }
+
   .gl-component-wrapper:hover {
     border: solid 1px #178df7;
   }
@@ -241,6 +253,18 @@
 
   .gl-dnd-item-handle {
     cursor: move;
+  }
+
+  .gl-dnd-ghost {
+    border-top: solid 2px red !important;
+  }
+
+  /*.gl-dnd-ghost .gl-component-item-hover-title, .gl-dnd-ghost .gl-component-item-toolbar, .gl-dnd-ghost .gl-component-wrapper {*/
+  /*display: none !important;*/
+  /*}*/
+
+  .gl-dnd-ghost > * {
+    display: none !important;
   }
 
   /*.gl-container-wrapper:hover * {*/

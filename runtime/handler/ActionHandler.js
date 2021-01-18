@@ -1,9 +1,9 @@
-import InvokeCurrentComponentHandler from './handler/InvokeCurrentComponentHandler'
-import InvokeComponentHandler from './handler/InvokeComponentHandler'
-import InvokeRestfulSrvHandler from './handler/InvokeRestfulSrvHandler'
-import OpenModalHandler from './handler/OpenModalHandler'
-import ShowMessageHandler from './handler/ShowMessageHandler'
-import ShowNotificationHandler from './handler/ShowNotificationHandler'
+import InvokeCurrentComponentHandler from './InvokeCurrentComponentHandler'
+import InvokeComponentHandler from './InvokeComponentHandler'
+import InvokeRestfulSrvHandler from './InvokeRestfulSrvHandler'
+import OpenModalHandler from './OpenModalHandler'
+import ShowMessageHandler from './ShowMessageHandler'
+import ShowNotificationHandler from './ShowNotificationHandler'
 
 export default class ActionHandler {
 
@@ -99,7 +99,7 @@ export default class ActionHandler {
   }
 
   findCurrentPage(component) {
-    if (!component.$parent.$vnode) {
+    if (!component.$parent || !component.$parent.$vnode) {
       // 到了根节点，还找不到，可能是在设计器中执行该方案，设计器的舞台中不存在GlPage
       return undefined
     }

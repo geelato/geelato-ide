@@ -1,5 +1,5 @@
 /* eslint-disable no-useless-constructor */
-import ActionHandler from './ActionHandler'
+import ActionHandler from './handler/ActionHandler'
 
 /**
  * 解析pageFile配置信息，构建对象树、绑定事件
@@ -164,21 +164,39 @@ export default class EditingFileParser {
 
   /**
    * 绑定事件
-   * @param controlBindEvents 所有的控件事件引用，并在此方法中增加当前控件事件
+   * @param bindEventHandlers 所有的控件事件引用，并在此方法中增加当前控件事件
    * @param control 绑定的目标控件
    * @param actions 绑定的事件配置（一到多个事件）
    * @param controlCtx 绑定的目标控件所在的组件（上下文），如：目标控件按钮，上线文组件为表格组件
    */
-  bindEvent(controlBindEvents, control, actions, controlCtx) {
-    console.log('geelato > runtime > EditingFileParser > bindEvent() > controlBindEvents, control, actions，controlCtx>', controlBindEvents, control, actions, controlCtx)
+  bindEvent(bindEventHandlers, control, actions, controlCtx) {
+    // console.assert(actions,'actions 不允许为空。')
+    console.log('geelato > runtime > EditingFileParser > bindEvent() > bindEventHandlers>', bindEventHandlers)
+    console.log('geelato > runtime > EditingFileParser > bindEvent() > control>', control)
+    console.log('geelato > runtime > EditingFileParser > bindEvent() > actions>', actions)
+    console.log('geelato > runtime > EditingFileParser > bindEvent() > controlCtx>', controlCtx)
     for (const actionIndex in actions) {
       // 侦听事件配置信息，侦听事件类型为onAction.on的值。在onAction中，里面包含了执行事件(doAction)配置信息
       const onAction = actions[actionIndex]
-      const eventKey = control.gid + '_$_' + onAction.on
-      controlBindEvents[eventKey] = this.createActionHandlerFn(onAction, controlCtx)
-      // control.component.$off(action.on, controlBindEvents[eventKey])
-      control.component.$on(onAction.on, controlBindEvents[eventKey])
-      console.log('geelato > runtime > EditingFileParser > bindEvent() > this.controlBindEvents>', controlBindEvents, eventKey)
+      const eventKey = control.gid || control.$vnode.data.ref || control.id + '_$_' + onAction.on
+      bindEventHandlers[eventKey] = this.createActionHandlerFn(onAction, controlCtx)
+      console.log('geelato > runtime > EditingFileParser > bindEvent() > bindEventHandler>', bindEventHandlers[eventKey])
+      console.log('geelato > runtime > EditingFileParser > bindEvent() > action>', onAction)
+      // console.log('geelato > runtime > EditingFileParser > bindEvent() > control>', control)
+      // console.log('geelato > runtime > EditingFileParser > bindEvent() > controlCtx>', controlCtx)
+
+      // control.component.$off(action.on, bindEventHandlers[eventKey])
+      if (control.glType === 'control') {
+        console.log('geelato > runtime > EditingFileParser > bindEvent() > bindControlComponent')
+        control.$on(onAction.on, bindEventHandlers[eventKey])
+      } else if(control.component) {
+        console.log('geelato > runtime > EditingFileParser > bindEvent() > control.component', control.component)
+        control.component.$on(onAction.on, bindEventHandlers[eventKey])
+      } else{
+        // 非geelato的组件，如AButton
+        control.$on(onAction.on, bindEventHandlers[eventKey])
+      }
+      console.log('geelato > runtime > EditingFileParser > bindEvent() > this.bindEventHandlers>', bindEventHandlers, eventKey)
     }
   }
 
@@ -186,15 +204,15 @@ export default class EditingFileParser {
    * 打开设置窗口时，解绑事件，避免重复绑定
    * @param actions
    */
-  clearEvent(controlBindEvents, control, actions) {
+  clearEvent(bindEventHandlers, control, actions) {
     for (const actionIndex in actions) {
       const action = actions[actionIndex]
       const eventKey = control.gid + '_$_' + action.on
-      if (controlBindEvents[eventKey] === undefined) {
+      if (bindEventHandlers[eventKey] === undefined) {
         continue
       }
-      control.component.$off(action.on, controlBindEvents[eventKey])
-      console.log('clearEvent() > this.controlBindEvents>', controlBindEvents, eventKey)
+      control.component.$off(action.on, bindEventHandlers[eventKey])
+      console.log('clearEvent() > this.bindEventHandlers>', bindEventHandlers, eventKey)
     }
   }
 
@@ -231,6 +249,7 @@ export default class EditingFileParser {
 
     return {
       id: editingFile.id,
+      appId: editingFile.appId,
       extendId: editingFile.extendId,
       type: editingFile.type,
       code: editingFile.code,

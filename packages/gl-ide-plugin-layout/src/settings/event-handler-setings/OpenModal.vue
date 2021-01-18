@@ -138,60 +138,6 @@
       <!--</tr>-->
       </tbody>
     </table>
-
-    <!--<table class="gl-table">-->
-    <!--<tr class="gl-table-row gl-table-row-header">-->
-    <!--<th class="gl-table-cell" style="width: 35%">按钮名称</th>-->
-    <!--<th class="gl-table-cell" style="width: 25%">类型</th>-->
-    <!--<th class="gl-table-cell">设置</th>-->
-    <!--</tr>-->
-    <!--<template v-for="(action,actionIndex) in modalInfo.actions">-->
-    <!--<tr class="gl-table-row" :key="actionIndex">-->
-    <!--&lt;!&ndash; TODO change? &ndash;&gt;-->
-    <!--<td class="gl-table-cell"><a-input v-model="action.text" style="width: 99%" @change="onActionUpdate()"/></td>-->
-    <!--<td class="gl-table-cell">-->
-    <!--<a-select v-model="action.type" :allowClear="true" @change="onActionUpdate()"-->
-    <!--style="min-width: 99%">-->
-    <!--<a-select-option v-for="btnType in btnTypes" :key="btnType.value">-->
-    <!--{{btnType.text}}-->
-    <!--</a-select-option>-->
-    <!--</a-select>-->
-    <!--</td>-->
-    <!--<td class="gl-table-cell">-->
-    <!--&lt;!&ndash;<a-button class="gl-mini-btn" v-if="currentActionIndex!==actionIndex"&ndash;&gt;-->
-    <!--&lt;!&ndash;@click="currentActionIndex = actionIndex" title="显示更多设置">&ndash;&gt;-->
-    <!--&lt;!&ndash;<a-icon type="eye"/>&ndash;&gt;-->
-    <!--&lt;!&ndash;</a-button>&ndash;&gt;-->
-    <!--&lt;!&ndash;<a-button class="gl-mini-btn" v-if="currentActionIndex===actionIndex"&ndash;&gt;-->
-    <!--&lt;!&ndash;@click="currentActionIndex = -1" title="隐藏更多设置">&ndash;&gt;-->
-    <!--&lt;!&ndash;<a-icon type="eye-invisible"/>&ndash;&gt;-->
-    <!--&lt;!&ndash;</a-button>&ndash;&gt;-->
-    <!--<a-button class="gl-mini-btn" v-if="actionIndex!==0"-->
-    <!--@click="$gl.utils.moveup(modalInfo.actions,actionIndex);onActionUpdate()">-->
-    <!--<a-icon type="arrow-up"/>-->
-    <!--</a-button>-->
-    <!--<a-button class="gl-mini-btn" v-if="actionIndex!==modalInfo.actions.length-1"-->
-    <!--@click="$gl.utils.movedown(modalInfo.actions,actionIndex);onActionUpdate()">-->
-    <!--<a-icon type="arrow-down"/>-->
-    <!--</a-button>-->
-    <!--<a-button class="gl-mini-btn"-->
-    <!--@click="$gl.utils.remove(modalInfo.actions,actionIndex);onActionUpdate()">-->
-    <!--<a-icon type="delete" theme="twoTone" twoToneColor="#eb2f96"/>-->
-    <!--</a-button>-->
-    <!--</td>-->
-    <!--</tr>-->
-    <!--</template>-->
-    <!--<tr class="gl-table-row">-->
-    <!--<td colspan="3">-->
-    <!--<a-button size="small" block-->
-    <!--@click="modalInfo.actions.push({gid:$gl.utils.uuid(16),title: '操作',icon: 'plus',type: 'primary'});onActionUpdate()"-->
-    <!--style="line-height: 1.499em">-->
-    <!--<a-icon type="plus" size="small"/>-->
-    <!--添加行操作按钮-->
-    <!--</a-button>-->
-    <!--</td>-->
-    <!--</tr>-->
-    <!--</table>-->
   </div>
 </template>
 
@@ -272,9 +218,9 @@
         })
       },
       getCardDefined(componentName) {
-        let cardDefined = cardsDefined.items.find(cardDefined => cardDefined.component === componentName)
+        let cardDefined = cardsDefined.items.find(cardDefined => cardDefined.componentName === componentName)
         if (!cardDefined) {
-          console.error('gl-ide-plugin-layout > event-handler-settings > OpenModal > getCardDefined() > not found by componentName:', componentName)
+          console.error('gl-ide-plugin-layout > event-handler-settings > OpenModal > getCardDefined() > not found by componentName:', componentName, cardsDefined.items)
         }
         return cardDefined
       },
@@ -306,11 +252,12 @@
         page.opts.layout.rows.forEach(row => {
           row.cols.forEach(col => {
             col.items.forEach(cardItem => {
+              cardItem.componentName = cardItem.componentName||cardItem.component
               // 如果是引用页面cardItem.component为GlPage，需再进一步加载页面进行解析
-              if (cardItem.component === 'GlPage') {
+              if (cardItem.componentName === 'GlPage') {
                 let option = {
                   gid: cardItem.gid,
-                  component: cardItem.component,
+                  componentName: cardItem.componentName,
                   title: cardItem.title || '引用页面',
                   inParams: [],
                   // 子页面
@@ -319,10 +266,10 @@
                 inParamSelection.push(option)
                 that.loadTargetPage(cardItem.bind.opts.extendId, option.items)
               } else {
-                let cardDefined = that.getCardDefined(cardItem.component)
+                let cardDefined = that.getCardDefined(cardItem.componentName||cardItem.component)
                 if (cardDefined.meta.inParam && cardDefined.meta.inParam.path) {
                   console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > parseTargetPage() > forEach cardItem:', cardItem)
-                  console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > parseTargetPage() > get cardDefined:', cardDefined, ' by componentName:', cardItem.component)
+                  console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > parseTargetPage() > get cardDefined:', cardDefined, ' by componentName:', cardItem.componentName)
                   console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > parseTargetPage() > the cardDefined.meta.inParam.path:', cardDefined.meta.inParam.path)
                   let inParams = utils.eval('$ctx.' + cardDefined.meta.inParam.path, cardItem.bind.opts)
                   let newInParams = []
@@ -338,7 +285,7 @@
                   }
                   inParamSelection.push({
                     gid: cardItem.gid,
-                    component: cardItem.component,
+                    componentName: cardItem.componentName,
                     title: cardItem.title,
                     inParams: newInParams
                   })
@@ -357,10 +304,11 @@
         that.$ide.store.editingFile.sourceContent.opts.layout.rows.forEach(row => {
           row.cols.forEach(col => {
             col.items.forEach(cardItem => {
-              let cardDefined = that.getCardDefined(cardItem.component)
+              cardItem.componentName = cardItem.componentName||cardItem.component
+              let cardDefined = that.getCardDefined(cardItem.componentName)
               // TODO 如果是引用页页面，需获取引用页面内的页面
               console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > loadAndParseSourcePage() > forEach cardItem:', cardItem)
-              console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > loadAndParseSourcePage() > get cardDefined:', cardDefined, ' by componentName:', cardItem.component)
+              console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > loadAndParseSourcePage() > get cardDefined:', cardDefined, ' by componentName:', cardItem.componentName)
               console.log('gl-ide-plugin-layout > event-handler-settings > OpenModal > loadAndParseSourcePage() > the cardDefined.meta.outParams:', cardDefined.meta.outParams)
               cardDefined.meta.outParams.forEach(outParamItem => {
                 // 输出参数元数据定义
@@ -388,7 +336,7 @@
                 }
                 that.outParamSelection.push({
                   gid: cardItem.gid,
-                  component: cardItem.component,
+                  componentName: cardItem.componentName,
                   title: outParamItem.group + (cardItem.bind.opts.title ? ' (' + cardItem.bind.opts.title + ')' : ''),
                   outParams: newOutParams
                 })

@@ -1,6 +1,6 @@
 <template>
   <a-card :bordered="false">
-    <gl-page v-if="refreshFlag" :page-id="pageId" :extend-id="extendId"></gl-page>
+    <gl-page :ref="pageRefId" v-if="refreshFlag" :page-id="pageId" :extend-id="extendId"></gl-page>
   </a-card>
 </template>
 
@@ -12,7 +12,7 @@
     data() {
       return {
         pageId: this.$route.params.pageId,
-        extendId: this.$route.name,
+        extendId: this.$route.params.extendId,
         refreshFlag: true
       }
     },
@@ -21,7 +21,22 @@
         this.forceRefresh()
       }
     },
+    computed: {
+      pageRefId() {
+        return this.pageId + '_' + this.extendId
+      }
+    },
     mounted() {
+      this.$gl.ctx = this.$gl.ctx || {}
+      this.$gl.ctx.pages = this.$gl.ctx.pages || {}
+      console.log('gl-page-runtime > mounted() > pageRefId>', this.pageRefId)
+      console.log('gl-page-runtime > mounted() > $refs>', this.$refs)
+      this.$gl.ctx.pages[this.pageRefId] = this.$refs[this.pageRefId]
+      console.log('gl-page-runtime > mounted() > pages:', this.$gl.ctx.pages)
+    },
+    beforeDestroy() {
+      delete this.$gl.ctx.pages[this.pageRefId]
+      console.log('gl-page-runtime > beforeDestroy() > pages:', this.$gl.ctx.pages)
     },
     methods: {
       /**
@@ -31,7 +46,7 @@
         this.refreshFlag = false
         this.$nextTick(() => {
           this.pageId = this.$route.params.pageId
-          this.extendId = this.$route.name
+          this.extendId = this.$route.params.extendId
           this.refreshFlag = true
         })
       }

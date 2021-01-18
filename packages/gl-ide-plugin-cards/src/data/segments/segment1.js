@@ -111,7 +111,7 @@ export default {
   }
   ,
   meta: {
-    component: 'GlSegment',
+    componentName: 'GlSegment',
     designer: 'GlIdePluginSegmentDesigner',
     title: '编辑器',
     objectTree: [{title: 'UI片段', path: 'segments'}],

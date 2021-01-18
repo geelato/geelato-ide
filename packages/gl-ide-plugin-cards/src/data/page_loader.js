@@ -7,5 +7,5 @@ export default {
     width: '',
     height: ''
   },
-  meta:{component: 'GlPage', designer: 'GlIdePluginPageLoaderDesigner', title: '设置', modalWidthPercent: .5}
+  meta:{componentName: 'GlPage', designer: 'GlIdePluginPageLoaderDesigner', title: '设置', modalWidthPercent: .5}
 }

@@ -331,5 +331,5 @@ let data = {
       }
     }
   },
-  "_bindEvents": {}
+  "_bindEventHandlers": {}
 }

@@ -183,7 +183,7 @@
         })
       },
       getCardDefined(componentName) {
-        let cardDefined = cardsDefined.items.find(cardDefined => cardDefined.component === componentName)
+        let cardDefined = cardsDefined.items.find(cardDefined => cardDefined.componentName === componentName)
         if (!cardDefined) {
           console.error('gl-ide-plugin-layout > event-handler-settings > ParamMapping > getCardDefined() > not found by componentName:', componentName)
         }
@@ -226,11 +226,12 @@
         page.opts.layout.rows.forEach(row => {
           row.cols.forEach(col => {
             col.items.forEach(cardItem => {
+              cardItem.componentName = cardItem.componentName||cardItem.component
               // 如果是引用页面cardItem.component为GlPage，需再进一步加载页面进行解析
-              if (cardItem.component === 'GlPage') {
+              if (cardItem.componentName === 'GlPage') {
                 let option = {
                   gid: cardItem.gid,
-                  component: cardItem.component,
+                  componentName: cardItem.componentName,
                   title: cardItem.title || '引用页面',
                   inParams: [],
                   // 子页面
@@ -239,10 +240,10 @@
                 inParamSelection.push(option)
                 that.loadTargetPage({extendId: cardItem.bind.opts.extendId, inParamSelection: option.items})
               } else {
-                let cardDefined = that.getCardDefined(cardItem.component)
+                let cardDefined = that.getCardDefined(cardItem.componentName)
                 if (cardDefined.meta.inParam && cardDefined.meta.inParam.path) {
                   console.log('gl-ide-plugin-layout > event-handler-settings > ParamMapping > parseTargetPage() > forEach cardItem:', cardItem)
-                  console.log('gl-ide-plugin-layout > event-handler-settings > ParamMapping > parseTargetPage() > get cardDefined:', cardDefined, ' by componentName:', cardItem.component)
+                  console.log('gl-ide-plugin-layout > event-handler-settings > ParamMapping > parseTargetPage() > get cardDefined:', cardDefined, ' by componentName:', cardItem.componentName)
                   console.log('gl-ide-plugin-layout > event-handler-settings > ParamMapping > parseTargetPage() > the cardDefined.meta.inParam.path:', cardDefined.meta.inParam.path)
                   let inParams = utils.eval('$ctx.' + cardDefined.meta.inParam.path, cardItem.bind.opts)
                   let newInParams = []
@@ -259,7 +260,7 @@
                   }
                   inParamSelection.push({
                     gid: cardItem.gid,
-                    component: cardItem.component,
+                    componentName: cardItem.componentName,
                     title: cardItem.title,
                     inParams: newInParams
                   })
@@ -278,10 +279,11 @@
         that.$ide.store.editingFile.sourceContent.opts.layout.rows.forEach(row => {
           row.cols.forEach(col => {
             col.items.forEach(cardItem => {
-              let cardDefined = that.getCardDefined(cardItem.component)
+              cardItem.componentName = cardItem.componentName||cardItem.component
+              let cardDefined = that.getCardDefined(cardItem.componentName)
               // TODO 如果是引用页页面，需获取引用页面内的页面
               console.log('gl-ide-plugin-layout > event-handler-settings > ParamMapping > loadAndParseSourcePage() > forEach cardItem:', cardItem)
-              console.log('gl-ide-plugin-layout > event-handler-settings > ParamMapping > loadAndParseSourcePage() > get cardDefined:', cardDefined, ' by componentName:', cardItem.component)
+              console.log('gl-ide-plugin-layout > event-handler-settings > ParamMapping > loadAndParseSourcePage() > get cardDefined:', cardDefined, ' by componentName:', cardItem.componentName)
               console.log('gl-ide-plugin-layout > event-handler-settings > ParamMapping > loadAndParseSourcePage() > the cardDefined.meta.outParams:', cardDefined.meta.outParams)
               cardDefined.meta.outParams.forEach(outParamItem => {
                 // 输出参数元数据定义
@@ -310,7 +312,7 @@
                 }
                 that.outParamSelection.push({
                   gid: cardItem.gid,
-                  component: cardItem.component,
+                  componentName: cardItem.componentName,
                   title: outParamItem.group + (cardItem.bind.opts.title ? ' (' + cardItem.bind.opts.title + ')' : ''),
                   outParams: newOutParams
                 })

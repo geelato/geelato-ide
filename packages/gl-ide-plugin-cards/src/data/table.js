@@ -116,7 +116,7 @@ export default {
     stat: ''
   },
   meta: {
-    component: 'GlTable',
+    componentName: 'GlTable',
     designer: 'GlIdePluginTableDesigner',
     title: '列表设计器',
     objectTree: [

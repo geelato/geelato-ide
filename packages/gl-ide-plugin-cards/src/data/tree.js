@@ -128,7 +128,7 @@ export default {
     }
   },
   meta: {
-    component: 'GlTree',
+    componentName: 'GlTree',
     designer: 'GlIdePluginTreeDesigner',
     title: '树设计器',
     objectTree: [

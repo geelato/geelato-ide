@@ -269,7 +269,6 @@
 
 <script>
   import ideConfig from '../../../gl-ide/src/data/ideSelectItems.js'
-  import pluginEvent from '../events'
   import events from "../../../gl-ide/src/events";
 
   let componentName = 'GlIdePluginLayoutCardSettings'
@@ -359,7 +358,7 @@
         }
       },
       changeObjectTreeNodeTitle({gid, title}) {
-        this.$gl.bus.$emit(events.ide_setting_update_object_tree_node, {gid, title})
+        this.$gl.bus.$emit(events.ide_setting_object_tree_node_update, {gid, title})
       }
     }
   }

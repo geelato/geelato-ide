@@ -72,7 +72,7 @@
           <a-card title="动作设置" :bordered="false" v-if="currentEditingType==='control'">
             <p>
               <component :is="currentDetailComponentName" v-bind="currentDoItem"
-                         :designComponentName="currentComponent.meta.component"
+                         :designComponentName="currentComponent.meta.componentName"
                          :objectTree="ideStore.editingFile.objectTree"
                          @update="(params)=>currentDoItem.params = params"></component>
             </p>
