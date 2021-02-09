@@ -104,6 +104,7 @@
           </td>
           <td class="gl-table-cell">
             <a-radio-group v-model="config.style.float" size="small">
+              <a-radio-button value="">无</a-radio-button>
               <a-radio-button value="auto">自动</a-radio-button>
               <a-radio-button value="top">上</a-radio-button>
               <a-radio-button value="bottom">下</a-radio-button>

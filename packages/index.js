@@ -23,6 +23,7 @@ import GlText from '../runtime/components/gl-text/index'
 // 公共组件
 import GlDataSource from './components/gl-data-source/index'
 import GlSettingStyle from './components/gl-setting-style/Index'
+import GlSettingControl from './components/gl-setting-control/index'
 
 // import GlIdePluginStructure from './gl-ide-plugin-structure/index'
 import ide from './gl-ide/src/ide'
@@ -50,7 +51,8 @@ const components = [
   GlSegment,
   GlText,
   GlDataSource,
-  GlSettingStyle
+  GlSettingStyle,
+  GlSettingControl
 ]
 
 // let uiApi = new Api()

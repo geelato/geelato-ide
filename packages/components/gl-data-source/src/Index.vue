@@ -38,7 +38,10 @@
        * 当前上下文，可选的数据源集，key为数据源名称，value为数据源配置
        */
       dsMap: {
-        type: Object
+        type: Object,
+        default() {
+          return {}
+        }
       },
       /**
        * 静态数据集合
@@ -144,12 +147,14 @@
         if (this.dataSourceType === 'dynamic') {
           // 无dsKey，则创建一个
           dsKey = this.dsKey || this.$gl.utils.uuid(16)
+          console.log('gl-data-source > Index > onChange() > add dsMap by key:', dsKey, ' and result:', this.dsMap)
           this.$set(this.dsMap, dsKey, updatedDsItem)
-          console.log('gl-data-source > Index > onChange() > add dsMap by key:', this.dsKey, ' and result:', this.dsMap)
         } else {
-          console.log('gl-data-source > Index > onChange() > delete dsMap by key:', this.dsKey, ' and result:', this.dsMap)
           // this.$set(this.dsMap, dsKey, undefined)
-          delete this.dsMap[this.dsKey]
+          if (this.dsKey) {
+            console.log('gl-data-source > Index > onChange() > delete dsMap by key:', this.dsKey, ' and result:', this.dsMap)
+            delete this.dsMap[this.dsKey]
+          }
         }
         console.log('gl-data-source > Index > onChange() > $emit {dsItem, dsKey, dsMap}:', updatedDsItem, dsKey, this.dsMap)
 

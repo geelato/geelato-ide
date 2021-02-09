@@ -11,18 +11,18 @@ export default {
       // 设置该id:{}，便于子实体中依赖该id
       id: {},
       name: {
-        control: 'input',
+        control: 'Input',
         title: '名称'
       },
       code: {
-        control: 'input',
+        control: 'Input',
         title: '编码',
         rules: {
           required: true
         }
       },
       type: {
-        control: 'select',
+        control: 'Select',
         title: '类型',
         // 若数据是动态生产成，可配置ds，基于ds加载的数据最终会设置到data中
         data: [{text: '默认', value: 0}, {text: '类型一', value: 1}, {text: '类型二', value: 2}
@@ -33,7 +33,7 @@ export default {
       },
       description: {
         gid: utils.uuid(16),
-        control: 'textarea',
+        control: 'Textarea',
         title: '描述'
       }
     },

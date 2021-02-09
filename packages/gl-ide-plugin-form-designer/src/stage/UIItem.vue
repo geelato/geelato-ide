@@ -57,8 +57,8 @@
                         <a-icon type="setting" theme="twoTone"/>
                       </div>
                     </div>
-                    <gl-control :ref="getProperty(fieldItem.field).gid" :form="form"
-                                :property="getProperty(fieldItem.field)"
+                    <gl-control :gid="getProperty(fieldItem.field).gid" :ref="getProperty(fieldItem.field).gid" :form="form"
+                                :opts="getProperty(fieldItem.field)"
                                 :key="fieldItemIndex"
                     ></gl-control>
                   </div>
@@ -93,7 +93,7 @@
 
 <script>
   /* eslint-disable no-unused-vars */
-  import controlTypes from '../data/controlTypes'
+  import controlTypes from '../../../components/gl-setting-control/src/data/formControlTypes'
 
   let GEELATO_SCRIPT_PREFIX = 'gs:'
 

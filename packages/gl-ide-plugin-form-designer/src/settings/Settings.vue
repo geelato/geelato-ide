@@ -32,7 +32,7 @@
           <table class="gl-table">
             <tr class="gl-table-row">
               <td class="gl-table-cell gl-table-cell-sub-label">
-                默认实体：
+                默认（主）实体：
               </td>
               <td class="gl-table-cell">
                 <a-select v-model="opts.defaultEntity" :allowClear="true" style="min-width: 99%">
@@ -42,6 +42,34 @@
                     {{entityItem.value}}
                   </a-select-option>
                 </a-select>
+              </td>
+            </tr>
+            <tr class="gl-table-row">
+              <td class="gl-table-cell gl-table-cell-sub-label">
+                属性绑定：
+              </td>
+              <td class="gl-table-cell">
+                <table class="gl-table">
+                  <tr class="gl-table-row">
+                    <th class="gl-table-cell" style="width: 4em">属性</th>
+                    <th class="gl-table-cell">实体</th>
+                    <th class="gl-table-cell" style="width: 6em">字段</th>
+                  </tr>
+                  <tr class="gl-table-row" v-for="p in opts.properties">
+                    <td class="gl-table-cell" :title="p.title">{{p.title}}</td>
+                    <td class="gl-table-cell" :title="p.entity">
+                      {{p.entity}}
+                      <!--<a-select v-model="p.entity" :allowClear="true" style="min-width: 99%">-->
+                        <!--<a-select-option v-for="entityItem in toSelectEntityNames" :key="entityItem.value"-->
+                                         <!--:value="entityItem.value"-->
+                                         <!--:title="entityItem.text">-->
+                          <!--{{entityItem.value}}-->
+                        <!--</a-select-option>-->
+                      <!--</a-select>-->
+                    </td>
+                    <td class="gl-table-cell" :title="p.field">{{p.field}}</td>
+                  </tr>
+                </table>
               </td>
             </tr>
           </table>
@@ -145,151 +173,8 @@
         <div :style="tabPanelStyle">
           <a-alert v-if="!fieldConfig.field" style="text-align: center" message="请先点击选择左边字段" type="info"
                    class="gl-card-gutter"/>
-          <div v-if="fieldConfig.field">
-            <div class="gl-title">
-              <a-icon type="setting"/>
-              外观
-            </div>
-            <table class="gl-table">
-              <tr class="gl-table-row">
-                <td class="gl-table-cell gl-table-cell-sub-label">
-                  字段名：
-                </td>
-                <td class="gl-table-cell">
-                  <a-input v-model="fieldConfig.title" style="width: 99%"/>
-                </td>
-              </tr>
-              <tr class="gl-table-row">
-                <td class="gl-table-cell gl-table-cell-sub-label">
-                  <a-icon type="info-circle" title=""/>
-                  控件类型：
-                </td>
-                <td class="gl-table-cell">
-                  <a-select v-model="fieldConfig.control" :allowClear="true" style="min-width: 99%">
-                    <a-select-option v-for="(controlItem,controlItemIndex) in controlTypes" :key="controlItemIndex"
-                                     :value="controlItem.control"
-                                     :title="controlItem.title">
-                      <a-icon :type="controlItem.icon"/>&nbsp;&nbsp;{{controlItem.title}}
-                    </a-select-option>
-                  </a-select>
-                </td>
-              </tr>
-            </table>
-            <div class="gl-title">
-              <a-icon type="setting"/>
-              数据
-            </div>
-            <table class="gl-table">
-              <tr class="gl-table-row">
-                <td class="gl-table-cell gl-table-cell-sub-label">
-                  <a-icon type="info-circle" title="绑定数据库的字段，才可以存储到后台。"/>
-                  绑定数据：
-                </td>
-                <td class="gl-table-cell">
-                  <div class="gl-title-sub">先选择实体：</div>
-                  <!--<a-input-search placeholder="选择并绑定实体" v-model="fieldConfig.entity" @search="openSelectEntityList"-->
-                  <!--readOnly>-->
-                  <!--<a-button type="primary" slot="enterButton">-->
-                  <!--<a-icon type="select"/>-->
-                  <!--选择-->
-                  <!--</a-button>-->
-                  <!--</a-input-search>-->
-                  <a-select v-model="fieldConfig.entity" :allowClear="true" style="min-width: 99%" v-if="refreshFlag"
-                            @change="onChangeSelectEntity">
-                    <div slot="dropdownRender" slot-scope="menu">
-                      <gl-v-nodes :vnodes="menu"/>
-                      <a-divider style="margin: 4px 0;"/>
-                      <div style="padding: 8px; cursor: pointer;" @click="openSelectEntityList">
-                        <a-icon type="plus"/>
-                        添加
-                      </div>
-                    </div>
-                    <a-select-option v-for="entityItem in toSelectEntityNames" :key="entityItem.value"
-                                     :value="entityItem.value"
-                                     :title="entityItem.text">
-                      {{entityItem.value}}
-                    </a-select-option>
-                  </a-select>
-                  <div class="gl-title-sub">再绑定字段：</div>
-                  <!--:style="{color:!containField()?'':'red'}"-->
-                  <a-select v-model="fieldConfig.field" :allowClear="true" style="min-width: 99%" v-if="refreshFlag"
-                            @change="forceFresh">
-                    <a-select-option v-for="(colMeta,colMetaIndex) in currentEntityColumns" :key="colMetaIndex"
-                                     :value="colMeta.fieldName" :title="colMeta.title">
-                      <span v-if="!colMeta.nullable" class="gl-required" style="font-weight: bold">*</span>{{colMeta.fieldName}}&nbsp;({{colMeta.title}})
-                    </a-select-option>
-                  </a-select>
-                  <div style="margin: 0.2em">
-                    <a-switch v-model="fieldConfig.isServerSaveIgnore"></a-switch>
-                    <!--保存时是否排除该字段-->
-                    仅加载数据有效，不做保存
-                  </div>
-                </td>
-              </tr>
-              <!--<tr class="gl-table-row">-->
-              <!--<td class="gl-table-cell gl-table-cell-sub-label">-->
-              <!--是否排除：-->
-              <!--</td>-->
-              <!--<td class="gl-table-cell">-->
-              <!--<a-switch v-model="fieldConfig.isServerSaveIgnore"></a-switch>-->
-              <!--保存时是否排除该字段-->
-              <!--</td>-->
-              <!--</tr>-->
-              <tr class="gl-table-row" v-if="freshFlag&&isContainDataItems(fieldConfig)">
-                <td class="gl-table-cell gl-table-cell-sub-label">
-                  {{getControlType(fieldConfig.control).title}}项：
-                </td>
-                <td class="gl-table-cell">
-                  <gl-data-source :dataItems="fieldConfig.data" :dsKey="fieldConfig.dsName" :dsMap="opts.ds"
-                                  @update="onDataSourceUpdate"></gl-data-source>
-                </td>
-              </tr>
-            </table>
-            <div class="gl-title">
-              <a-icon type="setting"/>
-              验证、权限规则
-            </div>
-            <table class="gl-table">
-              <tr class="gl-table-row">
-                <td class="gl-table-cell gl-table-cell-sub-label">
-                  是否必填：
-                </td>
-                <td class="gl-table-cell">
-                  <a-switch v-model="fieldConfig.rules.required"></a-switch>
-                </td>
-              </tr>
-              <tr class="gl-table-row">
-                <td class="gl-table-cell gl-table-cell-sub-label">
-                  是否唯一：
-                </td>
-                <td class="gl-table-cell">
-                  <a-switch v-model="fieldConfig.rules.unique"></a-switch>
-                </td>
-              </tr>
-            </table>
-            <div class="gl-title">
-              <a-icon type="setting"/>
-              提示、描述、说明
-            </div>
-            <table class="gl-table">
-              <tr class="gl-table-row">
-                <td class="gl-table-cell gl-table-cell-sub-label">
-                  占位符：
-                </td>
-                <td class="gl-table-cell">
-                  <a-input v-model="fieldConfig.props.placeholder" style="width: 99%"/>
-                </td>
-              </tr>
-              <tr class="gl-table-row">
-                <td class="gl-table-cell gl-table-cell-sub-label">
-                  提示描述：
-                </td>
-                <td class="gl-table-cell">
-                  <textarea v-model="fieldConfig.tips" style="width: 99%" rows="5"></textarea>
-                </td>
-              </tr>
-            </table>
-          </div>
+          <gl-setting-control v-if="fieldConfig.field" :opts="fieldConfig"
+                              :toSelectEntityNames="toSelectEntityNames" :dsMap="opts.ds" @dataSourceUpdate="onDataSourceUpdate"></gl-setting-control>
         </div>
       </a-tab-pane>
     </a-tabs>
@@ -298,19 +183,11 @@
 
 <script>
   import mixin from '../../../mixin-designer'
-  import controlTypes from '../data/controlTypes'
-  import SelectEntityList from '../../../components/gl-data-source/src/SelectEntityList'
-  import GlDataSource from "../../../components/gl-data-source/src/Index";
-
+  import controlTypes from '../../../components/gl-setting-control/src/data/formControlTypes'
 
   export default {
     name: "Settings",
-    components: {
-      GlDataSource, GlVNodes: {
-        functional: true,
-        render: (h, ctx) => ctx.props.vnodes,
-      }
-    },
+    components: {},
     mixins: [mixin],
     props: {
       opts: {
@@ -409,21 +286,16 @@
         console.log(JSON.stringify(item), bindEntityNames, 'toSelectEntityNames: ', this.toSelectEntityNames)
         if (item.rules === undefined) {
           this.$set(item, 'rules', {required: undefined, unique: undefined})
-          // this.$set(item.rules, 'required', undefined)
-          // this.$set(item.rules, 'unique', undefined)
         }
         if (item.props === undefined) {
           this.$set(item, 'props', {placeholder: undefined})
-          // this.$set(item.props, 'placeholder', undefined)
         }
         if (item.isServerSaveIgnore === undefined) {
           item.isServerSaveIgnore = false
         }
         // data
         if (this.isContainDataItems(item) && (item.data === undefined || item.data.length === 0)) {
-          // item.data = [{text: '选项一', value: 0}]
           this.$set(item, 'data', [{text: '选项一', value: 0}])
-          // item.props.defaultActiveIndex = item.props.defaultActiveIndex || 0
           this.$set(item.props, 'defaultActiveIndex', item.props.defaultActiveIndex || 0)
         }
         if (item.dsName === undefined) {
@@ -432,19 +304,17 @@
 
         // 对于无实体的，从当前表单已配置的实体中，默认选择第一项
         if (!item.entity && this.toSelectEntityNames.length > 0) {
-          // this.$set(item, 'entity', this.toSelectEntityNames[0].key)
           this.$set(item, 'entity', this.toSelectEntityNames[0].value)
-          // item.entity = this.toSelectEntityNames[0].value
         }
         this.fieldConfig = item
 
         // 通过实体加载字段下拉项数据
-        this.loadFieldMetaByEntityName(this.fieldConfig.entity)
-        this.freshFlag = false
-        this.$nextTick(function () {
-          this.freshFlag = true
-        })
-        console.log(JSON.stringify(item))
+        // this.loadFieldMetaByEntityName(this.fieldConfig.entity)
+        // this.refreshFlag = false
+        // this.$nextTick(function () {
+        //   this.refreshFlag = true
+        // })
+        // console.log(JSON.stringify(item))
       },
       /**
        * 选中单元格
@@ -501,67 +371,6 @@
           return controlType.control === control
         })
       },
-      isContainDataItems(item) {
-        return item.control === 'select'
-      },
-      openSelectEntityList() {
-        this.$gl.ui.openModal(this, {
-          title: '选择实体',
-          width: '1000px',
-          height: '480px',
-          body: {
-            type: 'static',
-            component: SelectEntityList,
-            props: {}
-          },
-          actions: [{
-            fn: 'close',
-            ctx: 'modal',
-            text: '取消'
-          }],
-          on: [{
-            fn: 'selectItem',
-            ctx: 'content',
-            then: {
-              fn: 'onEntitySelected',
-              ctx: 'opener',
-              then: {
-                fn: 'close',
-                ctx: 'modal'
-              },
-              dataMapping: {
-                id: '$ctx.item.id',
-                name: '$ctx.item.title'
-              }
-            }
-          }]
-        })
-      },
-      onChangeSelectEntity(data) {
-        this.loadFieldMetaByEntityName(data);
-        this.forceFresh()
-      },
-      onEntitySelected(params, data) {
-        this.fieldConfig.entity = data.name
-        this.addToSelectEntityNames({text: data.title, value: data.name})
-        this.loadFieldMeta({tableId: data.id, '@order': 'fieldName|+'})
-      },
-      loadFieldMetaByEntityName(entityName) {
-        let that = this
-        that.$gl.api.query('platform_dev_table', 'id,title,description', {
-          entityName: entityName,
-          delStatus: 0,
-          enableStatus: 1
-        }).then(function (res) {
-          that.loadFieldMeta({tableId: res.data[0].id, '@order': 'fieldName|+'})
-        })
-      },
-      loadFieldMeta(kvConditions) {
-        let that = this
-        that.$gl.api.query('platform_dev_column', 'id,nullable,title,fieldName,name,description', kvConditions).then(function (res) {
-          that.currentEntityColumns = res.data
-        })
-      },
       containField() {
         let found = this.currentEntityColumns.find(function (item) {
           return item.fieldName === this.fieldConfig.field
@@ -576,6 +385,9 @@
         console.log('gl-ide-plugin-form-designer > Settings > onDataSourceUpdate() > dsItem, dsKey, dsMap:', dsItem, dsKey, dsMap)
         this.$set(this.fieldConfig, 'dsName', dsKey)
         this.$set(this.opts, 'ds', dsMap)
+      },
+      isContainDataItems(item) {
+        return item.control === 'Select'
       }
     }
 

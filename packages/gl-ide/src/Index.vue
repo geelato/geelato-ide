@@ -63,7 +63,7 @@
         },
         settings: {
           height: 0,
-          width: 300
+          width: 320
         },
         status: {
           height: 0,

@@ -24,12 +24,14 @@
           <a-input-number v-model="item[dataAlias.value]" style="width: 4em" placeholder="选项值"/>
         </span>
         <span class="icons-list">
-          <a-icon type="plus" @click="add(item,index)"/>
           <a-icon type="minus" @click="remove(item,index)"/>
           <a-icon type="drag" class=""/>
         </span>
       </div>
     </gl-draggable>
+    <a-button block @click="add()" size="small"  style="line-height: 1.499em">
+      <a-icon type="plus" size="small"/>添加
+    </a-button>
     <!--<a-switch :checked="dataType==='number'" @click='changeType'/>-->
     <!--是否数值类型-->
   </div>
@@ -40,7 +42,8 @@
     name: "GlDataSourceStatic",
     props: {
       dataItems: {
-        type: Array
+        type: Array,
+        required: true
       },
       dataAlias: {
         type: Object,
@@ -66,13 +69,17 @@
       // },
       add(item, index) {
         console.log('index>', index)
-        this.items.splice(index + 1, 0, {text: '选项', value: this.items.length + 1})
+        if (index === undefined) {
+          this.items.push({text: '选项', value: this.items.length + 1})
+        } else {
+          this.items.splice(index + 1, 0, {text: '选项', value: this.items.length + 1})
+        }
       },
       remove(item, index) {
-        if (this.items.length === 1) {
-          this.$message.info('至少需保留一项。')
-          return
-        }
+        // if (this.items.length === 1) {
+        //   this.$message.info('至少需保留一项。')
+        //   return
+        // }
         this.items.splice(index, 1)
       }
     }

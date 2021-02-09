@@ -6,6 +6,7 @@ import events from './src/events'
 import GlStringValueSettingTip from './src/settings/event-handler-setings/common/StringValueSettingTip'
 import GlIdeSettingObjectTree from './src/settings/GlIdeSettingObjectTree'
 import GlIdePluginLayoutCardSettings from './src/settings/CardSettings'
+import GlIdePluginLayoutControlSettings from './src/settings/ControlSettings'
 import GlIdePluginLayoutSegmentSettings from './src/settings/SegmentSettings'
 
 // import formData from "../gl-ide-plugin-file-combination/src/formData";
@@ -58,12 +59,12 @@ const plugin = {
     }
     ],
     settingPanels: [
-      {
-        title: '页面',
-        component: 'GlIdeSettingFileInfo',
-        opts: {},
-        params: {}
-      },
+      // {
+      //   title: '页面',
+      //   component: 'GlIdeSettingFileInfo',
+      //   opts: {},
+      //   params: {}
+      // },
       {
         title: '动作',
         component: 'GlIdeSettingObjectTree',
@@ -77,8 +78,14 @@ const plugin = {
         params: {}
       },
       {
-        title: '组件',
+        title: '容器',
         component: 'GlIdePluginLayoutSegmentSettings',
+        opts: {},
+        params: {}
+      },
+      {
+        title: '组件',
+        component: 'GlIdePluginLayoutControlSettings',
         opts: {},
         params: {}
       }
@@ -99,6 +106,7 @@ export default {
     Vue.component(GlStringValueSettingTip.name, GlStringValueSettingTip)
     Vue.component(GlIdeSettingObjectTree.name, GlIdeSettingObjectTree)
     Vue.component(GlIdePluginLayoutCardSettings.name, GlIdePluginLayoutCardSettings)
+    Vue.component(GlIdePluginLayoutControlSettings.name, GlIdePluginLayoutControlSettings)
     Vue.component(GlIdePluginLayoutSegmentSettings.name, GlIdePluginLayoutSegmentSettings)
   },
   config: plugin,

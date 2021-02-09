@@ -398,7 +398,7 @@
         console.log('gl-ide-plugin-layout-item > onSettingSwitchPanel > panel:', panel, this.currentSelectObjectUid, this.currentSelectedCell, this.currentSelectedComponent)
         if (panel.name === "GlIdePluginLayoutCardSettings") {
           this.currentSelectObjectUid = this.currentSelectedCell ? this.currentSelectedCell.gid : ''
-        } else if (panel.name === "GlIdePluginLayoutSegmentSettings") {
+        } else if (panel.name === "GlIdePluginLayoutControlSettings") {
           this.currentSelectObjectUid = this.currentSelectedComponent ? this.currentSelectedComponent.gid : ''
         }
       },
@@ -860,13 +860,16 @@
        */
       onComponentSettingOpen(component) {
         this.currentSelectedComponent = component
-        this.$gl.bus.$emit(events.ide_setting_open, {panelName: 'GlIdePluginLayoutSegmentSettings', config: component})
+        // 如果是 GlControl
+        if (component.componentName === 'GlControl') {
+          this.$gl.bus.$emit(events.ide_setting_open, {panelName: 'GlIdePluginLayoutControlSettings', config: component})
+        }
       },
       onComponentSettingUpdate(component) {
         console.log('gl-ide-plugin-layout > UIItem > onComponentSettingUpdate>', component)
         this.currentSelectedComponent = component
         this.$gl.bus.$emit(events.ide_setting_update, {
-          panelName: 'GlIdePluginLayoutSegmentSettings',
+          panelName: 'GlIdePluginLayoutControlSettings',
           config: component
         })
       },

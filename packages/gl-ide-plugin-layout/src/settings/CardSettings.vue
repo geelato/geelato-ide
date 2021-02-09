@@ -270,7 +270,6 @@
 <script>
   import ideConfig from '../../../gl-ide/src/data/ideSelectItems.js'
   import events from "../../../gl-ide/src/events";
-
   let componentName = 'GlIdePluginLayoutCardSettings'
   export default {
     name: componentName,

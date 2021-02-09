@@ -141,7 +141,7 @@
 
 <script>
   import mixin from '../../mixin-designer'
-  import controlTypes from './data/controlTypes'
+  import controlTypes from '../../components/gl-setting-control/src/data/formControlTypes'
 
   export default {
     name: "GlIdePluginFormDesignerSidebar",

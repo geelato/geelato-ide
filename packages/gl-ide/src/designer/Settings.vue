@@ -2,8 +2,8 @@
   <div class="gl-designer-properties" v-if="ideStore.refreshToggleFlag">
     <a-tabs :activeKey="activeTabKey" @change="onChangeTabs" size="small" class="gl-compact"
             v-if="ideStore.editingFile&&ideStore.editingFile.type">
-      <a-tab-pane v-for="(panel,index) in ideStore.settingPanels" :tab="panel.title" :key="index"
-                  :style="{padding:`${panelPadding}px`}">
+      <a-tab-pane v-for="(panel,index) in ideStore.settingPanels" :tab="panel.title" :key="index" style="overflow-y: auto;overflow-x: hidden"
+                  :style="{padding:`${panelPadding}px`,height:`${layout.height-48}px`}" >
         <template v-if="currentPanelName&&setting[currentPanelName]">
           <component :is="panel.component" v-bind="panel.opts"
                      :ideStore="ideStore"
@@ -33,7 +33,17 @@
     name: "GlIdeSettings",
     components: {ATextarea},
     mixins: [mixin],
-    props: {},
+    props: {
+      layout: {
+        type: Object,
+        default() {
+          return {
+            width: 0,
+            height: 0
+          }
+        }
+      }
+    },
     data() {
       return {
         activeTabKey: 0,

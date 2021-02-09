@@ -2,9 +2,7 @@
 -->
 <template>
   <div class="gl-ide-plugin-designer-settings">
-    <template v-if="config">
-      <gl-setting-style :config="config"></gl-setting-style>
-    </template>
+    <gl-setting-style v-if="config" :config="config"></gl-setting-style>
     <a-alert v-else
              message="未选择组件或UI片段"
              description="请将鼠标移动到左边的设计界面上，点击。"
@@ -70,35 +68,35 @@
 
 <style>
 
-  .gl-mp-size {
-    cursor: default;
-    user-select: none;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 10px;
-    letter-spacing: -0.2px;
-    display: flex;
-    color: rgb(139, 190, 250);
-    background: rgba(76, 152, 241, 0.15);
-    padding: 2px;
-    margin-left: -2px;
-    border-radius: 2px;
-    max-width: 100%;
-    box-sizing: content-box;
-    place-self: center;
-    position: relative;
-    opacity: 1;
-    align-items: center;
-    justify-content: center;
-  }
+  /*.gl-mp-size {*/
+    /*cursor: default;*/
+    /*user-select: none;*/
+    /*overflow: hidden;*/
+    /*text-overflow: ellipsis;*/
+    /*white-space: nowrap;*/
+    /*font-size: 12px;*/
+    /*font-weight: 400;*/
+    /*line-height: 10px;*/
+    /*letter-spacing: -0.2px;*/
+    /*display: flex;*/
+    /*color: rgb(139, 190, 250);*/
+    /*background: rgba(76, 152, 241, 0.15);*/
+    /*padding: 2px;*/
+    /*margin-left: -2px;*/
+    /*border-radius: 2px;*/
+    /*max-width: 100%;*/
+    /*box-sizing: content-box;*/
+    /*place-self: center;*/
+    /*position: relative;*/
+    /*opacity: 1;*/
+    /*align-items: center;*/
+    /*justify-content: center;*/
+  /*}*/
 
-  .gl-mp-size .gl-text {
-    min-width: 1em;
-    min-height: 1em;
-    text-align: center;
-  }
+  /*.gl-mp-size .gl-text {*/
+    /*min-width: 1em;*/
+    /*min-height: 1em;*/
+    /*text-align: center;*/
+  /*}*/
 
 </style>

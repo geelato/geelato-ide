@@ -38,7 +38,7 @@
       </tr>
       <tr class="gl-table-row">
         <td class="gl-table-cell gl-table-cell-sub-label">
-          是否展示操作栏：
+          是否展示工具栏：
         </td>
         <td class="gl-table-cell">
           <a-switch :defaultChecked="config.toolbar.show"

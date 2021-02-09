@@ -49,13 +49,10 @@
                   <!--插槽 slots-->
                   <template slot="tabBarExtraContent">
                     <div v-for="(slot) in cellItem.slots" :key="slot.gid"
-                         style="padding-top: 0.1em;position: relative">
+                         style="padding-top: 0.1em;padding-right:0.2em;position: relative;display: inline-block">
                       <component :glCtx="glCtx" :ref="slot.gid" v-show="slot.show"
                                  :is="$globalVue.component(slot.componentName)"
                                  v-bind="slot.bind" :style="slot.style"></component>
-                      <!--<div v-if="!slot.show" style="text-align: center;font-size: 3em">-->
-                      <!--<a-icon :type="slot.icon" @click="slot.show=true" title="点击展示该组件内容"/>-->
-                      <!--</div>-->
                     </div>
                   </template>
                 </a-tabs>
@@ -140,6 +137,7 @@
             }
           } else {
             // 非geelate的组件，如AButton
+            console.log('component.$vnode>', component)
             that.editingFileParser.bindEvent(that.bindEventHandlers, component, that.events[component.$vnode.data.ref], ctx || component)
           }
         }
@@ -148,24 +146,25 @@
           row.cols.filter((cell) => !!cell.items).forEach((cell) => {
             cell.items.forEach((cellItem) => {
               if (cellItem.componentName) {
-                bindComponentEvent(this.componentRefs[cellItem.gid].component)
+                bindComponentEvent(this.componentRefs[cellItem.gid].component, cellItem)
               } else {
-                // // cellItem.items 对应tabs的多个面板
-                // // panel 容器的一个面板
-                // // that.generateContainerNodeAndBindEvent(cellItem, cell)
-                // cellItem.items.forEach((panel) => {
-                //   // that.generateContainerPanelNodeAndBindEvent(panel, cellItem)
-                //   // panel.items 对应页板内的多个组件
-                //   panel.items.forEach((component) => {
-                //     // that.generateComponentNodeAndBindEvent(component, panel)
-                //   })
-                // })
-                // // slots 容器的的插槽
-                // if (cellItem.slots && cellItem.slots.length > 0) {
-                //   cellItem.slots.forEach((slotComponent) => {
-                //     // that.generateComponentNodeAndBindEvent(slotComponent, cellItem)
-                //   })
-                // }
+                // cellItem.items 对应tabs的多个面板
+                // panel 容器的一个面板
+                // that.generateContainerNodeAndBindEvent(cellItem, cell)
+                cellItem.items.forEach((panel) => {
+                  // that.generateContainerPanelNodeAndBindEvent(panel, cellItem)
+                  // panel.items 对应页板内的多个组件
+                  panel.items.forEach((component) => {
+                    bindComponentEvent(this.componentRefs[component.gid].component, panel)
+                  })
+                })
+                // slots 容器的的插槽
+                if (cellItem.slots && cellItem.slots.length > 0) {
+                  cellItem.slots.forEach((slotComponent) => {
+                    console.log('slotComponent:', slotComponent, this.componentRefs, this.componentRefs[slotComponent.gid])
+                    bindComponentEvent(this.componentRefs[slotComponent.gid].component, cellItem)
+                  })
+                }
               }
             })
           })

@@ -26,17 +26,35 @@ export default {
   methods: {
     /**
      * 初始化组件树中的组件引用
-     * 不包括布局容器
+     * 包括布局容器内的组件、插槽内的组件
+     * 布局容器本身不作为组件进行引用
      */
     initComponentRefs() {
-      for (let rowIndex in this.rowItems) {
-        let row = this.rowItems[rowIndex]
-        for (let cellIndex in row.cols) {
-          for (let cellItemIndex in row.cols[cellIndex].items) {
-            this.generateComponentRef(row.cols[cellIndex].items[cellItemIndex])
-          }
-        }
-      }
+      this.rows.filter((row) => !!row.cols).forEach((row) => {
+        row.cols.filter((cell) => !!cell.items).forEach((cell) => {
+          cell.items.forEach((cellItem) => {
+            if (cellItem.componentName) {
+              this.generateComponentRef(cellItem)
+            } else {
+              // cellItem.items 对应tabs的多个面板
+              // panel 容器的一个面板
+              cellItem.items.forEach((panel) => {
+                // panel.items 对应页板内的多个组件
+                panel.items.forEach((component) => {
+                  this.generateComponentRef(component)
+                })
+              })
+              // slots 容器的的插槽
+              if (cellItem.slots && cellItem.slots.length > 0) {
+                cellItem.slots.forEach((slotComponent) => {
+                  this.generateComponentRef(slotComponent)
+                })
+              }
+            }
+          })
+        })
+      })
+
     },
     generateComponentRef(item) {
       // 过滤掉容器
