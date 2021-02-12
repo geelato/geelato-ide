@@ -169,14 +169,22 @@
           that.$set(that, 'segmentTemplates', segmentTemplates)
         })
       },
-      customClone(item) {
-        // let id = utils.uuid(16)
-        let result = {
-          // id: id,
-          gid: utils.uuid(16)
+      customClone(componentConfig) {
+        let config = JSON.parse(JSON.stringify(componentConfig))
+        if (!componentConfig.bind.opts && typeof componentConfig.bind.buildOpts === 'function') {
+          config.bind.opts = componentConfig.bind.buildOpts()
         }
-        Object.assign(result, item)
-        return JSON.parse(JSON.stringify(result))
+        config.gid = utils.uuid(16);
+        console.log('item>>>>>', config)
+
+        // let id = utils.uuid(16)
+        // let result = {
+        //   // id: id,
+        //   gid: utils.uuid(16)
+        // }
+        // Object.assign(result, item)
+        // return JSON.parse(JSON.stringify(result))
+        return config
       },
       onCloseModal(e) {
         this.modalVisible = false

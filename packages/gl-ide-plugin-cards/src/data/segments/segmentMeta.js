@@ -16,7 +16,7 @@ export default {
     //   // 在设计配置页面中展示，选择参数
     //   name: 'field', title: 'title', path: 'properties',
     //   // 在运行时获取参数值
-    //   dataCtx: 'ctxLoader()'
+    //   dataCtx: '$_ctxLoader()'
     // }
   ],
   // 组件的接收参数

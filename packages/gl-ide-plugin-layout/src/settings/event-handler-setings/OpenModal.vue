@@ -3,7 +3,7 @@
     <table class="gl-table">
       <tbody v-if="designComponentName">
       <tr>
-        <td class="gl-table-cell label" style="width: 30%">打开页面</td>
+        <td class="gl-table-cell label" style="width: 25%">打开页面</td>
         <td class="gl-table-cell" colspan="3">
           <!--<a-input v-model="modalInfo.pageId" style="width: 100%"/>-->
           <a-tree-select

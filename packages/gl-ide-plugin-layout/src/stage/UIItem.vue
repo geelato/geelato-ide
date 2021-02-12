@@ -862,7 +862,10 @@
         this.currentSelectedComponent = component
         // 如果是 GlControl
         if (component.componentName === 'GlControl') {
-          this.$gl.bus.$emit(events.ide_setting_open, {panelName: 'GlIdePluginLayoutControlSettings', config: component})
+          this.$gl.bus.$emit(events.ide_setting_open, {
+            panelName: 'GlIdePluginLayoutControlSettings',
+            config: component
+          })
         }
       },
       onComponentSettingUpdate(component) {

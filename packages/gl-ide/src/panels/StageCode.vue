@@ -3,7 +3,8 @@
 -->
 <template>
   <div class="myEditor">
-    <div id="container" ref="container" :style="{height:(layout.height-56)+`px`}"></div>
+    <div style="text-align:center"><a-button size="small" @click="update">更新UI</a-button></div>
+    <div id="container" ref="container"  :style="{height:(layout.height-56-24)+`px`}"></div>
   </div>
 </template>
 
@@ -136,12 +137,17 @@
           // reset();
         })
       },
-      RunResult() {
-        console.log(this.monacoEditor.getValue());
-      },
       // eslint-disable-next-line no-unused-vars
       themeChange(val) {
         this.reset();
+      },
+      update(){
+        try{
+          let content = JSON.parse(this.monacoEditor.getValue())
+          this.$emit('update', content);
+        }catch(e){
+          console.error(e)
+        }
       }
     }
   }

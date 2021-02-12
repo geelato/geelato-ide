@@ -1,7 +1,7 @@
 <template>
   <div class="gl-ide-layout-stage" style="height: 760px;overflow-x: hidden">
-    <gl-ide-stage-code v-if="refreshFlag" :content="ideStore.editingFile.sourceContent" :opts="{editable:false}"
-                       :layout="layout"></gl-ide-stage-code>
+    <gl-ide-stage-code v-if="refreshFlag" :content="ideStore.editingFile.sourceContent" :opts="{editable:true}"
+                       :layout="layout" @update="onUpdate"></gl-ide-stage-code>
   </div>
 </template>
 <script>
@@ -43,6 +43,9 @@
       console.log('geelato-ide >  GlIdePluginLayoutStageUI > mounted()', this.ideStore.editingFile.sourceContent)
     },
     methods: {
+      onUpdate(sourceContent) {
+        this.$set(this.ideStore.editingFile, 'sourceContent', sourceContent)
+      },
       commit() {
       }
     }

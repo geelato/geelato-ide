@@ -221,15 +221,14 @@ utils.compileString = function (expression, $ctx) {
 //   }
 // }
 /**
- * 直接执行eval，代码检查工具eslintrc，提示有误，改该此方法
  * @param expression
  * @param $ctx 用于expression的上下文参数
  * @param ctxName 指定上下文的参数名，默认为$ctx
  * @returns {*}
  */
 utils.eval = function (expression, $ctx, ctxName = '$ctx') {
-  // console.log('geelato-ui-ant > utils > expression: ', expression)
-  // console.log('geelato-ui-ant > utils > $ctx: ', $ctx)
+  console.log('runtime > utils.eval() > expression: ', expression)
+  console.log('runtime > utils.eval() > ctx: ', $ctx)
   if (expression.indexOf(ctxName) === -1) {
     return expression
   }
@@ -384,39 +383,6 @@ utils.stopPropagationAndPreventDefault = function (e) {
     e.preventDefault()
   } else {
     window.event.returnValue = false
-  }
-}
-
-/**
- * 数组元素上移
- * @param items 数组
- * @param index 移动项索引
- */
-utils.moveup = function (items, index) {
-  let item = items[index]
-  items.splice(index, 1)
-  items.splice(index - 1, 0, item)
-}
-
-/**
- * 数组元素下移
- * @param items 数组
- * @param index 移动项索引
- */
-utils.movedown = function (items, index) {
-  let item = items[index]
-  items.splice(index, 1)
-  items.splice(index + 1, 0, item)
-}
-/**
- * 数组元素删除
- * @param items
- * @param index
- * @param confirmMsg 删除的确认信息，若有则提示，若无则直接删除
- */
-utils.remove = function (items, index, confirmMsg) {
-  if (!confirmMsg || confirm(confirmMsg)) {
-    items.splice(index, 1)
   }
 }
 

@@ -73,17 +73,24 @@
         dsItem: {}
       }
     },
+    watch: {
+      dsKey: function (val, oval) {
+        // console.log('val', val, 'oval', oval)
+        this.init()
+      }
+    },
     mounted() {
       console.log('gl-data-source > Index > mounted() > props', 'dsKey', this.dsKey, 'dsMap', this.dsMap, 'dataItems', this.dataItems)
-
       this.init()
+    },
+    updated() {
     },
     beforeDestroy() {
 
     },
     methods: {
       init() {
-        // 已有数据源
+        // 若已有数据源，优先展示
         if (this.dsKey && this.dsMap[this.dsKey]) {
           this.dataSourceType = 'dynamic'
           let ds = this.dsMap[this.dsKey]
@@ -101,6 +108,7 @@
             description: ds.description
           }
         } else {
+          this.dataSourceType = 'static'
           // 参数转换
           this.dsItem = {
             entity: 'platform_demo_entity',

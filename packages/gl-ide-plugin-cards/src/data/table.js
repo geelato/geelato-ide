@@ -143,12 +143,12 @@ export default {
       // 在设计配置页面中展示，选择参数
       name: 'field', title: 'title', path: 'query.mix.properties',
       // 在运行时获取参数值
-      dataCtx: 'ctxLoader().currentQuery'
+      dataCtx: '$_ctxLoader().table.currentQuery'
     }, {
       group: '行记录（currentRow）',
       type: Object,
       name: 'dataIndex', title: 'title', path: 'table.columns',
-      dataCtx: 'ctxLoader().currentRow'
+      dataCtx: '$_ctxLoader().table.currentRow'
     }],
     // methods: [{code: 'refresh', title: '刷新', description: '刷新列表'}],
     // 组件的接收参数

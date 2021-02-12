@@ -60,11 +60,11 @@
                     <td class="gl-table-cell" :title="p.entity">
                       {{p.entity}}
                       <!--<a-select v-model="p.entity" :allowClear="true" style="min-width: 99%">-->
-                        <!--<a-select-option v-for="entityItem in toSelectEntityNames" :key="entityItem.value"-->
-                                         <!--:value="entityItem.value"-->
-                                         <!--:title="entityItem.text">-->
-                          <!--{{entityItem.value}}-->
-                        <!--</a-select-option>-->
+                      <!--<a-select-option v-for="entityItem in toSelectEntityNames" :key="entityItem.value"-->
+                      <!--:value="entityItem.value"-->
+                      <!--:title="entityItem.text">-->
+                      <!--{{entityItem.value}}-->
+                      <!--</a-select-option>-->
                       <!--</a-select>-->
                     </td>
                     <td class="gl-table-cell" :title="p.field">{{p.field}}</td>
@@ -129,7 +129,7 @@
           <table class="gl-table">
             <tr class="gl-table-row">
               <td class="gl-table-cell gl-table-cell-sub-label">
-                所在行布局：
+                行布局：
               </td>
               <!--:tipFormatter="(item)=>item+1"-->
               <td class="gl-table-cell">
@@ -147,7 +147,7 @@
             </tr>
             <tr class="gl-table-row">
               <td class="gl-table-cell gl-table-cell-sub-label">
-                单元格布局：
+                字段布局：
               </td>
               <td class="gl-table-cell">
                 <a-slider
@@ -174,7 +174,8 @@
           <a-alert v-if="!fieldConfig.field" style="text-align: center" message="请先点击选择左边字段" type="info"
                    class="gl-card-gutter"/>
           <gl-setting-control v-if="fieldConfig.field" :opts="fieldConfig"
-                              :toSelectEntityNames="toSelectEntityNames" :dsMap="opts.ds" @dataSourceUpdate="onDataSourceUpdate"></gl-setting-control>
+                              :toSelectEntityNames="toSelectEntityNames" :dsMap="opts.ds"
+                              @dataSourceUpdate="onDataSourceUpdate"></gl-setting-control>
         </div>
       </a-tab-pane>
     </a-tabs>
@@ -243,7 +244,17 @@
     watch: {
       'opts.defaultEntity': function (val) {
         // 同步更改默认的id字段的实体
-        this.$set(this.opts.properties.id, 'entity', val)
+        let property = this.opts.properties[this.opts.pk]
+        if (!property) {
+          // 对于一些旧的配置数据，不存在pk属性，则采用以下方式获取property
+          for (let key in this.opts.properties) {
+            property = this.opts.properties[key]
+            if (property.field === 'id') {
+              break;
+            }
+          }
+        }
+        this.$set(property, 'entity', val)
       }
     },
     created() {
@@ -283,7 +294,9 @@
         for (let key in bindEntityNames) {
           this.addToSelectEntityNames({key: key, value: bindEntityNames[key]})
         }
-        console.log(JSON.stringify(item), bindEntityNames, 'toSelectEntityNames: ', this.toSelectEntityNames)
+        console.log('onFieldSelect() > bindEntityNames:', bindEntityNames)
+        console.log('onFieldSelect() > toSelectEntityNames: ', this.toSelectEntityNames)
+        console.log('onFieldSelect() > item:', JSON.stringify(item))
         if (item.rules === undefined) {
           this.$set(item, 'rules', {required: undefined, unique: undefined})
         }
@@ -354,7 +367,7 @@
           that.currentRowLayout.cols[index].span = sliderItemValue - lastValue
           lastValue = sliderItemValue
         })
-        console.log(that.currentRowLayout)
+        console.log('currentRowLayout:', that.currentRowLayout)
       },
       onColLayoutChange() {
         console.log('before')

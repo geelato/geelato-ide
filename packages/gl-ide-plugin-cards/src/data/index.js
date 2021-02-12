@@ -6,7 +6,6 @@ import header from './header.js'
 import pageLoader from './page_loader.js'
 import controlButton from './control/button'
 
-
 export default {
   items: [{
     group: '组件',
@@ -28,21 +27,9 @@ export default {
       description: '',
       show: true,
       // 初始化的模板数据
-      bind: {opts: form.opts, params: {}},
+      bind: {buildOpts: form.buildOpts, params: {}},
       meta: form.meta
     },
-    // {
-    //   group: '组件',
-    //   title: '表单2',
-    //   icon: 'form',
-    //   componentName: 'GlForm',
-    //   img: '',
-    //   description: '',
-    //   show: true,
-    //   // 初始化的模板数据
-    //   bind: {opts: form2.opts, params: {}},
-    //   meta: form2.meta
-    // },
     {
       title: '页面引用',
       icon: 'link',
