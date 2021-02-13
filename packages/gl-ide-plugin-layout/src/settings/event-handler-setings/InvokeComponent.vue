@@ -5,22 +5,49 @@
       <tr>
         <td class="gl-table-cell label" style="width: 20%">组件</td>
         <td class="gl-table-cell" style="padding: 0.5em">
-          <a-select v-model="selectedComponentKey" style="width: 100%">
-            <a-select-option v-for="obj in objectTree" :key="obj.key" :title="obj.title">
-              {{obj.title}}&nbsp;({{obj._component}})
-            </a-select-option>
-          </a-select>
+          <!--<a-select v-model="selectedComponentKey" style="width: 100%">-->
+          <!--<a-select-option v-for="obj in objectTree" :key="obj.key" :title="obj.title">-->
+          <!--{{obj.title}}&nbsp;({{obj._component}})-->
+          <!--</a-select-option>-->
+          <!--</a-select>-->
+          <!--<a-tree-->
+              <!--showIcon-->
+              <!--:treeData="treeData"-->
+              <!--:defaultExpandAll=true-->
+          <!--&gt;-->
+          <!--:filterTreeNode="filterTreeNode"-->
+
+          <a-tree-select
+              v-model="params.InvokeComponent.refId"
+              style="width: 100%"
+              :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+              :tree-data="treeData"
+              placeholder="Please select"
+              tree-default-expand-all
+          >
+          <!--<span slot="title" slot-scope="{ key, value }" style="color: #08c">-->
+            <!--{{ value }}-->
+          <!--</span>-->
+          </a-tree-select>
         </td>
       </tr>
       <tr>
         <td class="gl-table-cell label" style="width: 20%">方法</td>
         <td class="gl-table-cell">
-          <a-select v-model="fn.name" style="min-width: 99%" @change="handleMethodChange($event,fn)">
+          <a-select v-model="params.InvokeComponent.fn.name" style="min-width: 99%"
+                    @change="handleMethodChange($event,params.InvokeComponent.fn)">
             <a-select-option v-for="method in getMixMethods()" :key="method.name"
                              :title="method.title">
               {{method.title}}&nbsp;({{method.name}})
             </a-select-option>
           </a-select>
+        </td>
+      </tr>
+      <tr>
+        <td class="gl-table-cell label" style="width: 20%">说明</td>
+        <td class="gl-table-cell" style="padding: 0.5em">
+          <div v-if="params.InvokeComponent.fn.description" v-html="params.InvokeComponent.fn.description"></div>
+          <div v-else>无</div>
         </td>
       </tr>
       <tr>
@@ -40,13 +67,10 @@
           <!--<div style="width: 100%" v-else>-->
           <!--b-->
           <!--</div>-->
-          <gl-param-mapping :params="fn.params" @update="(value)=>{fn.params = value}"></gl-param-mapping>
-        </td>
-      </tr>
-      <tr>
-        <td class="gl-table-cell label" style="width: 20%">说明</td>
-        <td class="gl-table-cell" style="padding: 0.5em">
-          {{fn.description||'无'}}
+          <!--<gl-param-mapping :params="fn.params" @update="(value)=>{fn.params = value}"></gl-param-mapping>-->
+          <gl-param-mapping :params="params.InvokeComponent.params"
+                            @update="(value)=>{params.InvokeComponent.params = value}"></gl-param-mapping>
+
         </td>
       </tr>
       </tbody>
@@ -62,28 +86,18 @@
   export default {
     components: {GlParamMapping},
     mixins: [mixin],
-    props: {
-      objectTree: {
-        type: Array,
-        required: true
-      },
-      params: {
-        type: Object,
-        default() {
-          return {}
-        }
-      },
-      designComponentName: {
-        type: String
-      }
-    },
+    props: {},
     data() {
       return {
-        meta: {},
-        fn: {
-          name: '',
-          params: []
+        name: 'InvokeComponent',
+        defaultConfig: {
+          fn: {
+            name: '',
+            params: []
+          },
+          refId: ''
         },
+        meta: {},
         /**
          *  所有控件默认的方法，不需要在每个控件中配置一次，与geelato-ui-ant的mixin对应
          */
@@ -139,9 +153,9 @@
             this.selectedComponentName = obj._component
             // 如果切换后的组件不存在该方法名时，将方法名清空
             if (this.getMixMethods().filter((m) => {
-              return m.name === that.fn.name
+              return m.name === that.params.InvokeComponent.fn.name
             }).length === 0) {
-              that.$set(that.fn, 'name', '')
+              that.$set(that.params.InvokeComponent.fn, 'name', '')
             }
           }
         },
@@ -153,11 +167,11 @@
       this.meta = componentsMeta
     },
     mounted() {
+      this.init()
       this.selectedComponentName = this.designComponentName
-      if (this.params && this.params.InvokeComponent && this.params.InvokeComponent.fn) {
-        this.fn = this.params.InvokeComponent.fn
-        this.selectedComponentKey = this.params.InvokeComponent.refId
-      }
+      this.selectedComponentKey = this.params[this.name].refId
+      console.log('objectTree>', this.objectTree)
+      console.log('params>', this.params)
     },
     methods: {
       getMeta() {
@@ -178,19 +192,18 @@
           return obj.key === that.selectedComponentKey
         })
       },
+      /**
+       * 过滤到非组件的部分
+       * @param inputValue string
+       * @param treeNode TreeNode
+       */
+      filterTreeNode(inputValue, treeNode) {
+        return inputValue.indexOf('[组]') != -1
+      },
       handleMethodChange(methodName, fn) {
         console.log('handleMethodChange()>', methodName, fn, this.selectedComponentName, this.getMixMethods())
         let method = this.getMixMethods().find(method => method.name === methodName)
         Object.assign(fn, JSON.parse(JSON.stringify(method)))
-        this.updateSettings()
-      },
-      updateSettings() {
-        this.$emit('update', {
-          InvokeComponent: {
-            fn: this.fn,
-            refId: this.selectedComponentRefId
-          }
-        })
       }
     }
   }

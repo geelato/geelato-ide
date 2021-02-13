@@ -188,7 +188,7 @@ export default {
         ],
         // 当前方法的返回结果
         return: [],
-        description: '删除该行记录，仅用于操作列按钮有效。'
+        description: '<span style="color: red">删除该行记录，仅用于操作列的控件（如按钮）有效。</span>'
       },
       {
         name: 'refresh',

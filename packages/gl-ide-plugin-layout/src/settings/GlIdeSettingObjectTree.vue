@@ -148,6 +148,7 @@
                 let node = findNode || {}
                 node.title = '打开页面-' + doItem.params.title
                 node.key = doItem.params.gid
+                node.value = doItem.params.gid
                 node.slots = {icon: 'table'}
                 node.children = groups
                 // action：Object，示例

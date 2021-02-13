@@ -57,11 +57,11 @@
     methods: {
       addCallback() {
         if (!this.doItem.then) {
-          this.doItem.then = []
+          this.$set(this.doItem, 'then', [])
         }
         this.doItem.then.push({handler: '', fn: '', params: {}, then: []})
         // this.doItems.push({handler: '', fn: '', params: {}})
-        console.log('doItems>', this.doItems, this.doItem)
+        console.log('ActionBar > addCallback() > doItems,doItem:', this.doItems, this.doItem)
         this.$emit('doActionAdded', this.doItem.handler, this.doItems, this.doItemIndex)
       }
     }

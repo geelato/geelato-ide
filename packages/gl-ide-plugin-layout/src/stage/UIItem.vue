@@ -443,11 +443,13 @@
         let node = that.findTreeNode(item.gid) || {
           title: item.title,
           key: item.gid,
+          value: item.gid,
           slots: {
             icon: item.icon,
           },
           disabled: true,
           children: [],
+          _type: 'component',
           _component: ''
         }
         let groups = node.children
@@ -466,6 +468,7 @@
               group = {
                 title: treeNodeObject.title + '[组]',
                 key: treeNodeObject.path,
+                value: treeNodeObject.path,
                 disabled: true,
                 slots: {
                   icon: 'folder',
@@ -494,7 +497,8 @@
                     foundChildrenNode = {
                       title: foundChildrenNodeTitle,
                       // 组件id+组件内的控件id
-                      key: item.gid + '_$_' + childObj.gid, // that.$gl.utils.uuid(16),
+                      key: item.gid + '_$_' + childObj.gid,
+                      value: item.gid + '_$_' + childObj.gid,
                       slots: {
                         icon: 'link',
                       }
@@ -595,7 +599,8 @@
             foundChildrenNode = {
               title: foundChildrenNodeTitle,
               // 组件id+组件内的控件id
-              key: item.gid + '_$_' + childObj.gid, // that.$gl.utils.uuid(16),
+              key: item.gid + '_$_' + childObj.gid,
+              value: item.gid + '_$_' + childObj.gid,
               slots: {
                 icon: 'link',
               }
@@ -642,6 +647,7 @@
         let node = that.findTreeNode(container.gid) || {
           title: container.title,
           key: container.gid,
+          value: container.gid,
           disabled: true,
           slots: {
             icon: 'folder',
@@ -657,6 +663,7 @@
         let node = that.findTreeNode(panel.gid) || {
           title: panel.title,
           key: panel.gid,
+          value: panel.gid,
           disabled: true,
           slots: {
             icon: 'folder',
@@ -671,6 +678,7 @@
         let node = that.findTreeNode(row.gid) || {
           title: row.title,
           key: row.gid,
+          value: row.gid,
           disabled: true,
           slots: {
             icon: 'folder',
@@ -687,6 +695,7 @@
         let group = {
           title: cell.title || '单元格',
           key: cell.gid,
+          value: cell.gid,
           disabled: true,
           slots: {
             icon: 'folder',

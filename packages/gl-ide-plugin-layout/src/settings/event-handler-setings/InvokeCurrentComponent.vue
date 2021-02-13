@@ -85,7 +85,6 @@
         Object.assign(fn, JSON.parse(JSON.stringify(method)))
         this.updateSettings()
       },
-
       updateSettings() {
         this.$emit('update', {
           InvokeCurrentComponent: {

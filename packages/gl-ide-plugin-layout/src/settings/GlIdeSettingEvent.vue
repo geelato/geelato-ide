@@ -53,7 +53,8 @@
                             @doActionSetting="doActionSetting" @doActionRemoved="doActionRemoved"
                             @doActionChange="doActionChange" @doActionAdded="doActionAdded"
                             @setCondition="onSetCondition"></action-bar>
-                <div class="line" v-if="doItem.then" v-for="(thenItem,thenItemIndex) in doItem.then"
+                <div class="line" v-if="doItem.then"
+                     v-for="(thenItem,thenItemIndex) in doItem.then"
                      :key="actionIndex+'_'+doItemIndex+'_'+thenItemIndex">
                   <action-bar label="回调动作" :isLastOne="true" :doItems="doItem.then" :doItem="thenItem"
                               :doItemIndex="thenItemIndex"
@@ -98,6 +99,7 @@
   import ShowAndHide from './event-handler-setings/ShowAndHide'
   import ReadAndWrite from './event-handler-setings/ReadAndWrite'
   import Empty from './event-handler-setings/Empty'
+  import mixinRefresh from '../../../mixin-refresh'
 
   let localComponents = {
     ActionBar,
@@ -117,6 +119,7 @@
   export default {
     name: "GlIdeSettingEvent",
     components: localComponents,
+    mixins: [mixinRefresh],
     props: {
       ideStore: {
         type: Object,
@@ -195,7 +198,7 @@
         })
       },
       doActionAdded($event, doItems, index) {
-        this.$nextTick()
+        // this.$_forceRefresh()
       },
       doActionRemoved($event, doItems, index) {
         console.log($event, doItems, index)
