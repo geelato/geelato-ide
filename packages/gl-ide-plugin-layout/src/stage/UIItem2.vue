@@ -134,7 +134,7 @@
                   <!-- 单元格内该项为容器 -->
                   <div class="gl-container-wrapper">
                     <a-tabs v-if="cellItem.type==='Tabs'" :default-active-key="0" type="editable-card"
-                            @edit="(targetKey, action)=>{onTabsAdd(targetKey, action,cellItem)}">
+                            @edit="(targetKey, action)=>{onTabsEdit(targetKey, action,cellItem)}">
                       <a-tab-pane :tab="panel.title" v-for="(panel,panelIndex) in cellItem.items"
                                   :key="panelIndex">
                         <gl-draggable
@@ -1102,7 +1102,7 @@
        * @param action
        * @param tabs
        */
-      onTabsAdd(targetKey, action, tabs) {
+      onTabsEdit(targetKey, action, tabs) {
         console.log(targetKey, action, tabs)
         if (action === 'add') {
           tabs.items.push({gid: 'tab_' + this.$gl.utils.uuid(12), title: '新标签页', items: []})

@@ -5,9 +5,20 @@ import tree from './tree.js'
 import header from './header.js'
 import pageLoader from './page_loader.js'
 import controlButton from './control/button'
+import container_tabs from './container_tabs'
 
 export default {
   items: [{
+    group: '容器',
+    title: '标签容器',
+    icon: 'read',
+    componentName: 'GlContainerTabs',
+    img: '',
+    description: '',
+    show: true,
+    bind: {buildOpts: container_tabs.buildOpts, params: {}},
+    meta: container_tabs.meta
+  }, {
     group: '组件',
     title: '列表',
     icon: 'table',
@@ -61,17 +72,17 @@ export default {
       bind: {opts: toolbar.opts, params: {}},
       meta: toolbar.meta
     },
-    {
-      group: '组件',
-      title: '标题',
-      icon: 'bars',
-      componentName: 'GlHeader',
-      img: '',
-      description: '',
-      show: true,
-      bind: {opts: header.opts, params: {}},
-      meta: header.meta
-    },
+    // {
+    //   group: '组件',
+    //   title: '标题',
+    //   icon: 'bars',
+    //   componentName: 'GlHeader',
+    //   img: '',
+    //   description: '',
+    //   show: true,
+    //   bind: {opts: header.opts, params: {}},
+    //   meta: header.meta
+    // },
     {
       group: '控件',
       title: '按钮',

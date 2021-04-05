@@ -13,6 +13,9 @@ const component = {
 // 为组件提供 install 安装方法，供按需引入
 component.install = function (Vue) {
   console.log('install >', component.name)
+
+  Vue.prototype.$gl.i18n = Vue.prototype.$gl.i18n || {}
+
   Vue.prototype.$globalVue = Vue
   Vue.use(GlPage)
   Vue.use(GlExtra)
@@ -20,7 +23,7 @@ component.install = function (Vue) {
   // Install and Activate the zh_CN locale.
   localize('zh_CN', zhCN);
   Object.keys(rules).forEach(rule => {
-    console.log('install rule >', rule)
+    console.log('runtime > index > install rule:', rule)
     extend(rule, rules[rule])
   })
 }

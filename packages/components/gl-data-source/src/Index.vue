@@ -12,7 +12,9 @@
     </div>
     <div v-else-if="dataSourceType==='static'">
       <gl-data-source-static v-if="dsType==='select'" :dataItems="dataItems"
-                             :dataAlias="dataAlias"></gl-data-source-static>
+                             :dataAlias="dataAlias"
+                             :defaultActiveIndex="defaultActiveIndex"
+                             @changeDefaultActiveIndex="onChangeDefaultActiveIndex"></gl-data-source-static>
       <gl-data-source-static-tree-node v-else-if="dsType==='treeNode'" :dataItems="dataItems"
                                        :dataAlias="dataAlias"></gl-data-source-static-tree-node>
     </div>
@@ -65,6 +67,9 @@
         default() {
           return 'select'
         }
+      },
+      defaultActiveIndex: {
+        type: Number
       }
     },
     data() {
@@ -167,7 +172,10 @@
         console.log('gl-data-source > Index > onChange() > $emit {dsItem, dsKey, dsMap}:', updatedDsItem, dsKey, this.dsMap)
 
         this.$emit('update', {dsItem: updatedDsItem, dsKey: dsKey, dsMap: this.dsMap})
-      }
+      },
+      onChangeDefaultActiveIndex(defaultActiveIndex) {
+        this.$emit('changeDefaultActiveIndex', defaultActiveIndex)
+      },
     }
   }
 </script>

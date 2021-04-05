@@ -57,7 +57,7 @@
                   </template>
                 </a-tabs>
               </template>
-              <template v-else>未支持的type:{{cellItem.type}}</template>
+              <template v-else>未支持的type:{{ cellItem.type}}</template>
             </template>
 
           </div>
@@ -70,7 +70,7 @@
 <script>
   import Vue from 'vue'
   import EditingFileParser from '../../../EditingFileParser'
-  import pageItemMixin from "./pageItemMixin";
+  import pageItemMixin from './pageItemMixin'
 
   export default {
     name: 'GlPageItem',
@@ -169,20 +169,15 @@
             })
           })
         })
-      }
-
-      ,
+      },
       onComponentClick($event) {
         console.log('$event', $event)
-      }
-      ,
+      },
       getCardConfig(cardId) {
         return this.componentRefs[cardId]
-      }
-      ,
+      },
       getCardComponent(cardId) {
         const card = this.getCardConfig(cardId)
-        // console.log('...................', cardId, card, Vue.component(card.type))
         return Vue.component(card.type)
       }
     }

@@ -27,6 +27,10 @@
       }
     },
     mounted() {
+      console.log('gl-page-runtime > mounted() > i18n.locale:', this.$i18n.locale)
+      console.log('gl-page-runtime > mounted() > i18n.locale:', this.$i18n.locale)
+      console.log('gl-page-runtime > mounted() > i18n:', this.$i18n)
+
       this.$gl.ctx = this.$gl.ctx || {}
       this.$gl.ctx.pages = this.$gl.ctx.pages || {}
       console.log('gl-page-runtime > mounted() > pageRefId>', this.pageRefId)

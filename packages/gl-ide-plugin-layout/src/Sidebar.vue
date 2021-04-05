@@ -40,7 +40,8 @@
           @choose="onChooseLayoutContainer"
           :clone="cloneLayoutContainer"
       >
-        <a-col v-for="(container,containerIndex) in containers" :key="containerIndex" :title="container.title"
+        <a-col v-for="(container,containerIndex) in containers" :key="containerIndex"
+               :title="container.title"
                :span="8">
           <!--<div style="min-height: 2em"  class="gl-dnd-row-handle">{{container.title}}</div>-->
           <div class="gl-container-item" v-if="containerIndex===0"
@@ -171,21 +172,21 @@
         chooseContainerIndex: 0,
         containers: [
           {
-            title: '平铺页面',
+            title: '自由布局容器',
             activeKey: 0,
             type: 'Flow',
             items: [{title: 'Flow1', items: []}, {title: 'Flow2', items: []}],
             slots: [],
             opts: {}
           }, {
-            title: '标签页面',
+            title: '标签容器',
             activeKey: 0,
             type: 'Tabs',
             items: [{title: 'tab1', items: []}, {title: 'tab2', items: []}],
             slots: [],
             opts: {tabPosition: 'top', type: 'line', size: 'default'}
           }, {
-            title: '折叠页面',
+            title: '折叠容器',
             activeKey: 0,
             type: 'Collapse',
             items: [{title: 'panel1', items: []}, {title: 'panel2', items: []}],

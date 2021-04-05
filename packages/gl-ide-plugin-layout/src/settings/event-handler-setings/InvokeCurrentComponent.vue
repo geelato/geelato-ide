@@ -14,6 +14,13 @@
         </td>
       </tr>
       <tr>
+        <td class="gl-table-cell label" style="width: 20%">说明</td>
+        <td style="padding: 0.5em">
+          <div v-html="fn.description">
+          </div>
+        </td>
+      </tr>
+      <tr>
         <td class="gl-table-cell label">参数</td>
         <td>
           <table style="margin: 2px;width: 100%" v-if="fn.params&&fn.params.length>0">
@@ -23,19 +30,13 @@
               </td>
               <td class="gl-table-cell">
                 <a-input v-model="param.value" style="min-width: 99%" :placeholder="param.placeholder||param.name"
-                       @change="updateSettings"/>
+                         @change="updateSettings"/>
               </td>
             </tr>
           </table>
           <div style="margin: 0.5em;width: 100%" v-else>
             无
           </div>
-        </td>
-      </tr>
-      <tr>
-        <td class="gl-table-cell label" style="width: 20%">说明</td>
-        <td style="padding: 0.5em">
-          {{fn.description}}
         </td>
       </tr>
       </tbody>

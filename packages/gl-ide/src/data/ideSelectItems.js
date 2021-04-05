@@ -33,7 +33,7 @@ export default {
   ],
   btnTypes: [
     {text: '主按钮', value: 'primary'},
-    {text: '次按钮', value: ''},
+    {text: '次按钮', value: 'normal'},
     {text: '虚线按钮', value: 'dashed'},
     {text: '危险按钮', value: 'danger'},
     {text: '链接按钮', value: 'link'},

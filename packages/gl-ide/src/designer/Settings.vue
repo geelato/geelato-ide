@@ -25,7 +25,7 @@
 </template>
 
 <script>
-  import mixin from '../../../mixin'
+  import mixin from '../mixin'
   import events from '../events'
   import ATextarea from "ant-design-vue/es/input/TextArea";
 

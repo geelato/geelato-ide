@@ -222,11 +222,11 @@
   }
 
   /*.gl-dnd-more-than-one-child {*/
-    /*display: none;*/
+  /*display: none;*/
   /*}*/
 
   /*.gl-dnd-only-one-child {*/
-    /*display: none;*/
+  /*display: none;*/
   /*}*/
 
   .gl-dnd-ghost + .gl-dnd-only-one-child {
@@ -265,6 +265,11 @@
 
   .gl-dnd-ghost > * {
     display: none !important;
+  }
+
+  /* 拖拉到舞台上的容器，在拖拉状态时，100%展示宽度*/
+  .gl-dnd-wrapper-cell-item > div.ant-col-8 {
+    width: 100% !important;
   }
 
   /*.gl-container-wrapper:hover * {*/

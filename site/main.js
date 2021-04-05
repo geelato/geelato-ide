@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import i18n from '../runtime/locales/index'
 import VueRouter from 'vue-router'
 import Antd from 'ant-design-vue'
 import App from './App.vue'
@@ -37,7 +38,8 @@ let auiOptions = {
   // 修改服务地址，默认为http://localhost:8080/api
   api: new ApiSettings({
     baseURL: 'http://localhost:8080/api',
-  })
+  }),
+  i18n: i18n
 }
 
 Vue.use(VueRouter)
@@ -68,6 +70,7 @@ const router = new VueRouter({
 // 记得要通过 router 配置参数注入路由，
 // 从而让整个应用都有路由功能
 new Vue({
+  i18n,
   router,
   render: h => h(App),
 }).$mount('#app')

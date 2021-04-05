@@ -1,5 +1,5 @@
 <template>
-  <div v-if="opts">
+  <div v-if="opts&&opts.props" class="gl-setting-control">
     <div class="gl-title">
       <a-icon type="setting"/>
       外观
@@ -10,7 +10,14 @@
           字段名：
         </td>
         <td class="gl-table-cell">
-          <a-input v-model="opts.title" style="width: 99%"/>
+          <a-input v-model="opts.title" style="width: 99%">
+            <a-icon slot="suffix" type="global" @click="$refs.titleI18n.show()"
+                    :style="opts.titleI18n?iconActiveStyle:{}" v-show="refreshFlag"/>
+          </a-input>
+          <gl-setting-i18n ref="titleI18n" :i18nMap="i18nMap" :i18nKey="opts.titleI18n" :defaultLocaleValue="opts.title"
+                           @change="(message)=>{$set(opts, 'title', message.zh)}"
+                           @delete="(i18nKey)=>{delete opts.titleI18n;forceFresh()}"
+                           @createKey="(i18nKey)=>{$set(opts, 'titleI18n', i18nKey)}"></gl-setting-i18n>
         </td>
       </tr>
       <tr class="gl-table-row">
@@ -48,7 +55,8 @@
           <!--选择-->
           <!--</a-button>-->
           <!--</a-input-search>-->
-          <a-select v-model="opts.entity" :allowClear="true" style="min-width: 99%" v-if="refreshFlag">
+          <a-select v-model="opts.entity" :allowClear="true" style="min-width: 99%" v-if="refreshFlag"
+                    @change='onChangeSelectEntity'>
             <div slot="dropdownRender" slot-scope="menu">
               <gl-v-nodes :vnodes="menu"/>
               <a-divider style="margin: 4px 0;"/>
@@ -94,7 +102,9 @@
         </td>
         <td class="gl-table-cell">
           <gl-data-source :dataItems="opts.data" :dsKey="opts.dsName" :dsMap="dsMap"
-                          @update="onDataSourceUpdate"></gl-data-source>
+                          @update="onDataSourceUpdate"
+                          :defaultActiveIndex="opts.props.defaultActiveIndex"
+                          @changeDefaultActiveIndex="onChangeDefaultActiveIndex"></gl-data-source>
         </td>
       </tr>
     </table>
@@ -124,13 +134,21 @@
       <a-icon type="setting"/>
       提示、描述、说明
     </div>
-    <table class="gl-table" v-if="opts.props">
+    <table class="gl-table">
       <tr class="gl-table-row">
         <td class="gl-table-cell gl-table-cell-sub-label">
           占位符：
         </td>
         <td class="gl-table-cell">
-          <a-input v-model="opts.props.placeholder" style="width: 99%"/>
+          <a-input v-model="opts.props.placeholder" style="width: 99%">
+            <a-icon slot="suffix" type="global" @click="$refs.placeholderI18n.show()"
+                    :style="opts.props.placeholderI18n?iconActiveStyle:{}" v-show="refreshFlag"/>
+          </a-input>
+          <gl-setting-i18n ref="placeholderI18n" :i18nMap="i18nMap" :i18nKey="opts.props.placeholderI18n"
+                           :defaultLocaleValue="opts.props.placeholder"
+                           @change="(message)=>{$set(opts.props,'placeholder', message.zh)}"
+                           @delete="(i18nKey)=>{delete opts.props.placeholderI18n;forceFresh()}"
+                           @createKey="(i18nKey)=>{$set(opts.props, 'placeholderI18n', i18nKey)}"></gl-setting-i18n>
         </td>
       </tr>
       <tr class="gl-table-row">
@@ -138,7 +156,14 @@
           提示描述：
         </td>
         <td class="gl-table-cell">
-          <a-textarea v-model="opts.tips" style="width: 99%" rows="5"></a-textarea>
+          <a-icon slot="suffix" type="global" style="position: relative;float: right;right: 1em;z-index: 99999;margin-top: 0.5em" @click="$refs.tipsI18n.show()"
+                  :style="opts.tipsI18n?iconActiveStyle:{}" v-show="refreshFlag"/>
+          <a-textarea v-model="opts.tips" style="width: 99%;padding-right: 2em" rows="5">
+          </a-textarea>
+          <gl-setting-i18n ref="tipsI18n" :i18nMap="i18nMap" :i18nKey="opts.tipsI18n" :defaultLocaleValue="opts.tips"
+                           @change="(message)=>{$set(opts, 'tips', message.zh)}"
+                           @delete="(i18nKey)=>{delete opts.tipsI18n;forceFresh()}"
+                           @createKey="(i18nKey)=>{$set(opts, 'tipsI18n', i18nKey)}"></gl-setting-i18n>
         </td>
       </tr>
     </table>
@@ -183,6 +208,15 @@
         default() {
           return {}
         }
+      },
+      /**
+       *  国际化方案
+       */
+      i18nMap: {
+        type: Object,
+        default() {
+          return {}
+        }
       }
     },
     data() {
@@ -190,42 +224,52 @@
         controlTypes: controlTypes,
         currentEntityNames: this.toSelectEntityNames,
         currentEntityColumns: [],
-        refreshFlag: true
+        refreshFlag: true,
+        visibleTitleI18n: false,
+        iconActiveStyle: {color: '#1890FF'}
       }
     },
     watch: {
-      'opts.entity': {
-        handler: function (val, oval) {
-          console.log('opts.entity', val, oval)
-          this.onChangeSelectEntity(val)
-        },
-        immediate: true
-      },
       'opts.control': {
         handler: function (val, oval) {
           console.log('opts.control', val, oval)
-          this.initDataItems()
+          this.initConvertData()
         },
         immediate: true
       }
     },
     mounted() {
       console.log('gl-setting-control > opts:', this.opts)
+
+      this.onChangeSelectEntity(this.opts.entity)
     },
     created() {
-      // Object.assign(this.currentEntityNames, this.toSelectEntityNames)
-      this.initDataItems()
+      this.initConvertData()
     },
     destroyed() {
     },
     methods: {
+      // createKey($evnet) {
+      //   console.log('createKey:', $evnet)
+      //   this.$set(this.opts, 'titleI18n', $evnet)
+      // },
       forceFresh() {
         this.refreshFlag = false
         this.$nextTick(function () {
           this.refreshFlag = true
         })
       },
-      initDataItems() {
+      /**
+       * 设置默认值、属性
+       */
+      initConvertData() {
+        if (!this.opts.rules) {
+          this.$set(this.opts, 'rules', {})
+        }
+        if (!this.opts.props) {
+          this.$set(this.opts, 'props', {})
+          this.$set(this.opts.props, 'placeholder', {placeholder: ''})
+        }
         if (this.isContainDataItems(this.opts) && !this.opts.data) {
           this.$set(this.opts, 'data', [])
         }
@@ -321,14 +365,21 @@
         this.$emit('dataSourceUpdate', {dsItem: dsItem, dsKey: dsKey, dsMap: dsMap})
 
       },
+      onChangeDefaultActiveIndex(defaultActiveIndex) {
+        this.$set(this.opts.props, 'defaultActiveIndex', defaultActiveIndex)
+      },
       onEntitySelected(params, data) {
-        this.opts.entity = data.name
+        this.$set(this.opts, 'entity', data.name)
         this.addToSelectEntityNames({text: data.title, value: data.name})
         this.loadFieldMeta({tableId: data.id, '@order': 'fieldName|+'})
-      },
+      }
     }
   }
 </script>
 
-<style scoped>
+<style>
+  .gl-setting-control-popover {
+    margin-top: 24px !important;
+    margin-right: 48px !important;;
+  }
 </style>

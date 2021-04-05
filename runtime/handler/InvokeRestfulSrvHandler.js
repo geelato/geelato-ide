@@ -1,5 +1,5 @@
-import utils from "../utils";
-import notification from "ant-design-vue/es/notification/index";
+import utils from '../utils';
+import notification from 'ant-design-vue/es/notification/index';
 import VarsParser from '../VarsParser'
 
 export default class InvokeRestfulSrvHandler {

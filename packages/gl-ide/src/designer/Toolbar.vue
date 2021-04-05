@@ -59,6 +59,10 @@
       <a-icon type="question-circle"/>
       帮助
     </a-button>
+    <a-button v-if="currentLanguage" size="small" :style="{background: theme.background }" style="float: right"
+              @click="setI18nLanguage($i18n.locale==='zh-CN'?'en-US':'zh-CN')">
+      {{$i18n.locale==='zh-CN'?'English':'中文'}}
+    </a-button>
     <a-button size="small" :style="{background: theme.background }" @click="toggleFullScreen" style="float: right"
               title="按ESC键即可退出全屏">
       <template v-if="isFullscreen">
@@ -74,8 +78,9 @@
 </template>
 
 <script>
-  import mixin from '../../../mixin'
+  import mixin from '../mixin'
   import screenfull from 'screenfull'
+  import {setI18nLanguage} from '../../../../runtime/locales/index'
 
   export default {
     name: "GlDesignerToolbar",
@@ -84,10 +89,26 @@
       return {
         isFullscreen: false,
         islogined: true,
+        zh: {
+          title: '中文',
+          locale: 'zh-CN',
+          toggleTitle: 'English'
+        },
+        en: {
+          title: 'English',
+          locale: 'en-US',
+          toggleTitle: '中文'
+        },
+        currentLanguage: undefined
       }
     },
+    created() {
+      this.currentLanguage = this.zh
+    },
     methods: {
-
+      setI18nLanguage(lang) {
+        setI18nLanguage(lang)
+      },
       showProjectForm() {
         this.$gl.bus.$emit('gl-ide.designer.showProjectForm')
       },
@@ -126,6 +147,13 @@
       toggleFullScreen() {
         screenfull.toggle()
         this.isFullscreen = !this.isFullscreen
+      },
+      changeLanguages() {
+        console.log('this.$i18n:', this.$i18n)
+        console.log('this.$i18n.locale:', this.$i18n.locale)
+        this.currentLanguage = this.currentLanguage.locale === 'zh-CN' ? this.en : this.zh
+        setI18nLanguage(this.currentLanguage.locale)
+        console.log('this.$i18n.locale:', this.$i18n.locale)
       }
     },
   }

@@ -1,39 +1,39 @@
 <template>
   <div>
-    <gl-draggable
-        v-model="items"
-        animation="700"
-        handle=".gl-dnd-select-handle"
-        :group="{ name: 'select', pull: 'clone', put: true }"
-        ghost-class="ghost"
-        :sort="true"
-        @start="drag=true"
-        @end="drag=false"
-    >
-      <div v-for="(item,index) in items" :key="index" class="gl-select-item gl-dnd-select-handle">
-        <!--<span>-->
-        <!--<a-input type="radio" name="defaultIndex"/>-->
-        <!--</span>-->
-        <span>
-          <a-input v-model="item[dataAlias.text]" style="width: 6em" placeholder="选项内容"/>
-        </span>
-        <!--<span>-->
-        <!--<a-input v-model="item.value" style="width: 4em" placeholder="选项值"/>-->
-        <!--</span>-->
-        <span>
-          <a-input-number v-model="item[dataAlias.value]" style="width: 4em" placeholder="选项值"/>
-        </span>
-        <span class="icons-list">
-          <a-icon type="minus" @click="remove(item,index)"/>
+    <a-radio-group v-model="activeIndex" @change="onChangeDefaultActiveIndex">
+      <gl-draggable
+          v-model="items"
+          animation="700"
+          handle=".gl-dnd-select-handle"
+          :group="{ name: 'select', pull: 'clone', put: true }"
+          ghost-class="ghost"
+          :sort="true"
+          @start="drag=true"
+          @end="drag=false"
+      >
+        <div v-for="(item,index) in items" :key="index" class="gl-select-item gl-dnd-select-handle">
+        <span class="icons-list" style="margin: 0 0.5em 0 0">
           <a-icon type="drag" class=""/>
         </span>
-      </div>
-    </gl-draggable>
-    <a-button block @click="add()" size="small"  style="line-height: 1.499em">
-      <a-icon type="plus" size="small"/>添加
-    </a-button>
-    <!--<a-switch :checked="dataType==='number'" @click='changeType'/>-->
-    <!--是否数值类型-->
+          <span>
+          <a-radio :value="index" title="默认选择项"></a-radio>
+          <a-input v-model="item[dataAlias.text]" style="width: 7em" placeholder="显示内容" title="显示内容"/>
+        </span>
+          <span>
+          <a-input-number v-model="item[dataAlias.value]" style="width: 5em" placeholder="选项值" title="选项值"/>
+        </span>
+          <span class="icons-list" style="float: right;line-height: 2.4em;margin-right: 0.5em;color: red">
+          <a-icon type="delete" @click="remove(item,index)"/>
+        </span>
+        </div>
+      </gl-draggable>
+      <a-button block @click="add()" size="small" style="line-height: 1.499em">
+        <a-icon type="plus" size="small"/>
+        添加
+      </a-button>
+      <!--<a-switch :checked="dataType==='number'" @click='changeType'/>-->
+      <!--是否数值类型-->
+    </a-radio-group>
   </div>
 </template>
 
@@ -50,10 +50,17 @@
         default() {
           return {text: 'text', value: 'value'}
         }
+      },
+      defaultActiveIndex: {
+        type: Number,
+        default() {
+          return 0
+        }
       }
     },
     data() {
       return {
+        activeIndex: this.defaultActiveIndex,
         items: this.dataItems,
         // dataType: 'number'
       }
@@ -80,7 +87,13 @@
         //   this.$message.info('至少需保留一项。')
         //   return
         // }
+        if (index === this.activeIndex) {
+          this.activeIndex = 0
+        }
         this.items.splice(index, 1)
+      },
+      onChangeDefaultActiveIndex() {
+        this.$emit('changeDefaultActiveIndex', this.activeIndex)
       }
     }
   }

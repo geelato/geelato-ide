@@ -18,7 +18,7 @@
 </template>
 
 <script>
-  import mixin from '../../../mixin'
+  import mixin from '../mixin'
 
   export default {
     name: "GlDesignerSidebar",

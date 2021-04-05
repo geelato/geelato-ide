@@ -21,9 +21,11 @@ import GlTemplate from '../runtime/components/gl-template/index'
 import GlSegment from '../runtime/components/gl-segment/index'
 import GlText from '../runtime/components/gl-text/index'
 // 公共组件
+import GlSettingI18n from './components/gl-setting-i18n/index'
 import GlDataSource from './components/gl-data-source/index'
 import GlSettingStyle from './components/gl-setting-style/Index'
 import GlSettingControl from './components/gl-setting-control/index'
+import GlContainerTabs from './components/containers/gl-container-tabs/index'
 
 // import GlIdePluginStructure from './gl-ide-plugin-structure/index'
 import ide from './gl-ide/src/ide'
@@ -44,6 +46,7 @@ import './ide.css'
 // 存储组件列表
 const components = [
   Verte,
+  GlSettingI18n,
   GlIde,
   GlPage,
   GlTag,
@@ -52,7 +55,8 @@ const components = [
   GlText,
   GlDataSource,
   GlSettingStyle,
-  GlSettingControl
+  GlSettingControl,
+  GlContainerTabs
 ]
 
 // let uiApi = new Api()

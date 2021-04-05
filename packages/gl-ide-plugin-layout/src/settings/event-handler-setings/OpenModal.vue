@@ -10,7 +10,7 @@
               style="width: 100%"
               :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }"
               :treeData="treeData"
-              placeholder="Please select"
+              placeholder="请选择"
               treeDefaultExpandAll
               v-model="modalInfo.pageId"
           >
